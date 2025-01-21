@@ -25,3 +25,11 @@ replay_pid*
 
 # DB 정보 은닉
 /src/main/resources/db-config.properties
+
+# Ignore Maven target directory
+target/
+
+# Ignore IDE specific files
+.idea/
+*.iml
+*.class
