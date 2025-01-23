@@ -24,7 +24,7 @@ hs_err_pid*
 replay_pid*
 
 # DB 정보 은닉
-/src/main/resources/db-config.properties
+/src/main/resources/postgre-config.properties
 
 # Ignore Maven target directory
 target/

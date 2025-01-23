@@ -25,12 +25,12 @@
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/images/**" location="/images/" />
 	
-	<context:property-placeholder location="classpath:db-config.properties" />
+	<context:property-placeholder location="classpath:postgre-config.properties" />
 	<bean id="MY_tomcat_ds" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-	    <property name="driverClassName" value="${db.driverClassName}" />
-	    <property name="url" value="${db.url}" />
-	    <property name="username" value="${db.username}" />
-	    <property name="password" value="${db.password}" />
+	    <property name="driverClassName" value="${postgre.driverClassName}" />
+	    <property name="url" value="${postgre.url}" />
+	    <property name="username" value="${postgre.username}" />
+	    <property name="password" value="${postgre.password}" />
 	</bean>
 	
 	<!-- MYBATIS CONSOL SQL PRINT : log4jdbc-remix.jar --> 
