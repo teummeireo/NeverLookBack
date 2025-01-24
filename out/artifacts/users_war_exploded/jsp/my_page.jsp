@@ -37,7 +37,9 @@
         </div>
         <div class="card">
             <i class="fas fa-user-times"></i>
-            <p class="card-title">회원 탈퇴</p>
+            <p class="card-title">
+                <a href="unregister_user.jsp" style="text-decoration: none; color: inherit;">회원 탈퇴</a>
+            </p>
             <p class="card-description">회원 탈퇴를 진행합니다.</p>
         </div>
     </div>

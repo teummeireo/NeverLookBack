@@ -22,39 +22,8 @@
     </div>
     <br>
     <button type="submit" class="btn-submit">탈퇴하기</button>
+
   </form>
-</div
-        <!-- 모달 HTML -->
-<div class="modal" id="confirmationModal">
-  <div class="modal-content">
-    <p>정말로 탈퇴하시겠습니까?</p>
-    <button class="btn-confirm" id="confirmButton">확인</button>
-    <button class="btn-cancel" id="cancelButton">취소</button>
-  </div>
 </div>
-
-<script>
-  // 모달 관련 JavaScript
-  const deleteButton = document.getElementById('deleteButton');
-  const modal = document.getElementById('confirmationModal');
-  const confirmButton = document.getElementById('confirmButton');
-  const cancelButton = document.getElementById('cancelButton');
-  const signupForm = document.getElementById('signupForm');
-
-  // "탈퇴하기" 버튼 클릭 시 모달 표시
-  deleteButton.addEventListener('click', () => {
-    modal.style.display = 'flex';
-  });
-
-  // "확인" 버튼 클릭 시 폼 제출
-  confirmButton.addEventListener('click', () => {
-    signupForm.submit();
-  });
-
-  // "취소" 버튼 클릭 시 모달 닫기
-  cancelButton.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-</script>
 </body>
 </html>
