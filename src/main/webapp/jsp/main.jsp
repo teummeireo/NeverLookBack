@@ -11,7 +11,7 @@
 <body>
 <div class="main-container">
     <aside class="sidebar">
-        <h2>Vuexy</h2>
+        <h2>NeverLookBack</h2>
         <ul>
             <li><a href="/jsp/main.jsp">메인페이지</a></li>
             <li><a href="/jsp/make_exam.jsp">시험생성</a></li>
