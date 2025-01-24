@@ -33,7 +33,6 @@ body::before {
     background: rgba(33, 32, 38, 0.55); /* 컨테이너 투명도 설정 */
     border-radius: 10px;
     padding: 20px 30px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 400px;
     border: 2px solid #373737; /* 테두리 색상 추가 */
