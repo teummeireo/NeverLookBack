@@ -30,21 +30,19 @@
                 <label for="new-nickname">새 닉네임</label>
                 <input type="text" id="new-nickname" placeholder="새 닉네임">
             </div>
-            <button class="btn">변경하기</button>
+            <button type="button" class="btn" onclick="handleNicknameChange()">변경하기</button>
         </form>
     </div>
 </div>
 
 <script>
-        function goHome() {
+    function goHome() {
         window.location.href = "main.jsp";
     }
-        function logout() {
+    function logout() {
         window.location.href = "main.jsp"; //이부분 세션없이
-        }
-</script>
+    }
 
-<script>
     // 닉네임 변경 화면 표시
     function showNicknameChange() {
         const content = document.getElementById("content");
@@ -60,7 +58,7 @@
                     <label for="new-nickname">새 닉네임</label>
                     <input type="text" id="new-nickname" placeholder="새 닉네임">
                 </div>
-                <button class="btn">변경하기</button>
+                <button type="button" class="btn" onclick="handleNicknameChange()">변경하기</button>
             </form>
         `;
     }
@@ -73,7 +71,7 @@
 
         content.innerHTML = `
         <h1>비밀번호 변경</h1>
-        <div class="divider"/></div>
+        <div class="divider"></div>
         <p>주기적인 <span  style="color: #b388ff; font-weight: bold;">비밀번호 변경</span>을 통해<br>개인 정보를 안전하게 보호하세요.</p>
         <form>
             <div class="form-group">
@@ -84,12 +82,22 @@
                 <label for="confirm-password">비밀번호 확인</label>
                 <input type="password" id="confirm-password" placeholder="비밀번호 확인">
             </div>
-            <button class="btn">변경하기</button>
+            <button type="button" class="btn" onclick="handlePasswordChange()">변경하기</button>
         </form>
         <p style="font-size: 14px; color: #777; margin-top: 20px;">
             <span style="color: #b388ff; font-size: 18px; font-weight: bold;">ⓘ</span> 비밀번호는 6~16자 이내로 영문(대, 소문자), 숫자, 특수문자 3가지 조합 중<br>2가지 이상을 포함해야 합니다.
         </p>
-`;
+        `;
+    }
+    function handleNicknameChange() {
+        alert("변경되었습니다!");
+        document.getElementById("new-nickname").value = "";
+    }
+
+    function handlePasswordChange() {
+        alert("변경되었습니다!");
+        document.getElementById("new-password").value = "";
+        document.getElementById("confirm-password").value = "";
     }
 </script>
 </body>

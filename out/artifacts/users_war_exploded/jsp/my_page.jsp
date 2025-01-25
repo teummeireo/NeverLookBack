@@ -17,8 +17,8 @@
         <li><a href="/jsp/exam_apply.jsp">시험응시</a></li>
         <li><a href="/jsp/manageExam.jsp">시험관리</a></li>
         <li><a href="/jsp/.jsp">응시한 시험</a></li>
-        <li><a href="/jsp/my_exam.jsp">마이페이지</a></li>
-        <li><a href="/jsp/logout.jsp">로그아웃</a></li>
+        <li><a href="/jsp/my_page.jsp">마이페이지</a></li>
+        <li><a href="/jsp/my_page.jsp">로그아웃</a></li>
     </ul>
 </div>
 <div class="main-container">
