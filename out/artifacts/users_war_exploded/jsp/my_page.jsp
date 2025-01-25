@@ -31,8 +31,11 @@
     <hr class="divider">
     <div class="card-container">
         <div class="card">
+            <br>
             <i class="fas fa-user-edit"></i>
-            <p class="card-title">회원정보 수정</p>
+            <p class="card-title">
+            <a href="page_edit.jsp" style="text-decoration: none; color: inherit;">회원정보 수정</a>
+            </p>
             <p class="card-description">회원 정보, 비밀번호 및 닉네임 변경 등 <br> 내 정보를 수정하세요.</p>
         </div>
         <div class="card">
