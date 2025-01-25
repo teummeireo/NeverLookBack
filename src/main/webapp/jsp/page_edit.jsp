@@ -19,7 +19,7 @@
     <div class="content" id="content">
         <h1>닉네임 변경</h1>
         <div class="divider"></div>
-        <p>새 닉네임을 입력하고 변경을 완료하세요.</p>
+        <p><span  style="color: #b388ff; font-weight: bold;">새 닉네임</span>을 입력하고<br>변경을 완료하세요.</p>
         <form>
             <div class="form-group">
                 <label for="new-nickname">새 닉네임</label>
@@ -40,7 +40,7 @@
         content.innerHTML = `
             <h1>닉네임 변경</h1>
             <div class="divider"></div>
-            <p>새 닉네임을 입력하고 변경을 완료하세요.</p>
+            <p><span  style="color: #b388ff; font-weight: bold;">새 닉네임</span>을 입력하고<br>변경을 완료하세요.</p>
             <form>
                 <div class="form-group">
                     <label for="new-nickname">새 닉네임</label>
@@ -59,8 +59,8 @@
 
         content.innerHTML = `
         <h1>비밀번호 변경</h1>
-        <div class="divider"></div>
-        <p>주기적인 <span style="color: #b388ff; font-weight: bold;">비밀번호 변경</span>을 통해 개인 정보를 안전하게 보호하세요.</p>
+        <div class="divider"/></div>
+        <p>주기적인 <span  style="color: #b388ff; font-weight: bold;">비밀번호 변경</span>을 통해<br>개인 정보를 안전하게 보호하세요.</p>
         <form>
             <div class="form-group">
                 <label for="new-password">새 비밀번호</label>
@@ -73,7 +73,7 @@
             <button class="btn">변경하기</button>
         </form>
         <p style="font-size: 14px; color: #777; margin-top: 20px;">
-            <span style="color: #b388ff; font-size: 18px; font-weight: bold;">ⓘ</span> 비밀번호는 6~16자 이내로 영문(대, 소문자), 숫자, 특수문자 3가지 조합 중 2가지 이상을 포함해야 합니다.
+            <span style="color: #b388ff; font-size: 18px; font-weight: bold;">ⓘ</span> 비밀번호는 6~16자 이내로 영문(대, 소문자), 숫자, 특수문자 3가지 조합 중<br>2가지 이상을 포함해야 합니다.
         </p>
 `;
     }

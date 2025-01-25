@@ -40,10 +40,10 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center the form */
-    align-items: flex-start; /* Align content to the left */
+    justify-content: center;
+    align-items: flex-start;
     padding: 20px;
-    text-align: left; /* Ensure text aligns to the left */
+    text-align: left;
 }
 
 .sidebar ul {
@@ -59,6 +59,8 @@ body {
     color: #7c4dff;
     font-weight: bold;
 }
+
+/*헤딩 (<h1>비밀번호 변경)*/
 .content h1 {
     font-size: 24px;
     margin-bottom: 20px;
@@ -67,11 +69,13 @@ body {
 
 .content p {
     font-size: 16px;
+    text-align: center;
     margin-bottom: 30px;
-    color: #b388ff;
+    color: #ffffff;
     line-height: 1.5;
 }
 
+/*비밀번호 변경 화면 표시 폼 (<form> 내부 요소)*/
 .form-group {
     width: 100%;
     margin-bottom: 20px;
@@ -98,6 +102,7 @@ body {
     color: #777;
 }
 
+/*<button class="btn">변경하기</button>)*/
 .btn {
     background-color: #7c4dff;
     color: #fff;
@@ -108,6 +113,7 @@ body {
     cursor: pointer;
     margin-top: 20px;
     transition: all 0.3s ease;
+
 }
 
 .btn:hover {
@@ -116,10 +122,12 @@ body {
     box-shadow: 0 0 10px #b388ff;
 }
 
+/*구분선<div class="divider"></div>)*/
 .divider {
     width: 100%;
     height: 2px;
-    background-color: #7c4dff; /* Matches the theme color */
-    margin: 10px 0 20px; /* Adds spacing around the divider */
+    background-color: #7c4dff;
+    margin: 10px 0 20px;
     border: none;
 }
+
