@@ -29,7 +29,7 @@ body {
     width: 25%;
     background-color: #1c1c1c;
     padding: 20px;
-    border-right: 2px solid #7c4dff;
+    border-right: 1px solid #7c4dff;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
