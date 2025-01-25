@@ -26,7 +26,7 @@
         <div class="profile-icon">
             <i class="fas fa-user-circle"></i>
         </div>
-        <h1>닉네임 님, 안녕하세요!</h1>
+        <h1>${userId} 님, 안녕하세요!</h1>
     </div>
     <hr class="divider">
     <div class="card-container">
