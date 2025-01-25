@@ -34,7 +34,6 @@ out/
 # Ignore IDE specific files
 .idea/
 *.iml
-*.class
 
 
 
