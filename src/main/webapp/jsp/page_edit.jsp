@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="/css/page_edit.css">
 </head>
 <body>
+<div class="top-buttons">
+    <button onclick="goHome()">홈으로가기</button>
+    <button onclick="logout()">로그아웃</button>
+</div>
 <div class="container">
+
     <div class="sidebar">
         <ul>
             <li id="nickname-btn" class="active" onclick="showNicknameChange()">닉네임 변경</li>
@@ -29,6 +34,15 @@
         </form>
     </div>
 </div>
+
+<script>
+        function goHome() {
+        window.location.href = "main.jsp";
+    }
+        function logout() {
+        window.location.href = "main.jsp"; //이부분 세션없이
+        }
+</script>
 
 <script>
     // 닉네임 변경 화면 표시
