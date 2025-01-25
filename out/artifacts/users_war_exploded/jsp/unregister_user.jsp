@@ -53,8 +53,8 @@
                 '회원 탈퇴가 성공적으로 처리되었습니다.',
                 'success'
         ).then(() => {
-          // 폼 제출 로직 (예: 서버에 요청)
-          $("#signupForm").submit();
+          // main.jsp로 이동
+          window.location.href = 'main.jsp';
         });
       }
     });
