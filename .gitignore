@@ -27,9 +27,17 @@ replay_pid*
 /src/main/resources/postgre-config.properties
 
 # Ignore Maven target directory
+pom.xml
 target/
+out/
 
 # Ignore IDE specific files
 .idea/
 *.iml
 *.class
+
+
+
+
+
+
