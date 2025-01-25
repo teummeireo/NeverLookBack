@@ -1,0 +1,148 @@
+@charset "UTF-8";
+body {
+    margin: 0;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+@font-face {
+    font-family: 'Pretendard'; /* 원하는 이름 설정 */
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
+    font-weight: normal; /* 옵션: normal, bold 등 */
+    font-style: normal; /* 옵션: italic, oblique 등 */
+}
+.container {
+    display: flex;
+    border: 2px solid #7c4dff;
+    border-radius: 10px;
+    width: 800px;
+    height: 600px;
+    margin: auto;
+    box-sizing: border-box;
+}
+
+.sidebar {
+    width: 25%;
+    background-color: #1c1c1c;
+    padding: 20px;
+    border-right: 1px solid #7c4dff;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    text-align: left;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 20px;
+}
+.sidebar ul li.active {
+    color: #7c4dff;
+    font-weight: bold;
+}
+
+/*헤딩 (<h1>비밀번호 변경)*/
+.content h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.content p {
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #ffffff;
+    line-height: 1.5;
+}
+
+/*비밀번호 변경 화면 표시 폼 (<form> 내부 요소)*/
+.form-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #b388ff;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #7c4dff;
+    border-radius: 5px;
+    background-color: #000;
+    color: #fff;
+    font-size: 16px;
+}
+
+.form-group input::placeholder {
+    color: #777;
+}
+
+/*<button class="btn">변경하기</button>)*/
+.btn {
+    background-color: #7c4dff;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+
+}
+
+.btn:hover {
+    background-color: #b388ff;
+    color: #000;
+    box-shadow: 0 0 10px #b388ff;
+}
+
+/*구분선<div class="divider"></div>)*/
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #7c4dff;
+    margin: 10px 0 20px;
+    border: none;
+}
+
+.top-buttons {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+.top-buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white; /* 글자 색을 흰색으로 설정 */
+    background-color: transparent; /* 배경색 제거 */
+}

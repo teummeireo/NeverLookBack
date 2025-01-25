@@ -87,7 +87,7 @@ h1 {
 
 /* Sidebar styling */
 .sidebar {
-    width: 250px;
+    width: 200px;
     background: #212026;
     padding: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
