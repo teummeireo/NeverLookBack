@@ -1,17 +1,25 @@
 @charset "UTF-8";
-/* General body styling */
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: url('../images/login.jpg') no-repeat center center fixed;
-    background-size: cover;
+    min-height: 100vh; /* 최소 높이를 설정 (스크롤 대비) */
+    background: url('../images/login.jpg') no-repeat center center; /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지 크기 조정 */
+    background-attachment: fixed; /* 스크롤 시 배경 고정 */
     position: relative;
     color: #fff;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
+    font-weight: normal; /* 옵션: normal, bold 등 */
+    font-style: normal; /* 옵션: italic, oblique 등 */
 }
 
 /* 투명도 레이어 */
@@ -32,21 +40,26 @@ body::before {
     z-index: 2;
     background: rgba(33, 32, 38, 0.55); /* 컨테이너 투명도 설정 */
     border-radius: 10px;
-    padding: 20px 30px;
+    padding: 40px 30px; /* 세로 패딩을 늘림 */
     width: 100%;
     max-width: 400px;
     border: 2px solid #373737; /* 테두리 색상 추가 */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5); /* 입체감 있는 효과 */
 }
 
+
 .signup-form h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #fff; /* 흰색 설정 (기본값) */
+    font-family: 'Pretendard', sans-serif; /* 커스텀 폰트 적용 */
+    font-size: 24px; /* 폰트 크기 조정 */
+    font-weight: bold; /* 굵기 설정 */
 }
 
 /* Box-sizing 설정 */
 * {
-    box-sizing: border-box; /* 모든 요소에 박스 크기 포함 */
+    box-sizing: border-box;
 }
 
 /* Form field styling */
@@ -59,6 +72,7 @@ body::before {
 
 input[type="email"],
 input[type="password"],
+
 input[type="text"] {
     width: 100%; /* 부모 요소 크기에 맞춤 */
     padding: 15px;
@@ -86,15 +100,3 @@ input[type="text"] {
     background: #7E57E4;
 }
 
-/* Footer links styling */
-.form-footer {
-    color: #7E57E4;
-    text-align: center;
-    margin-top: 20px;
-}
-
-.form-footer a {
-    color: #7E57E4;
-    text-decoration: none;
-    margin: 0 10px;
-}

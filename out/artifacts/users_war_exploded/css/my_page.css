@@ -6,7 +6,6 @@ body {
     padding: 0;
     background: #121212;
     color: #fff;
-    font-family: 'Pretendard', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -125,4 +124,3 @@ h1 {
 .sidebar a:hover {
     background: #575757;
 }
-
