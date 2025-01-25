@@ -6,9 +6,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: url('../images/login.jpg') no-repeat center center fixed;
-    background-size: cover;
+    min-height: 100vh; /* 최소 높이를 설정 (스크롤 대비) */
+    background: url('../images/login.jpg') no-repeat center center; /* 배경 이미지 설정 */
+    background-size: cover; /* 배경 이미지 크기 조정 */
+    background-attachment: fixed; /* 스크롤 시 배경 고정 */
     position: relative;
     color: #fff;
 }
@@ -50,6 +51,10 @@ body::before {
 .signup-form h2 {
     text-align: center;
     margin-bottom: 20px;
+    color: #fff; /* 흰색 설정 (기본값) */
+    font-family: 'Pretendard', sans-serif; /* 커스텀 폰트 적용 */
+    font-size: 24px; /* 폰트 크기 조정 */
+    font-weight: bold; /* 굵기 설정 */
 }
 
 /* Box-sizing 설정 */
