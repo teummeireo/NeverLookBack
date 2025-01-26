@@ -13,7 +13,13 @@ body {
     position: relative;
     color: #fff;
 }
-
+@font-face {
+    font-family: 'Pretendard'; /* 원하는 이름 설정 */
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
+    font-weight: normal; /* 옵션: normal, bold 등 */
+    font-style: normal; /* 옵션: italic, oblique 등 */
+}
 /* 투명도 레이어 */
 body::before {
     content: '';
