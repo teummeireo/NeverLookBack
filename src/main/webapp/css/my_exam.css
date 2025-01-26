@@ -1,0 +1,194 @@
+
+@charset "UTF-8";
+
+/* General styling */
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    height: 100vh;
+}
+
+@font-face {
+    font-family: 'Pretendard'; /* 원하는 이름 설정 */
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
+    font-weight: normal; /* 옵션: normal, bold 등 */
+    font-style: normal; /* 옵션: italic, oblique 등 */
+}
+
+
+/* Main container styling */
+.main-container {
+    display: flex;
+    width: 100%;
+}
+
+/* Sidebar styling */
+.sidebar {
+    width: 250px;
+    background: #212026;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
+    min-height: 100vh; /* 화면 높이에 맞게 사이드바 확장 */
+    overflow-y: auto; /* 내용물이 많아지면 스크롤 가능 */
+}
+
+.sidebar h2 {
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+/* Sidebar button style */
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar a {
+    display: block;
+    text-decoration: none;
+    padding: 10px 15px;
+    color: #fff;
+    background: #373737;
+    border-radius: 5px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background: #575757;
+}
+
+/* Content area styling */
+.content {
+    flex: 1;
+    padding: 20px;
+}
+
+/* 헤더 수정 */
+.header {
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    color: #fff;
+    margin-top: 10px;
+}
+
+/* 검색창 스타일 */
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar input[type="text"] {
+    background: transparent;
+    border: none;
+    color: #fff;
+    flex: 1;
+    font-size: 14px;
+    outline: none;
+    margin-right: 10px;
+}
+
+.search-bar .icon-search {
+    color: #aaa;
+    font-size: 18px;
+}
+
+
+/* Card styling */
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* 카드 호버 효과 */
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 제목 스타일 */
+.dashboard-card h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* 리스트 스타일 */
+.dashboard-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dashboard-card li {
+    font-size: 1.1em;
+    color: #555;
+    padding: 10px 15px;
+    border-left: 5px solid #007bff;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out, border-left 0.3s ease-in-out;
+}
+
+/* 프로젝트 상태에 따른 색상 변경 */
+.dashboard-card li:nth-child(1) {
+    border-left-color: #f39c12; /* 진행 중 */
+}
+
+.dashboard-card li:nth-child(2) {
+    border-left-color: #2ecc71; /* 완료 */
+}
+
+.dashboard-card li:nth-child(3) {
+    border-left-color: #e74c3c; /* 보류 */
+}
+
+/* 반응형 디자인 */
+@media (min-width: 768px) {
+    .dashboard-card {
+        max-width: 600px;
+        margin: 0 auto 20px auto;
+    }
+}
+
+.project-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.project-list li {
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #ccc;
+}
+/*구분선<div class="divider"></div>)*/
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #7c4dff;
+    margin: 10px 0 20px;
+    border: none;
+}
+
+
+
