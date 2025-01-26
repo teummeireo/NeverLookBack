@@ -2,7 +2,6 @@ package com.nlb.controller;
 
 
 import com.nlb.dto.response.CMResDTO;
-import com.nlb.exception.NoResourceFoundException;
 import com.nlb.service.ExamService;
 import com.nlb.vo.ExamVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class ExamRestController {
 
     // 정렬기능(제목, 생성일, 응시자수, 카테고리) & 필터기능(카테고리)
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
-    public ResponseEntity<CMResDTO<List<ExamVO>>> ExamsOfConstructor(
+    public ResponseEntity<CMResDTO<List<ExamVO>>> examsOfConstructor(
             @PathVariable("userId") int userId,
             @RequestParam(value = "sortBy", defaultValue = "createAt") String sortBy,
             @RequestParam(value = "order", defaultValue = "asc") String order,

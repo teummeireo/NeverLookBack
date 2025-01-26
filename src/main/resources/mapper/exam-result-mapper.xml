@@ -10,4 +10,32 @@
         delete from exam_result
         where exam_id = #{examId}
     </delete>
+
+
+    <!-- 시험 응시자 결과 조회 -->
+    <select id="selectExamResultList" resultType="ExamResultVO">
+        SELECT *
+        FROM exam_result
+        WHERE exam_id = #{examId}
+        <if test="isReviewed != null and isReviewed != ''">
+            AND is_reviewed = #{isReviewed}
+        </if>
+        <choose>
+            <when test="sortBy == 'submittedAt'">
+                ORDER BY submitted_at ${order}
+            </when>
+            <when test="sortBy == 'score'">
+                ORDER BY score ${order}
+            </when>
+            <otherwise>
+                ORDER BY submitted_at ASC
+            </otherwise>
+        </choose>
+    </select>
+
+    <update id="updateExamResultIsReviewed">
+        update exam_result
+        set is_reviewed = #{isReviewed}
+        where result_id = #{resultId}
+    </update>
 </mapper>
