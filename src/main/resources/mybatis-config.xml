@@ -6,7 +6,13 @@
 
 	<settings>
    		<setting name="cacheEnabled" value="false" />
+		<setting name="mapUnderscoreToCamelCase" value="true" />
    		<setting name="jdbcTypeForNull" value="NULL" />
 	</settings>
+
+
+	<typeAliases>
+		<package name="com.nlb.vo" /> <!-- VO 객체 패키지 -->
+	</typeAliases>
 
 </configuration>
