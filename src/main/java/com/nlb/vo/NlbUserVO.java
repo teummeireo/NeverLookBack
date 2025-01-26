@@ -1,11 +1,11 @@
 package com.nlb.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,6 +16,6 @@ public class NlbUserVO {
     private String nickname;
     private String email;
     private String userRole; // 'user', 'admin'
-    private Date regDate; // Default: sysdate
+    private String regDate; // Default: sysdate
     private boolean isActive; // Default: true
 }

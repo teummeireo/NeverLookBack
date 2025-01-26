@@ -13,7 +13,6 @@ import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class NlbUserServiceImplTest {
-
     @InjectMocks
     private NlbUserServiceImpl nlbUserService; // 테스트할 구현체
 
@@ -47,4 +46,6 @@ public class NlbUserServiceImplTest {
         assertFalse(result); // ID가 고유하지 않아야 함
         verify(nlbUserMapper, times(1)).existsById(id); // Repository 호출 확인
     }
+
+
 }

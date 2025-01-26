@@ -1,12 +1,12 @@
 package com.nlb.vo;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +22,8 @@ public class ExamMongoVO {      // MongoDB 에 시험 디테일 저장하는 VO
     private List<Question> questions;
 }
 
-
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

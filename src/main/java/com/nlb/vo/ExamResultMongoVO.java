@@ -1,12 +1,13 @@
 package com.nlb.vo;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.List;
 import java.util.Date;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,9 +16,11 @@ public class ExamResultMongoVO {
     private int examId;
     private int examineeId;
     private List<Answer> answers;
-    private Date submittedAt;
+    private String submittedAt;
 
     // 응시자의 답변 주의 : 답안지가 아님!!!!!!!
+    @Getter
+    @Setter
     @Data
     @AllArgsConstructor
     @NoArgsConstructor

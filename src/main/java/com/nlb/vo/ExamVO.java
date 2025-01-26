@@ -1,11 +1,11 @@
 package com.nlb.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,9 +18,9 @@ public class ExamVO {
     private String entreeCode;
     private int questionCount;
     private int examineeCount; // Default: 0
-    private Date createdAt; // Default: sysdate
-    private Date startedAt;
-    private Date finishedAt;
-    private int examTime;
+    private String createdAt; // Default: sysdate
+    private String startedAt;
+    private String finishedAt;
+    private int examTime;  //  분단위
     private String activationStatus; // 'not_started', 'on_going', 'closed'
 }

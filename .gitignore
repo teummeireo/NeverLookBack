@@ -25,7 +25,7 @@ replay_pid*
 
 # DB 정보 은닉
 /src/main/resources/postgre-config.properties
-
+/src/main/resources/mongo-config.properties
 # Ignore Maven target directory
 pom.xml
 target/
@@ -34,10 +34,8 @@ out/
 # Ignore IDE specific files
 .idea/
 *.iml
-*.class
 
 
 
 
-
-
+/src/main/resources/docker-compose.yml
