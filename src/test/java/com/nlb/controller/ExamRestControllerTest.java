@@ -1,5 +1,6 @@
 package com.nlb.controller;
 
+import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.service.ExamService;
 
 import com.nlb.vo.ExamVO;
@@ -98,5 +99,7 @@ public class ExamRestControllerTest {
         // 서비스 메서드 호출 여부 확인
         verify(examService, times(1)).setExamStatus(examId, status);
     }
+
+
 
 }
