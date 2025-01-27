@@ -23,7 +23,7 @@ public class ExamRestController {
     @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
     public ResponseEntity<CMResDTO<List<ExamVO>>> examsOfConstructor(
             @PathVariable("userId") int userId,
-            @RequestParam(value = "sortBy", defaultValue = "createAt") String sortBy,
+            @RequestParam(value = "sortBy", defaultValue = "createAt") String sortBy, //createAt, title, examineeCount, category
             @RequestParam(value = "order", defaultValue = "asc") String order,
             @RequestParam(value = "category", required = false) String category) {
 
@@ -31,7 +31,6 @@ public class ExamRestController {
 
         return new ResponseEntity<>(CMResDTO.successDataRes(examVOList), HttpStatus.OK);
     }
-
     // 시험 상태 변경 (시작전, 진행중, 비활성화)
     @RequestMapping(value = "/{examId}/status", method = RequestMethod.PUT)
     public ResponseEntity<CMResDTO<String>> setExamStatus(@PathVariable("examId") int examId,

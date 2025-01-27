@@ -1,6 +1,7 @@
 package com.nlb.service;
 
 
+import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.vo.ExamResultVO;
 
@@ -16,13 +17,23 @@ public class ExamResultServiceImpl implements ExamResultService {
     private ExamResultMapper examResultMapper;
 
     @Override
-    public List<ExamResultVO> getExamResultList(int examId, String sortBy, String order, boolean isReviewed) {
+    public List<ExamResultVO> getExamResultList(int examId, String sortBy, String order, Boolean isReviewed) {
         return examResultMapper.selectExamResultList(examId, sortBy, order, isReviewed);
     }
 
     @Override
-    public int setExamResultStatus(int resultId, boolean isReviewed) {
+    public int setExamResultStatus(int resultId, Boolean isReviewed) {
         return examResultMapper.updateExamResultIsReviewed(resultId, isReviewed);
+    }
+
+    @Override
+    public List<ExamResultVO> getExamResultListOfUser(int userId, String sortBy, String order, Boolean isReviewed) {
+        return examResultMapper.selectExamResultListByUserId(userId, sortBy, order, isReviewed);
+    }
+
+    @Override
+    public ExamResultCardDTO getExamResultAndExam(int resultId) {
+        return examResultMapper.selectExamResultAndExamByResultId(resultId);
     }
 
 

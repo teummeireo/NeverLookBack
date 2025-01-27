@@ -13,6 +13,7 @@
 
 	<typeAliases>
 		<package name="com.nlb.vo" /> <!-- VO 객체 패키지 -->
+		<package name="com.nlb.dto" />
 	</typeAliases>
 
 </configuration>
