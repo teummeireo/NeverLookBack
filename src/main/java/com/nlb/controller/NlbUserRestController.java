@@ -1,26 +1,54 @@
 package com.nlb.controller;
 
+import com.nlb.dto.response.CMResDTO;
 import com.nlb.service.NlbUserService;
+import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
+
 
 @RestController
+@RequestMapping(value = "/api/users")
 public class NlbUserRestController {
 
     @Autowired
     private NlbUserService nlbUserService;
 
-    @PostMapping("/check-id/{id}")
-    public ResponseEntity<HashMap<String, Object>> checkId(@PathVariable("id") String id) {
-        boolean isUnique = nlbUserService.isUniqueId(id);
-        HashMap<String, Object> response = new HashMap<>();
-        response.put("isUnique", isUnique);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    //회원 조회
+    @RequestMapping(value = "/info/{userId}", method = RequestMethod.GET)
+    public ResponseEntity<CMResDTO<NlbUserVO>> getUser(@PathVariable("userId") int userId) {
+
+        NlbUserVO uvo = nlbUserService.getUser(userId);
+
+        return new ResponseEntity<>(CMResDTO.successDataRes(uvo), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/update", method = RequestMethod.PUT)
+    public ResponseEntity<CMResDTO<String>> updateUser(@RequestBody NlbUserVO uvo) {
+
+        int rows = nlbUserService.updateUser(uvo);
+
+        return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/deactivate/{userId}", method = RequestMethod.PUT)
+    public ResponseEntity<CMResDTO<String>> setUserDeactivate(@PathVariable("userId") int userId) {
+
+
+        int rows = nlbUserService.setUserDeactivate(userId);
+
+        return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
+    }
+
+
+
+
+
 }
