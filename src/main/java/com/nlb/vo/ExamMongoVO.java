@@ -1,6 +1,8 @@
 package com.nlb.vo;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import lombok.*;
 
 import java.util.List;
@@ -12,30 +14,19 @@ import java.util.List;
 @NoArgsConstructor
 public class ExamMongoVO {      // MongoDB 에 시험 디테일 저장하는 VO
 
-    private String examId;
+    private int examId;  //todo 유니크ID 관련, examVO랑 매칭 컨벤션 정리 필요
     private String examCode;
     private String title;
     private String category;
     private String entreeCode;
     private int questionCount;
+    private int examTime;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    private LocalDateTime startedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
+    private LocalDateTime finishedAt;
 
-    private List<Question> questions;
+
+    private List<QuestionVO> questions;
 }
 
-@Getter
-@Setter
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Question {
-    private int questionId;
-    private String content;
-    private String type;
-    private List<String> options;
-    private String correctAnswer;
-    private int pointsAllocation;
-    private int maxOptionsNum; // 객관식일 경우 최대 보기 개수
-    private int maxAnswerLength; // 서술형일 경우 최대 답변 길이
-
-
-}
