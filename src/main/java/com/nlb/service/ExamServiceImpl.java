@@ -41,4 +41,9 @@ public class ExamServiceImpl implements ExamService {
         rows.add(examMapper.deleteExamByExamId(examId));
         return rows;
     }
+
+    @Override
+    public List<ExamVO> getAllExams(String sortBy, String order, String category) {
+        return examMapper.selectExamList(sortBy, order, category);
+    }
 }

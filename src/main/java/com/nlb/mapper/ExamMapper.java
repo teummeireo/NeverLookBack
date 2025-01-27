@@ -20,4 +20,8 @@ public interface ExamMapper {
                                    @Param("status") String status);
 
     int deleteExamByExamId(@Param("examId") int examId);
+
+    List<ExamVO> selectExamList(@Param("sortBy") String sortBy,
+                                @Param("order") String order,
+                                @Param("category") String category);
 }
