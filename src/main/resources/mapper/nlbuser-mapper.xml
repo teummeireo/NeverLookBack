@@ -11,4 +11,15 @@
         FROM users
         WHERE id = #{id}
     </select>
+
+    <select id = "selectUsers" resultType="NlbUserVO">
+        select *
+        from nlbuser
+    </select>
+
+    <update id="updateUserIsActive">
+        update nlbuser
+        set is_active = #{isActive}
+        where user_id = #{userId}
+    </update>
 </mapper>

@@ -9,4 +9,6 @@ public interface ExamService {
     List<ExamVO> getExamList(int userId, String sortBy, String order, String category);
     int setExamStatus(int examId, String status);
     List<Integer> deleteExam(int examId);
+
+    List<ExamVO> getAllExams(String sortBy, String order, String category);
 }
