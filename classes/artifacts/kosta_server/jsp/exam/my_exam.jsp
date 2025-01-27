@@ -30,10 +30,9 @@
                 <i class="icon-search"></i>
             </div>
             <br>
-
-            <h1>내 시험 결과</h1>
-            <div class="divider"></div>
+            <h1>My exam Dashboard</h1>
         </header>
+        <div class="divider"></div>
         <div class="dashboard-card project-list">
             <h3>내 시험 결과</h3>
             <ul>

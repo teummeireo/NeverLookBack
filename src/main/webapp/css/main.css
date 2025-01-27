@@ -120,7 +120,6 @@ body {
 }
 
 /* Dashboard grid */
-/* Dashboard grid */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3개의 열 */
