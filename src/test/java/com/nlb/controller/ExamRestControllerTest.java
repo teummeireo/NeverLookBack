@@ -1,8 +1,6 @@
 package com.nlb.controller;
 
-import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.service.ExamService;
-
 import com.nlb.vo.ExamVO;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -19,15 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -64,9 +59,9 @@ public class ExamRestControllerTest {
         // Mock 서비스 동작 정의
         List<ExamVO> examVOList = new ArrayList<>();
         examVOList.add(new ExamVO(1, 1, "exam001", "A Quiz", "history", null, 3,
-                5, "2024-05-30 13:41:24", "2024-05-31 13:41:24", "2024-05-33 13:41:24", 30, "closed"));
+                5, null, null, null, 30, "closed"));
         examVOList.add(new ExamVO(2, 1, "exam002", "B Quiz", "physics", null, 3,
-                5, "2024-05-30 13:41:24", "2024-05-31 13:41:24", "2024-05-33 13:41:24", 30, "closed"));
+                5, null, null, null, 30, "closed"));
         when(examService.getExamList(userId, sortBy, order, category)).thenReturn(examVOList);
 
         // REST API 호출 및 검증

@@ -1,8 +1,9 @@
 package com.nlb.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.time.LocalDateTime;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class ExamVO {
     private int questionCount;
     private int examineeCount; // Default: 0
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
-    private String createdAt; // Default: sysdate
+    private LocalDateTime createdAt; // Default: sysdate
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")
     private LocalDateTime startedAt;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS")

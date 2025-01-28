@@ -4,7 +4,6 @@ package com.nlb.vo;
 import lombok.*;
 
 import java.util.List;
-import java.util.Date;
 
 @Getter
 @Setter

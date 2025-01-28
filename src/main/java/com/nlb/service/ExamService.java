@@ -12,7 +12,7 @@ public interface ExamService {
     int setExamStatus(int examId, String status);
     List<Integer> deleteExam(int examId);
 
-    int createExam(ExamMongoVO examMongoVO);
+    //  int createExam(ExamMongoVO examMongoVO);
 
     boolean updateExam(int examId, ExamMongoVO examMongoVO);
 

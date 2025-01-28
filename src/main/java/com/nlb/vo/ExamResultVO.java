@@ -1,15 +1,10 @@
 package com.nlb.vo;
 
-import lombok.*;
+import lombok.Data;
 
-import java.util.Date;
 import java.util.List;
 
-@Getter
-@Setter
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class ExamResultVO {
     private int resultId;
     private int examId;

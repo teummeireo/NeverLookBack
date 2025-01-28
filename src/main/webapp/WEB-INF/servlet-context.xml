@@ -80,6 +80,31 @@
 	</aop:config>
 
 
+<!--	&lt;!&ndash; Event Bus &ndash;&gt;-->
+<!--	<bean id="eventBus" class="org.axonframework.eventhandling.SimpleEventBus" />-->
+
+<!--	&lt;!&ndash; Event Store &ndash;&gt;-->
+<!--	<bean id="eventStore" class="org.axonframework.eventsourcing.eventstore.EmbeddedEventStore">-->
+<!--		<constructor-arg ref="eventBus" />-->
+<!--	</bean>-->
+
+<!--	&lt;!&ndash; Serializer &ndash;&gt;-->
+<!--	<bean id="serializer" class="org.axonframework.serialization.xml.XStreamSerializer" />-->
+
+	<!-- Command Bus -->
+<!--	<bean id="commandBus" class="org.axonframework.commandhandling.SimpleCommandBus" />-->
+
+<!--	&lt;!&ndash; Command Gateway &ndash;&gt;-->
+<!--	<bean id="commandGateway" class="org.axonframework.commandhandling.gateway.DefaultCommandGateway">-->
+<!--		<constructor-arg>-->
+<!--			<bean class="org.axonframework.commandhandling.gateway.DefaultCommandGateway$Builder">-->
+<!--				<constructor-arg ref="commandBus" />-->
+<!--			</bean>-->
+<!--		</constructor-arg>-->
+<!--	</bean>-->
+
+
+
 
 	<!-- View Resolver -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

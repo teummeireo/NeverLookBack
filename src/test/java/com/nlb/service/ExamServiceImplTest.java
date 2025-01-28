@@ -35,9 +35,9 @@ public class ExamServiceImplTest {
 
         List<ExamVO> examVOList = new ArrayList<>();
         examVOList.add(new ExamVO(1, 1, "exam001", "A Quiz", "history", null, 3,
-                5, "2024-05-30 13:41:24", "2024-05-31 13:41:24", "2024-05-33 13:41:24", 30, "closed"));
+                5, null, null, null, 30, "closed"));
         examVOList.add(new ExamVO(2, 1, "exam002", "B Quiz", "physics", null, 3,
-                5, "2024-05-30 13:41:24", "2024-05-31 13:41:24", "2024-05-33 13:41:24", 30, "closed"));
+                5, null, null, null, 30, "closed"));
         when(examMapper.selectExamListByCreaterId(userId, sortBy, order, null)).thenReturn(examVOList);
 
         // 실행
