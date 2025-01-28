@@ -4,6 +4,7 @@ package com.nlb.mapper;
 import com.nlb.vo.ExamVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,7 +22,14 @@ public interface ExamMapper {
 
     int deleteExamByExamId(@Param("examId") int examId);
 
+    int insertExam(ExamVO examVO);
+
+    int updateExamById(ExamVO examVO);
+
+    int updateQuestionCount(@Param("examId") int examId, @Param("questionCount") int questionCount);
+
     List<ExamVO> selectExamList(@Param("sortBy") String sortBy,
                                 @Param("order") String order,
                                 @Param("category") String category);
+
 }
