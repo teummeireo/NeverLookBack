@@ -28,4 +28,8 @@ public interface ExamMapper {
 
     int updateQuestionCount(@Param("examId") int examId, @Param("questionCount") int questionCount);
 
+    List<ExamVO> selectExamList(@Param("sortBy") String sortBy,
+                                @Param("order") String order,
+                                @Param("category") String category);
+
 }

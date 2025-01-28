@@ -18,4 +18,5 @@ public interface ExamService {
 
     boolean updateQuestions(int examId, List<QuestionVO> questions);
 
+    List<ExamVO> getAllExams(String sortBy, String order, String category);
 }

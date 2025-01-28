@@ -5,7 +5,7 @@
 <mapper namespace="com.nlb.mapper.ExamMapper">
 
     <!-- 회원이 만든 시험 리스트 조회 -->
-    <select id="selectExamListByCreaterId" parameterType="map" resultType="ExamVO">
+    <select id="selectExamListByCreaterId"  resultType="ExamVO">
         SELECT *
         FROM exam
         WHERE creater_id = #{userId}
@@ -72,6 +72,33 @@
         SET question_count = #{questionCount}
         WHERE exam_id = #{examId}
     </update>
+
+
+    <!-- 모든 시험 리스트 조회 -->
+    <select id="selectExamList"  resultType="ExamVO">
+        SELECT *
+        FROM exam
+        <if test="category != null and category != ''">
+            AND category = #{category}
+        </if>
+        <choose>
+            <when test="sortBy == 'title'">
+                ORDER BY title ${order}
+            </when>
+            <when test="sortBy == 'createdAt'">
+                ORDER BY created_at ${order}
+            </when>
+            <when test="sortBy == 'examineeCount'">
+                ORDER BY examinee_count ${order}
+            </when>
+            <when test="sortBy == 'category'">
+                ORDER BY category ${order}
+            </when>
+            <otherwise>
+                ORDER BY created_at ASC
+            </otherwise>
+        </choose>
+    </select>
 
 
 </mapper>

@@ -150,4 +150,9 @@ public class ExamServiceImpl implements ExamService {
     query.addCriteria(Criteria.where("examId").is(examId));
     return mongoTemplate.findOne(query, ExamMongoVO.class, "exams");
   }
+
+    @Override
+    public List<ExamVO> getAllExams(String sortBy, String order, String category) {
+        return examMapper.selectExamList(sortBy, order, category);
+    }
 }
