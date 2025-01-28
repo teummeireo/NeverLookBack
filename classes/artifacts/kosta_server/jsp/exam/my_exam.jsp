@@ -34,7 +34,7 @@
         </header>
         <div class="divider"></div>
         <div class="dashboard-card project-list">
-            <h3>내 시험 결과</h3>
+            <h3>이전 응시 내역</h3>
             <ul>
                 <li>Project 1 - In Progress</li>
                 <li>Project 2 - Completed</li>
