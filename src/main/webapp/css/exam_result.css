@@ -8,7 +8,6 @@ body {
     color: #fff;
     display: flex;
     height: 100vh;
-    font-family: 'Pretendard', sans-serif; /* Pretendard 사용 */
 }
 
 @font-face {
@@ -86,6 +85,7 @@ body {
     justify-content: space-between;
     align-items: center;
     gap: 20px;
+    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 허용 */
 }
 
 .header h1 {
@@ -93,15 +93,15 @@ body {
     margin-top: 10px;
 }
 
-/* Search bar styling */
 .search-bar {
     display: flex;
     align-items: center;
     background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
+    padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex: 1;
+    width: 50%; /* 너비를 화면의 2분의 1로 설정 */
+    max-width: 500px; /* 최대 너비 제한 (선택 사항) */
 }
 
 .search-bar input[type="text"] {
@@ -206,4 +206,74 @@ body {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.sort-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#sortOrder {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+}
+/* 구분선 스타일 */
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #444444;
+    margin: 10px 0 20px;
+    border: none;
+}
+.filter-container {
+    display: flex; /* 정렬을 위한 flexbox 설정 */
+    align-items: center; /* 세로 가운데 정렬 */
+}
+.filter-button {
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    color: #374151;
+    padding: 8px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+.filter-button:hover {
+    background-color: #e5e7eb;
+}
+
+.filter-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    z-index: 1000;
+    min-width: 150px;
+}
+
+.filter-menu label {
+    display: block;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+}
+
+.filter-menu label:hover {
+    color: #111827;
 }

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:mvc="http://www.springframework.org/schema/mvc"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd"
+>
+
+	<!-- Spring MVC 설정 -->
+	<mvc:annotation-driven />
+	<context:component-scan base-package="com.nlb" />
+
+	<!-- 데이터 소스 설정 -->
+	<context:property-placeholder location="classpath:mongo-config.properties,classpath:postgre-config.properties" ignore-unresolvable="false" />
+
+	<bean id="MY_tomcat_ds" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<property name="driverClassName" value="${postgre.driverClassName}" />
+		<property name="jdbcUrl" value="${postgre.url}" />
+		<property name="username" value="${postgre.username}" />
+		<property name="password" value="${postgre.password}" />
+	</bean>
+
+
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+
+	<!-- MyBatis 설정 -->
+	<bean id="ID_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="MY_tomcat_ds" />
+		<property name="mapperLocations" value="classpath*:mapper/*-mapper.xml" />
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	</bean>
+
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="ID_sqlSessionFactory" />
+	</bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.nlb.mapper" />
+	</bean>
+
+	<!-- 트랜잭션 설정 -->
+	<bean id="ID_manager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="MY_tomcat_ds" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="ID_manager" />
+
+	<!-- AOP 설정 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+	<tx:advice id="ID_tx_advice" transaction-manager="ID_manager">
+		<tx:attributes>
+			<tx:method name="*" rollback-for="Exception" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut expression="execution(public * com.nlb.service.*Impl.*(..))" id="ID_cut" />
+		<aop:advisor advice-ref="ID_tx_advice" pointcut-ref="ID_cut" />
+	</aop:config>
+
+	<!-- MongoDB 설정 -->
+	<mongo:mongo-client id="mongoClient" connection-string="mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}" />
+	<mongo:repositories base-package="com.nlb.repository" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongoClient" />
+		<constructor-arg value="${mongodb.database}" />
+	</bean>
+
+
+
+
+	<!-- View Resolver -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+</beans>
