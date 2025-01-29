@@ -75,8 +75,14 @@ body {
 }
 
 .content {
-    flex-grow: 1;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .profile-section {
@@ -86,7 +92,7 @@ body {
 
 .profile-icon {
     font-size: 50px;
-    color: #2c3e50;
+    color: #8e44ad;
 }
 
 .divider {
@@ -94,7 +100,9 @@ body {
     height: 1px;
     background: #ccc;
     margin: 20px 0;
+    width: calc(100% + 10px); /* 기존보다 10px 더 길게 */
 }
+
 
 .card-container {
     display: flex;

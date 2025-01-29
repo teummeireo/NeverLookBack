@@ -20,8 +20,8 @@
             <h1 id="welcome-message">
                 ${user.nickname} 님, 안녕하세요!
             </h1>
+            <hr class="divider">
         </div>
-        <hr class="divider">
         <div class="card-container">
             <a href="/jsp/page_edit.jsp" class="card-link">
                 <div class="card">

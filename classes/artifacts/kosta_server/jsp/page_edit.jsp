@@ -24,7 +24,7 @@
     <div class="content" id="content">
         <h1>닉네임 변경</h1>
         <div class="divider"></div>
-        <p>새 닉네임을 입력하고 변경을 완료하세요.</p>
+        <p><span  style="color: #b388ff; font-weight: bold;">새 닉네임</span>을 입력하고<br>변경을 완료하세요.</p>
         <form>
             <div class="form-group">
                 <label for="new-nickname">새 닉네임</label>
