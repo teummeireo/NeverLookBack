@@ -27,7 +27,12 @@ public enum ErrorCode {
   METHOD_NOT_ALLOWED(405, "잘못된 Http Method"),
 
 
-  INTERNAL_SERVER_ERROR(500, "서버 내부 오류");
+  INTERNAL_SERVER_ERROR(500, "서버 내부 오류"),
+
+  //Exam 관련
+  DUPLICATED_QUESTIONID_EXIST(500, "중복 문제ID 존재"),
+  EXAM_NOT_FOUND(400, "시험이 존재하지 않습니다"),
+  EXAM_NOT_STARTED(400, "시험이 아직 시작되지 않았습니다");
 
   private final int code;
   private final String msg;
