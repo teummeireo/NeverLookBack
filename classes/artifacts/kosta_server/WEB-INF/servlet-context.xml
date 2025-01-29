@@ -29,6 +29,16 @@
 		<property name="password" value="${postgre.password}" />
 	</bean>
 
+	<!-- MongoDB 설정 -->
+	<mongo:mongo-client		id="mongoClient"		connection-string="mongodb://${mongodb.username}:${mongodb.password}@${mongodb.host}:${mongodb.port}/${mongodb.database}" />
+	<mongo:repositories base-package="com.nlb" />
+
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg ref="mongoClient" />
+		<constructor-arg value="${mongodb.database}" />
+	</bean>
+
+
 
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/images/**" location="/images/" />
@@ -68,16 +78,6 @@
 		<aop:pointcut expression="execution(public * com.nlb.service.*Impl.*(..))" id="ID_cut" />
 		<aop:advisor advice-ref="ID_tx_advice" pointcut-ref="ID_cut" />
 	</aop:config>
-
-	<!-- MongoDB 설정 -->
-	<mongo:mongo-client id="mongoClient" connection-string="mongodb://${mongodb.host}:${mongodb.port}/${mongodb.database}" />
-	<mongo:repositories base-package="com.nlb.repository" />
-
-	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
-		<constructor-arg ref="mongoClient" />
-		<constructor-arg value="${mongodb.database}" />
-	</bean>
-
 
 
 
