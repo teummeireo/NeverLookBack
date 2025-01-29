@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* 기존 my_page.css 스타일 유지 */
 body {
     margin: 0;
@@ -6,7 +7,6 @@ body {
     color: #fff;
     display: flex;
     height: 100vh;
-    font-family: 'Pretendard', sans-serif; /* Pretendard 사용 */
 }
 
 @font-face {
@@ -98,17 +98,31 @@ body {
 
 .card-container {
     display: flex;
-    gap: 20px;
+    gap: 40px; /* 카드 간격 조정 */
     justify-content: center;
+    margin-top: 20px;
 }
 
 .card {
-    background: #f8f9fa;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background: #141414; /* 다크 모드 배경 */
+    padding: 40px; /* 크기 확대 */
+    border-radius: 12px; /* 둥근 테두리 */
+    box-shadow: 0 0 10px rgba(98, 0, 234, 0.5); /* 보라색 네온 효과 */
     text-align: center;
-    width: 200px;
+    width: 280px; /* 크기 조정 */
+    border: 2px solid #6200ea; /* 보라색 테두리 */
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05); /* 호버 시 확대 효과 */
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #b388ff; /* 연한 보라색 */
+    margin-top: 10px;
 }
 
 .card-title a {
@@ -118,5 +132,21 @@ body {
 
 .card-description {
     font-size: 14px;
-    color: #666;
+    color: #bbb; /* 흐린 회색 */
+    margin-top: 8px;
+}
+
+/* 아이콘 스타일 */
+.card i {
+    font-size: 50px; /* 아이콘 크기 확대 */
+    color: #8e44ad; /* 보라색 아이콘 */
+}
+
+.card-link {
+    text-decoration: none; /* 밑줄 제거 */
+    color: inherit; /* 글자 색상 유지 */
+}
+
+.card-link .card {
+    cursor: pointer; /* 마우스 포인터 변경 */
 }
