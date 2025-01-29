@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../css/my_page.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/my_page.css">
     <title>My Page</title>
 </head>
 <body>
@@ -16,7 +16,7 @@
         <li><a href="/jsp/exam_apply.jsp">시험응시</a></li>
         <li><a href="/jsp/manageExam.jsp">시험관리</a></li>
         <li><a href="/jsp/.jsp">응시한 시험</a></li>
-        <li><a href="/page/my_page">마이페이지</a></li>
+        <li><a href="/api/users/my_page">마이페이지</a></li>
         <li><a href="/jsp/my_page.jsp">로그아웃</a></li>
     </ul>
 </div>
@@ -26,7 +26,7 @@
             <i class="fas fa-user-circle"></i>
         </div>
         <h1 id="welcome-message">
-            ${user.nickname} 님, 안녕하세요! <!-- 전달된 user 객체의 nickname을 사용 -->
+            ${user.nickname} 님, 안녕하세요!
         </h1>
     </div>
     <hr class="divider">
@@ -48,34 +48,7 @@
         </div>
     </div>
 
-<%--    <script>--%>
-<%--        document.addEventListener("DOMContentLoaded", function () {--%>
-<%--            const userId = 1; // userId를 지정--%>
-<%--            if (!userId) {--%>
-<%--                console.error("User ID is missing");--%>
-<%--                return;--%>
-<%--            }--%>
 
-<%--            fetch(`/api/users/info/${userId}`)--%>
-<%--                .then(response => {--%>
-<%--                    if (!response.ok) {--%>
-<%--                        throw new Error("Failed to fetch user data");--%>
-<%--                    }--%>
-<%--                    return response.json();--%>
-<%--                })--%>
-<%--                .then(data => {--%>
-<%--                    if (data) {--%>
-<%--                        document.getElementById("welcome-message").innerText = `${data.userId} 님, 안녕하세요!`;--%>
-<%--                    } else {--%>
-<%--                        document.getElementById("welcome-message").innerText = "사용자 정보를 가져올 수 없습니다.";--%>
-<%--                    }--%>
-<%--                })--%>
-<%--                .catch(error => {--%>
-<%--                    console.error("Error fetching user data:", error);--%>
-<%--                    document.getElementById("welcome-message").innerText = "오류가 발생했습니다.";--%>
-<%--                });--%>
-<%--        });--%>
-<%--    </script>--%>
 </div>
 </body>
 </html>
