@@ -18,7 +18,7 @@ public class ExamResultMongoVO {
     private List<Answer> answers;
     private String submittedAt;
 
-    // 응시자의 답변 주의 : 답안지가 아님!!!!!!!
+    // 응시자의 답변 주의 : 답안지가 아님!!!!!!! 그럼뭐야
     @Getter
     @Setter
     @Data
