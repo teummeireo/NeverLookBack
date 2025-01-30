@@ -5,6 +5,7 @@ import com.nlb.dto.request.ExamResultReqDTO;
 import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
 import java.util.List;
@@ -25,9 +26,17 @@ public interface ExamResultService {
 
   List<AnswerVO> submitExam(int resultId, ExamResultReqDTO examResultReqDTO);
 
-  ExamJoinResDTO joinExam(String examId, int examineeId, String entreeCode);
+  public ExamJoinResDTO joinExam(int examId, String examCode, int examineeId, String entreeCode);
 
   Map<String, Object> getExamResultData(int examId, int examineeId);
 
   public ExamDataResDTO getExamData(int examId, int examineeId);
+
+  public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
+      int examId);
+
+  public ExamResultVO getResultDetail(int examineeId, int examId, int resultId);
+
+  public ExamineeInfoResDTO getExamineeInfo(int examId, int examineeId);
+
 }
