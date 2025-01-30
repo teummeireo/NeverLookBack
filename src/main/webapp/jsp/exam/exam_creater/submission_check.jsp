@@ -71,22 +71,35 @@
     });
 
     function fetchResults() {
+        let sortBy = $("#sortBy").val(); // 선택된 정렬 기준 가져오기
+
         $.ajax({
-            url: "/api/exams/results", // examId 없이 모든 시험 결과 가져오기
+            url: "/api/exams/results",
             method: "GET",
             dataType: "json",
             success: function (response) {
-                var results = response.data; // CMResDTO
-                var tableBody = $("#resultTableBody");
+                let results = response.data; // CMResDTO
+                let tableBody = $("#resultTableBody");
                 tableBody.empty(); // 기존 데이터 삭제
 
                 if (results.length === 0) {
-                    tableBody.append("<tr><td colspan='4'>데이터가 없습니다.</td></tr>");
+                    tableBody.append("<tr><td colspan='5'>데이터가 없습니다.</td></tr>");
                 } else {
+                    // 선택된 정렬 기준에 따라 배열 정렬
+                    if (sortBy === "score") {
+                        results.sort((a, b) => b.score - a.score); // 점수 내림차순
+                    } else if (sortBy === "submittedAt") {
+                        results.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // 날짜 내림차순
+                    } else if (sortBy === "examineeId") {
+                        results.sort((a, b) => a.examineeId.localeCompare(b.examineeId, "ko")); // 이름 오름차순
+                    }
+
+                    // 테이블에 데이터 추가
                     $.each(results, function (index, result) {
-                        var reviewStatus = result.isReviewed ? "검토 완료" : "이의제기";
-                        var reviewClass = result.isReviewed ? "reviewed" : "appealed";
-                        var row = "<tr>" +
+                        let reviewStatus = result.isReviewed ? "검토 완료" : "이의제기";
+                        let reviewClass = result.isReviewed ? "reviewed" : "appealed";
+
+                        let row = "<tr>" +
                             "<td>" + result.examId + "</td>" +
                             "<td>" + result.examineeId + "</td>" +
                             "<td>" + result.score + "</td>" +
@@ -102,7 +115,6 @@
             }
         });
     }
-
 </script>
 </body>
 </html>
