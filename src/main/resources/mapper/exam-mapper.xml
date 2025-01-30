@@ -53,14 +53,18 @@
             #{examTime}, COALESCE(#{activationStatus}, 'not_started'))
   </insert>
 
-  <update id="updateExamById" parameterType="ExamVO">
+  <!-- 업데이트 된 값들만 업데이트 -->
+  <update id="updateExam" parameterType="ExamVO">
     UPDATE exam
-    SET title       = #{title},
-        category    = #{category},
-        entree_code = #{entreeCode},
-        exam_time   = #{examTime},
-        started_at  = #{startedAt},
-        finished_at = #{finishedAt}
+    <set>
+      <if test="title != null">title = #{title},</if>
+      <if test="examCode != null">exam_code = #{examCode},</if>
+      <if test="category != null">category = #{category},</if>
+      <if test="entreeCode != null">entree_code = #{entreeCode},</if>
+      <if test="examTime != null">exam_time = #{examTime},</if>
+      <if test="startedAt != null">started_at = #{startedAt},</if>
+      <if test="finishedAt != null">finished_at = #{finishedAt},</if>
+    </set>
     WHERE exam_id = #{examId}
   </update>
 
