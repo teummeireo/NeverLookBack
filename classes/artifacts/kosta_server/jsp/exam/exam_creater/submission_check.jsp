@@ -21,23 +21,13 @@
                     <h1>응시자 결과 확인</h1>
                 </div>
                 <div class="dropdown-container">
-                    <div class="dropdown">
-                        <select id="examId" class="category-select" onchange="fetchResults()">
-                            <option value="" disabled selected hidden>시험 선택</option>
-                            <option value="1">시험 1</option>
-                            <option value="2">시험 2</option>
-                            <option value="3">시험 3</option>
-                        </select>
-                        <span class="arrow">▼</span>
-                    </div>
-
                     <!-- 정렬 기준 선택 -->
                     <div class="dropdown">
                         <select id="sortBy" class="sort-select" onchange="fetchResults()">
                             <option value="" disabled selected hidden>정렬</option>
                             <option value="score">점수순</option>
                             <option value="submittedAt">응시 일시순</option>
-                            <option value="examineeName">응시자 이름순</option>
+                            <option value="examineeId">응시자 이름순</option>
                         </select>
                         <span class="arrow">▼</span>
                     </div>
@@ -76,10 +66,13 @@
     }
 </script>
 <script>
+    $(document).ready(function () {
+        fetchResults(); // 페이지가 로드되자마자 데이터 가져오기
+    });
+
     function fetchResults() {
-        var examId = $("#examId").val(); //시험 ID 가져옴스
         $.ajax({
-            url: "/api/exams/results/" + examId,
+            url: "/api/exams/results", // examId 없이 모든 시험 결과 가져오기
             method: "GET",
             dataType: "json",
             success: function (response) {
@@ -88,20 +81,20 @@
                 tableBody.empty(); // 기존 데이터 삭제
 
                 if (results.length === 0) {
-                    tableBody.append("<tr><td colspan='5'>데이터가 없습니다.</td></tr>");
+                    tableBody.append("<tr><td colspan='4'>데이터가 없습니다.</td></tr>");
                 } else {
-                        $.each(results, function (index, result) {
-                            var reviewStatus = result.isReviewed ? "검토 완료" : "이의제기";
-                            var reviewClass = result.isReviewed ? "reviewed" : "appealed";
-                            var row = "<tr>" +
-                                "<td>" + result.examId + "</td>" +
-                                "<td>" + result.examineeId + "</td>" +
-                                "<td>" + result.score + "</td>" +
-                                "<td>" + result.submittedAt + "</td>" +
-                                "<td class='" + reviewClass + "'>" + reviewStatus + "</td>" +
-                                "</tr>";
-                            tableBody.append(row);
-                        });
+                    $.each(results, function (index, result) {
+                        var reviewStatus = result.isReviewed ? "검토 완료" : "이의제기";
+                        var reviewClass = result.isReviewed ? "reviewed" : "appealed";
+                        var row = "<tr>" +
+                            "<td>" + result.examId + "</td>" +
+                            "<td>" + result.examineeId + "</td>" +
+                            "<td>" + result.score + "</td>" +
+                            "<td>" + result.submittedAt + "</td>" +
+                            "<td class='" + reviewClass + "'>" + reviewStatus + "</td>" +
+                            "</tr>";
+                        tableBody.append(row);
+                    });
                 }
             },
             error: function (error) {
@@ -109,6 +102,7 @@
             }
         });
     }
+
 </script>
 </body>
 </html>

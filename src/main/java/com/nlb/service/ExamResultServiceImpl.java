@@ -36,5 +36,8 @@ public class ExamResultServiceImpl implements ExamResultService {
         return examResultMapper.selectExamResultAndExamByResultId(resultId);
     }
 
-
+    @Override
+    public List<ExamResultVO> getAllExamResults() {
+        return examResultMapper.selectAllExamResults();
+    }
 }

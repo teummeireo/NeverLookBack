@@ -27,4 +27,5 @@ public interface ExamResultMapper {
                                                     @Param("isReviewed") Boolean isReviewed);
 
     ExamResultCardDTO selectExamResultAndExamByResultId(@Param("resultId") int resultId);
+    List<ExamResultVO> selectAllExamResults();
 }

@@ -37,6 +37,12 @@ public class ExamResultRestController {
         return new ResponseEntity<>(CMResDTO.successDataRes(examResultVOList), HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<CMResDTO<List<ExamResultVO>>> getAllResults() {
+        List<ExamResultVO> results = examResultService.getAllExamResults(); // 모든 데이터 가져오기
+        return ResponseEntity.ok(new CMResDTO<>(1, "전체 시험 결과 조회 성공", results));
+    }
+
     // 시험 결과 검토 상태 변경
     @RequestMapping(value = "/{resultId}/status", method = RequestMethod.PUT)
     public ResponseEntity<CMResDTO<String>> setExamResultStatus(@PathVariable("resultId") int resultId,

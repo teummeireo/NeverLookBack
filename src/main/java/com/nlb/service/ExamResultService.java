@@ -13,4 +13,6 @@ public interface ExamResultService {
     List<ExamResultVO> getExamResultListOfUser(int userId, String sortBy, String order, Boolean isReviewed);
 
     ExamResultCardDTO getExamResultAndExam(int resultId);
+
+    List<ExamResultVO> getAllExamResults();
 }
