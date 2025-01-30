@@ -132,12 +132,17 @@ public class ExamResultRestController {
   // 제출 답안 상세 조회
   @GetMapping("/{examId}/answers")
   public ResponseEntity<CMResDTO<Map<String, Object>>> getExamData(
-      @PathVariable("examId") int examId) {
+      @PathVariable("examId") int examId,
+      @RequestParam(value = "examineeId", required = false) Integer examineeId,
+      HttpSession session
+      ) {
+    // 파라미터 없이 들어오면 세션으로 내 조회  vs  파라미터 있으면 해당 아이디 조회
+    int ExamineeId = (examineeId != null) ? examineeId : (Integer) session.getAttribute("userId");
 
     //todo 로그인 개발되면 세션으로 변경
-    int examineeId = 1;
+    //ExamineeId = 1;
 
-    Map<String, Object> resultData = examResultService.getExamResultData(examId, examineeId);
+    Map<String, Object> resultData = examResultService.getExamResultData(examId, ExamineeId);
     return new ResponseEntity<>(CMResDTO.successDataRes(resultData), HttpStatus.OK);
   }
 

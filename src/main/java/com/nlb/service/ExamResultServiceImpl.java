@@ -261,7 +261,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 시험 문제 가져오기
     List<QuestionVO> questions = examService.getExamQuestions(examId);
 
-    // 응시자가 제출한 데이터 가져오기
+    // 응시자가 제출한 (몽고)데이터 가져오기
     Map<String, Object> examResultData = getExamResultData(examId, examineeId);
 
     int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
