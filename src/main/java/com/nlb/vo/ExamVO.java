@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class ExamVO {
 
   private int examId;
-  private int createrId;      //todo er? or?
+  private int createrId;
   private String examCode;
   private String title;
   private String category;

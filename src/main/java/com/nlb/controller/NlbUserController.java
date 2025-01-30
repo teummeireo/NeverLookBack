@@ -13,22 +13,30 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/api/users")
 public class NlbUserController {
-
-  @PostMapping("/login")
-  public ResponseEntity<String> login(HttpSession session) {
-    session.setAttribute("userId", 1); // 세션에 userId 저장
-    return new ResponseEntity<>("Login successful", HttpStatus.OK);
-  }
 
     @Autowired
     private NlbUserService nlbUserService;
 
-    @GetMapping("/my_page")
-    public String getUserInfo(Model model) {
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String main(HttpSession session) {
+
+        //로그인 구현 안되서 하드코딩 합니다. todo: 하드코딩 지우기
+        session.setAttribute("SESS_USERID"   , 1);
+        session.setAttribute("SESS_NICKNAME" , "UserOne");
+
+        return "/jsp/main";
+
+    }
+
+
+
+    @RequestMapping(value = "/mypage", method = RequestMethod.GET)
+    public String mypage(Model model) {
         int userId = 1; // 임시 user_id
 
         // 서비스에서 사용자 정보 가져오기
@@ -38,5 +46,13 @@ public class NlbUserController {
         model.addAttribute("user", user);
 
         return "jsp/my_page";
+    }
+
+    @RequestMapping(value = "/edit-info", method = RequestMethod.GET)
+    public String editInfo(HttpSession session) {
+
+
+        return "/jsp/page_edit";
+
     }
 }
