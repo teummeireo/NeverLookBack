@@ -23,6 +23,7 @@ import com.nlb.vo.ResultDetailVO;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -332,11 +333,37 @@ public class ExamResultServiceImpl implements ExamResultService {
   public ExamResultVO getResultDetail(int examineeId, int examId, int resultId) {
 
     ExamResultVO examResult = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId);
-
+    System.out.println("examResult = " + examResultMapper);
     List<ResultDetailVO> resultDetails = examResultMapper.selectResultDetailByResultId(resultId);
+    System.out.println("deatils = " + resultDetails);
     examResult.setResultDetails(resultDetails);
 
     return examResult;
+  }
+
+
+  @Override
+  public List<Map<String , Object>> getQuestionsState(int examId, int examineeId){
+
+    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId).getResultId();
+    Query query = Query.query(Criteria.where("resultId").is(resultId));
+    ExamResultMongoVO examResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
+
+    if (examResult == null) {
+      return Collections.emptyList(); // todo 없는 경우 빈 리스트 반환  or 빈 결과 예외처리
+    }
+
+    // 필드 추출하여 리스트로 반환
+    return examResult.getAnswers().stream()
+        .map(answer -> {
+          Map<String, Object> result = new HashMap<>();
+          result.put("questionId", answer.getQuestionId());
+          result.put("isCorrect", Boolean.TRUE.equals(answer.isCorrect()));
+          result.put("isObjection", Boolean.TRUE.equals(answer.isObjection()));
+          return result;
+        })
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -410,6 +437,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     return true;
   }
+
+
 
 
 }

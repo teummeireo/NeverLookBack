@@ -102,7 +102,7 @@
 
   <select id="selectResultDetailByResultId" parameterType="int" resultType="ResultDetailVO">
     SELECT *
-    FROM exam_detail
+    FROM result_detail
     WHERE result_id = #{resultId}
   </select>
 

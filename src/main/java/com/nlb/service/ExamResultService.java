@@ -43,4 +43,5 @@ public interface ExamResultService {
 
   public boolean submitObjectionReply(int examId, int examineeId, int questionId, String objectionReply);
 
+  public List<Map<String , Object>> getQuestionsState(int examId, int examineeId);
   }

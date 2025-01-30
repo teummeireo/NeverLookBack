@@ -129,7 +129,7 @@ public class ExamResultRestController {
   }
 
 
-  // 답안 상세 조회
+  // 제출 답안 상세 조회
   @GetMapping("/{examId}/answers")
   public ResponseEntity<CMResDTO<Map<String, Object>>> getExamData(
       @PathVariable("examId") int examId) {
@@ -156,8 +156,8 @@ public class ExamResultRestController {
   }
 
 
-  //제출한 답안 상세 조회
-  @GetMapping("/{examId}/{resultId}/{detailId}")
+  //
+  @GetMapping("/{examId}/{resultId}/details")
   public ResponseEntity<CMResDTO<ExamResultVO>> getResultDetail(
       @PathVariable("examId") int examId,
       @PathVariable("resultId") int resultId) {
@@ -170,6 +170,20 @@ public class ExamResultRestController {
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examResultVO), HttpStatus.OK);
   }
+
+
+  // 각 문제에 대한 채점/이의제기 상태 표기
+  @GetMapping("/details")
+  public ResponseEntity<CMResDTO<List<Map<String, Object>>>> getResultDetails(
+      @RequestParam("examId") int examId,
+      @RequestParam("examineeId") int examineeId){
+
+    List<Map<String, Object>> questionsState = examResultService.getQuestionsState(examId, examineeId);
+
+    return ResponseEntity.ok(CMResDTO.successDataRes(questionsState));
+  }
+
+
 
 
   //응시자 정보 조회
