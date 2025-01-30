@@ -280,7 +280,10 @@ public class ExamResultServiceImpl implements ExamResultService {
     );
   }
 
+
   // 시험 채점 메서드
+  @Override
+  @Transactional
   public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
       int examId) {
 
@@ -343,9 +346,10 @@ public class ExamResultServiceImpl implements ExamResultService {
 
 
   @Override
-  public List<Map<String , Object>> getQuestionsState(int examId, int examineeId){
+  public List<Map<String, Object>> getQuestionsState(int examId, int examineeId) {
 
-    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId).getResultId();
+    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
     Query query = Query.query(Criteria.where("resultId").is(resultId));
     ExamResultMongoVO examResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
@@ -366,11 +370,13 @@ public class ExamResultServiceImpl implements ExamResultService {
         .collect(Collectors.toList());
   }
 
+
   @Override
   public ExamineeInfoResDTO getExamineeInfo(int examId, int examineeId) {
     return examResultMapper.selectExamineeInfo(examId, examineeId);
 
   }
+
 
   @Override
   @Transactional
@@ -439,6 +445,43 @@ public class ExamResultServiceImpl implements ExamResultService {
   }
 
 
+  @Override
+  @Transactional
+  public boolean updateQuestionScore(int resultId, int questionId, boolean isCorrected){
+
+    //Answers 꺼내기 위한 ExamResult
+    Query query = Query.query(Criteria.where("resultId").is(resultId));
+    ExamResultMongoVO examResultVO = mongoTemplate.findOne(query, ExamResultMongoVO.class, "examResults");
+    //Questions 꺼내기 위한 Exam
+    ExamVO examVO = examMapper.selectExamByResultId(resultId);
+    Query query1 = Query.query(Criteria.where("examId").is(examVO.getExamId()));
+    ExamMongoVO examMongoVO = mongoTemplate.findOne(query1, ExamMongoVO.class, "exams");
+
+    List<AnswerVO> answers = examResultVO.getAnswers();
+    List<QuestionVO> questions = examMongoVO.getQuestions(); //todo 없는 문제, 없는 결과, 같은 corrected 예외처리
+
+    int score=0;
+    for (int i = 0; i < answers.size(); i++) {
+      if(answers.get(i).getQuestionId() == questionId){
+        score = questions.get(i).getPointsAllocation();
+        answers.get(i).setPointsEarned(score); // 획득점수 수정
+        answers.get(i).setCorrect(isCorrected);// 정답여부 수정
+      }
+    }
+
+    //ExamResult  RDB 테이블에 Score 계산 다시 적용
+    if (isCorrected){ examResultMapper.updateScoreByResultId(resultId, score); }
+    else{ examResultMapper.updateScoreByResultId(resultId, score*(-1));  }
+
+    //몽고에도 변화 적용
+    Query updateQuery = Query.query(Criteria.where("resultId").is(resultId).and("answers.questionId").is(questionId));
+    Update update = new Update()
+        .set("answers.$.pointsEarned", score)
+        .set("answers.$.isCorrect", isCorrected);
+    mongoTemplate.updateFirst(updateQuery, update, "examResults");
+
+   return true;
+  }
 
 
 }

@@ -236,5 +236,22 @@ public class ExamResultRestController {
     }
   }
 
+
+  //점수 수정 (객관식)
+  @PutMapping("/updateObj")
+  public ResponseEntity<CMResDTO<String>> updateQuestionScore(
+      @RequestParam int resultId,
+      @RequestParam int questionId,
+      @RequestParam boolean isCorrected)
+  {
+
+    boolean success = examResultService.updateQuestionScore(resultId, questionId, isCorrected);
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("문제 수정 성공"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+  }
 }
 

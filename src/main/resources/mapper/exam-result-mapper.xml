@@ -126,5 +126,17 @@
     WHERE er.exam_id = #{examId} AND er.examinee_id = #{examineeId}
   </select>
 
+  <select id="selectExamResultByResultId" parameterType="int" resultType="ExamResultVO">
+    SELECT *
+    FROM exam_result
+    where result_id =#{resultId}
+  </select>
+
+  <update id="updateScoreByResultId" parameterType="map">
+    UPDATE exam_result
+    SET score = score + #{score}
+    where result_id=#{resultId}
+  </update>
+
 
 </mapper>

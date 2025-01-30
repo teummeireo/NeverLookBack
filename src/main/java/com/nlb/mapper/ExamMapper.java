@@ -36,4 +36,6 @@ public interface ExamMapper {
   ExamVO selectExamByCodeAndUser(@Param("examCode") String examCode,
       @Param("examineeId") int examineeId);
 
+  ExamVO selectExamByResultId(@Param("resultId") int resultId);
+
 }

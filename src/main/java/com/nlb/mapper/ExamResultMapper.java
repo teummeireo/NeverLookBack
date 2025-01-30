@@ -8,6 +8,7 @@ import com.nlb.vo.ResultDetailVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 @Mapper
@@ -43,5 +44,9 @@ public interface ExamResultMapper {
   void insertResultDetail(@Param("details") List<ResultDetailVO> details);
 
   ExamineeInfoResDTO selectExamineeInfo(@Param("examId") int examId, @Param("examineeId") int examineeId);
+
+  ExamResultVO selectExamResultByResultId(@Param("resultId") int resultId);
+
+  void updateScoreByResultId(@Param("resultId") int resultId, @Param("score") int score);
 
   }
