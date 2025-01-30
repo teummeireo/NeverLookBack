@@ -16,22 +16,22 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ExamResultMapper {
 
-  int deleteExamResultByExamId(@Param("examId") int examId);
+    int deleteExamResultByExamId(@Param("examId") int examId);
+    List<ExamResultVO> selectExamResultList(@Param("examId") int examId,
+                                            @Param("sortBy") String sortBy,
+                                            @Param("order") String order,
+                                            @Param("isReviewed") Boolean isReviewed);
 
-  List<ExamResultVO> selectExamResultList(@Param("examId") int examId,
-      @Param("sortBy") String sortBy,
-      @Param("order") String order,
-      @Param("isReviewed") Boolean isReviewed);
+    int updateExamResultIsReviewed(@Param("resultId") int resultId,
+                                   @Param("isReviewed") Boolean isReviewed);
 
-  int updateExamResultIsReviewed(@Param("resultId") int resultId,
-      @Param("isReviewed") Boolean isReviewed);
+    List<ExamResultVO> selectExamResultListByUserId(@Param("userId") int userId,
+                                                    @Param("sortBy") String sortBy,
+                                                    @Param("order") String order,
+                                                    @Param("isReviewed") Boolean isReviewed);
 
-  List<ExamResultVO> selectExamResultListByUserId(@Param("userId") int userId,
-      @Param("sortBy") String sortBy,
-      @Param("order") String order,
-      @Param("isReviewed") Boolean isReviewed);
-
-  ExamResultCardDTO selectExamResultAndExamByResultId(@Param("resultId") int resultId);
+    ExamResultCardDTO selectExamResultAndExamByResultId(@Param("resultId") int resultId);
+    List<ExamResultVO> selectAllExamResults();
 
   int updateExamResult(ExamResultVO examResultVO);
 

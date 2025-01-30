@@ -12,6 +12,12 @@
     where exam_id = #{examId}
   </delete>
 
+    <!-- 전체 시험 결과 조회 -->
+    <select id="selectAllExamResults" resultType="ExamResultVO">
+        SELECT exam_id, examinee_id, score, submitted_at, is_reviewed
+        FROM exam_result
+        ORDER BY submitted_at DESC
+    </select>
 
   <!-- 시험 응시자 결과 조회 -->
   <select id="selectExamResultList" resultType="ExamResultVO">

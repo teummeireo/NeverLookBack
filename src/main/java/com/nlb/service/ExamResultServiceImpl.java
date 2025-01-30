@@ -183,6 +183,12 @@ public class ExamResultServiceImpl implements ExamResultService {
       throw new CustomAccessDeniedException("시험 입장 코드가 올바르지 않습니다.");
     }
 
+
+    @Override
+    public List<ExamResultVO> getAllExamResults() {
+        return examResultMapper.selectAllExamResults();
+    }
+
     // 재접속일 경우인 ResultId가 존재하는지 확인
     ExamResultVO existingResult = examResultMapper.selectExamResultByExamIdandUser(examId,
         examineeId);

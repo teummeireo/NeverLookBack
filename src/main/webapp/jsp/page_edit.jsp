@@ -30,16 +30,16 @@
                 <label for="new-nickname">새 닉네임</label>
                 <input type="text" id="new-nickname" placeholder="새 닉네임">
             </div>
-            <button type="button" class="btn" onclick="handleNicknameChange()">변경하기</button>
+            <button type="button" class="btn" id="update-nickname-btn">변경하기</button>
         </form>
     </div>
 </div>
 <script>
     function goHome() {
-        window.location.href = "main.jsp";
+        window.location.href = "/";
     }
     function logout() {
-        window.location.href = "main.jsp"; //이부분 세션없이
+        window.location.href = "/"; // todo : 이부분 세션없이
     }
 </script>
 <script>
@@ -58,7 +58,7 @@
                     <label for="new-nickname">새 닉네임</label>
                     <input type="text" id="new-nickname" placeholder="새 닉네임">
                 </div>
-                <button class="btn">변경하기</button>
+                <button type="button" class="btn" id="update-nickname-btn">변경하기</button>
             </form>
         `;
     }
@@ -82,7 +82,7 @@
                 <label for="confirm-password">비밀번호 확인</label>
                 <input type="password" id="confirm-password" placeholder="비밀번호 확인">
             </div>
-                <button type="button" class="btn" onclick="handleNicknameChange()">변경하기</button>
+                <button type="button" id="update-password-btn" class="btn"">변경하기</button>
         </form>
         <p style="font-size: 14px; color: #777; margin-top: 20px;">
             <span style="color: #b388ff; font-size: 18px; font-weight: bold;">ⓘ</span> 비밀번호는 6~16자 이내로 영문(대, 소문자), 숫자, 특수문자 3가지 조합 중<br>2가지 이상을 포함해야 합니다.
@@ -99,6 +99,60 @@
         document.getElementById("new-password").value = "";
         document.getElementById("confirm-password").value = "";
     }
+</script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script>
+    $(document).ready(function() {
+        // 닉네임 변경
+        $("#content").on("click", "#update-nickname-btn", function() {
+            var userVO = {
+                userId: ${sessionScope.SESS_USERID},
+                nickname: $("#new-nickname").val()
+            };
+
+            $.ajax({
+                url: "/api/users/update",
+                method: 'PUT',
+                data: JSON.stringify(userVO),
+                contentType: "application/json; charset=UTF-8",
+                dataType: "json",
+                success: function(obj) {
+                    console.log("응답:" + obj);
+                    handleNicknameChange();
+                },
+                error: function(xhr, status, error) {
+                    console.log("에러:", status);
+                    alert(xhr.responseJSON.error);
+                }
+            });
+        });
+
+        // 비밀번호 변경
+        $("#content").on("click", "#update-password-btn", function() {
+            var userVO = {
+                userId: ${sessionScope.SESS_USERID},
+                password: $("#new-password").val()
+            };
+
+            $.ajax({
+                url: "/api/users/update",
+                method: 'PUT',
+                data: JSON.stringify(userVO),
+                contentType: "application/json; charset=UTF-8",
+                dataType: "json",
+                success: function(obj) {
+                    console.log("응답:" + obj);
+                    handlePasswordChange();
+                },
+                error: function(xhr, status, error) {
+                    console.log("에러:", status);
+                    alert(xhr.responseJSON.error);
+                }
+            });
+        });
+
+
+    });
 </script>
 </body>
 </html>
