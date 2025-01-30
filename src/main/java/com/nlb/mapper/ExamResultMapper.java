@@ -44,4 +44,4 @@ public interface ExamResultMapper {
 
   ExamineeInfoResDTO selectExamineeInfo(@Param("examId") int examId, @Param("examineeId") int examineeId);
 
-}
+  }

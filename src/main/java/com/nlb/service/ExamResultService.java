@@ -39,4 +39,6 @@ public interface ExamResultService {
 
   public ExamineeInfoResDTO getExamineeInfo(int examId, int examineeId);
 
-}
+  public boolean submitObjection(int examId, int examineeId, int questionId, String objectionComments);
+
+  }

@@ -7,6 +7,7 @@ import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
+import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -177,6 +179,24 @@ public class ExamResultRestController {
       @RequestParam int examineeId) {
     ExamineeInfoResDTO response = examResultService.getExamineeInfo(examId, examineeId);
     return ResponseEntity.ok(CMResDTO.successDataRes(response));
+  }
+
+  //이의제기 등록
+
+  @PutMapping("/{examId}/dispute/{questionId}")
+  public ResponseEntity<CMResDTO<String>> submitObjection(
+      @PathVariable int examId,
+      @PathVariable int questionId,
+      @RequestBody Map<String, String> requestBody) {
+
+    int examineeId = 1; //todo 로그인 개발되면 세션으로 변경
+    boolean success = examResultService.submitObjection(examId, examineeId, questionId, requestBody.get("comments"));
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 성공"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
   }
 }
 
