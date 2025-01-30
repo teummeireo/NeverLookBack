@@ -491,9 +491,14 @@ public class ExamResultServiceImpl implements ExamResultService {
       }
     }
 
-    //ExamResult  RDB 테이블에 Score 계산 다시 적용
-    if (isCorrected){ examResultMapper.updateScoreByResultId(resultId, score); }
-    else{ examResultMapper.updateScoreByResultId(resultId, score*(-1));  }
+    // 수정 내용 RDB 업데이트 (점수 + 정답 여부 처리)
+    Map<String, Object> params = new HashMap<>();
+    params.put("resultId", resultId);
+    params.put("questionId", questionId);
+    params.put("score", isCorrected ? score : -score);
+    params.put("isCorrect", isCorrected);
+
+    examResultMapper.updateScoreAndIsCorrect(params);
 
     //몽고에도 변화 적용
     Query updateQuery = Query.query(Criteria.where("resultId").is(resultId).and("answers.questionId").is(questionId));

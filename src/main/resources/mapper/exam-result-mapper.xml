@@ -138,5 +138,15 @@
     where result_id=#{resultId}
   </update>
 
+  <update id="updateScoreAndIsCorrect" parameterType="map">
+    UPDATE exam_result
+    SET score = score + #{score}
+    WHERE result_id = #{resultId};
+
+    UPDATE result_detail
+    SET is_correct = #{isCorrect}
+    WHERE result_id = #{resultId} AND question_id = #{questionId};
+  </update>
+
 
 </mapper>
