@@ -6,6 +6,7 @@ import com.nlb.dto.response.CMResDTO;
 import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
@@ -153,6 +154,7 @@ public class ExamResultRestController {
   }
 
 
+  //제출한 답안 상세 조회
   @GetMapping("/{examId}/{resultId}/{detailId}")
   public ResponseEntity<CMResDTO<ExamResultVO>> getResultDetail(
       @PathVariable("examId") int examId,
@@ -165,6 +167,16 @@ public class ExamResultRestController {
     ExamResultVO examResultVO = examResultService.getResultDetail(examineeId, examId, resultId);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examResultVO), HttpStatus.OK);
+  }
+
+
+  //응시자 정보 조회
+  @GetMapping("/examinee-info")
+  public ResponseEntity<CMResDTO<ExamineeInfoResDTO>> getExamineeInfo(
+      @RequestParam int examId,
+      @RequestParam int examineeId) {
+    ExamineeInfoResDTO response = examResultService.getExamineeInfo(examId, examineeId);
+    return ResponseEntity.ok(CMResDTO.successDataRes(response));
   }
 }
 

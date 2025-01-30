@@ -2,6 +2,7 @@ package com.nlb.mapper;
 
 
 import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
 import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ResultDetailVO;
 import java.util.List;
@@ -40,5 +41,7 @@ public interface ExamResultMapper {
   List<ResultDetailVO> selectResultDetailByResultId(@Param("resultId") int resultId);
 
   void insertResultDetail(@Param("details") List<ResultDetailVO> details);
+
+  ExamineeInfoResDTO selectExamineeInfo(@Param("examId") int examId, @Param("examineeId") int examineeId);
 
 }

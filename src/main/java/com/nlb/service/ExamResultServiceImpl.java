@@ -6,6 +6,7 @@ import com.nlb.dto.request.ExamResultReqDTO;
 import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
 import com.nlb.exception.BadRequestException;
 import com.nlb.exception.CustomAccessDeniedException;
 import com.nlb.exception.ErrorCode;
@@ -342,5 +343,12 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     return examResult;
   }
+
+  @Override
+  public ExamineeInfoResDTO getExamineeInfo(int examId, int examineeId) {
+    return examResultMapper.selectExamineeInfo(examId, examineeId);
+
+  }
+
 
 }

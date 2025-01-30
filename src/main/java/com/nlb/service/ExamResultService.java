@@ -5,6 +5,7 @@ import com.nlb.dto.request.ExamResultReqDTO;
 import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
 import java.util.List;
@@ -35,4 +36,7 @@ public interface ExamResultService {
       int examId);
 
   public ExamResultVO getResultDetail(int examineeId, int examId, int resultId);
+
+  public ExamineeInfoResDTO getExamineeInfo(int examId, int examineeId);
+
 }

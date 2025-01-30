@@ -114,5 +114,17 @@
     </foreach>
   </insert>
 
+  <select id="selectExamineeInfo" resultType="ExamineeInfoResDTO">
+    SELECT
+      e.exam_code AS examCode, e.title AS title, e.started_at AS startedAt,
+      e.finished_at AS finishedAt, e.exam_time AS examTime,
+      er.result_id AS resultId, er.score AS score, er.submitted_at AS submittedAt, er.is_reviewed AS isReviewed,
+      u.nickname AS nickname, u.email AS email, u.login_id AS loginId, u.user_role AS userRole, u.reg_date AS regDate
+    FROM exam_result er
+           JOIN exam e ON er.exam_id = e.exam_id
+           JOIN nlbuser u ON er.examinee_id = u.user_id
+    WHERE er.exam_id = #{examId} AND er.examinee_id = #{examineeId}
+  </select>
+
 
 </mapper>
