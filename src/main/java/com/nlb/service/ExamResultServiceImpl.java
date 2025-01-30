@@ -80,8 +80,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
-      throw new CustomAccessDeniedException("잘못된 사용자 입니다");
-    }
+      throw new CustomAccessDeniedException("잘못된 사용자 입니다");}
+    // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
             examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
         .isAfter(LocalDateTime.of(1900, 1, 1, 0, 0, 0))) {
@@ -120,8 +120,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
-      throw new CustomAccessDeniedException("잘못된 사용자 입니다");
-    }
+      throw new CustomAccessDeniedException("잘못된 사용자 입니다");}
+    // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
             examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
         .isAfter(LocalDateTime.of(1900, 1, 1, 0, 0, 0))) {
@@ -287,7 +287,7 @@ public class ExamResultServiceImpl implements ExamResultService {
   public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
       int examId) {
 
-    int TotalScore = 0;
+    int totalScore = 0;
 
     // NPE 방지: resultDetailVOList가 null이면 초기화
     if (examResultVO.getResultDetails() == null) {
@@ -296,38 +296,60 @@ public class ExamResultServiceImpl implements ExamResultService {
     List<ResultDetailVO> resultDetailVOList = examResultVO.getResultDetails();
 
     // 해당 시험에서 정답 리스트 조회
-    Query query = Query.query(
-        Criteria.where("examId").is(examId));
+    Query query = Query.query(Criteria.where("examId").is(examId));
     ExamMongoVO examMongoVO = mongoTemplate.findOne(query, ExamMongoVO.class, "exams");
 
     List<QuestionVO> questions = examMongoVO.getQuestions();
 
-    //채점하며 필드값 수정
-    for (int i = 0; i < examMongoVO.getQuestions().size(); i++) {
-      resultDetailVOList.add(new ResultDetailVO());
-      resultDetailVOList.get(i).setExamId(examId);
-      resultDetailVOList.get(i).setResultId(resultId);
-      resultDetailVOList.get(i).setQuestionId(i);
+    // 문제 ID를 키로 하는 Map생성 (기존 제출된 답변 매칭)
+    Map<Integer, AnswerVO> answerMap = answers.stream()
+        .collect(Collectors.toMap(AnswerVO::getQuestionId, a -> a));
 
-      if (answers.get(i).getAnswer().equals(questions.get(i).getCorrectAnswer())) {
-        answers.get(i).setCorrect(true);
-        answers.get(i)
-            .setPointsEarned(questions.get(i).getPointsAllocation());  // todo 주관식 답 여러개일 경우 처리
-        resultDetailVOList.get(i).setCorrect(true);
-      } else {
-        answers.get(i).setCorrect(false);
-        answers.get(i).setPointsEarned(0);  // 획득점수 추가
+    List<AnswerVO> updatedAnswers = new ArrayList<>();
+
+    // 채점 로직
+    for (QuestionVO question : questions) {
+      int questionId = question.getQuestionId();
+
+      // 제출되지 않은 문제는 자동으로 "미응답" 처리
+      AnswerVO answer = answerMap.getOrDefault(questionId, new AnswerVO());
+      answer.setQuestionId(questionId);
+
+      if (answer.getAnswer() == null) {
+        answer.setAnswer("");  // 미응답
+        answer.setPointsEarned(0);
+        answer.setCorrect(false);
+        answer.setObjection(false);
       }
-      TotalScore += answers.get(i).getPointsEarned();  //총점에 점수 추가
+
+      // 채점
+      if (answer.getAnswer().equals(question.getCorrectAnswer())) {
+        answer.setCorrect(true);
+        answer.setPointsEarned(question.getPointsAllocation());
+      }
+
+      totalScore += answer.getPointsEarned();
+      updatedAnswers.add(answer);
+
+      // result_detail에도 저장할 데이터 추가
+      ResultDetailVO resultDetail = new ResultDetailVO();
+      resultDetail.setExamId(examId);
+      resultDetail.setResultId(resultId);
+      resultDetail.setQuestionId(questionId);
+      resultDetail.setCorrect(answer.isCorrect());
+      resultDetailVOList.add(resultDetail);
     }
 
-    examResultVO.setScore(TotalScore); // RDB에 총점 입력 후 저장
+    // 총점 업데이트
+    examResultVO.setScore(totalScore);
     examResultMapper.updateExamResult(examResultVO);
+
+    // result_detail 저장
     if (!resultDetailVOList.isEmpty()) {
-      examResultMapper.insertResultDetail(resultDetailVOList); // RDB에 result_detail 저장
+      examResultMapper.insertResultDetail(resultDetailVOList);
     }
 
-    return answers;
+    return updatedAnswers; // 모든 문제(미응답 포함) 반환
   }
 
 
