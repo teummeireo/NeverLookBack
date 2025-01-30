@@ -6,7 +6,7 @@
     <li><a href="/jsp/make_exam.jsp">시험생성</a></li>
     <li><a href="/jsp/exam_apply.jsp">시험응시</a></li>
     <li><a href="/jsp/manageExam.jsp">시험관리</a></li>
-    <li><a href="/jsp/exam.jsp">응시한 시험</a></li>
+    <li><a href="/jsp/exam/my_exam.jsp">응시한 시험</a></li>
     <li><a href="/api/users/my_page">마이페이지</a></li>
     <li><a href="/jsp/logout.jsp">로그아웃</a></li>
   </ul>

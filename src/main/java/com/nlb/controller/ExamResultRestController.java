@@ -88,10 +88,23 @@ public class ExamResultRestController {
   }
 
 
+
+    @GetMapping
+    public ResponseEntity<CMResDTO<List<ExamResultVO>>> getAllResults() {
+        List<ExamResultVO> results = examResultService.getAllExamResults(); // 모든 데이터 가져오기
+        return ResponseEntity.ok(new CMResDTO<>(1, "전체 시험 결과 조회 성공", results));
+    }
+
+    // 시험 결과 검토 상태 변경
+    @RequestMapping(value = "/{resultId}/status", method = RequestMethod.PUT)
+    public ResponseEntity<CMResDTO<String>> setExamResultStatus(@PathVariable("resultId") int resultId,
+                                                          @RequestParam("isReviewed") Boolean isReviewed) {
+
   // 시험 제출
   @PostMapping("/{examId}/submit")
   public ResponseEntity<CMResDTO<List<AnswerVO>>> submitExam(
       @RequestBody ExamResultReqDTO examResultReqDTO) {
+
 
     //todo 세션으로 아이디 가져오기
     int examineeId = 1;
