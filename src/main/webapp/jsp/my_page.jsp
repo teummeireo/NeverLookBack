@@ -18,7 +18,7 @@
                 <i class="fas fa-user-circle"></i>
             </div>
             <h1 id="welcome-message">
-                ${user.nickname} 님, 안녕하세요!
+                ${sessionScope.SESS_NICKNAME} 님, 안녕하세요!
             </h1>
             <hr class="divider">
         </div>

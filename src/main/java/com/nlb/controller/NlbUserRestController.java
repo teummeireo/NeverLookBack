@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +20,12 @@ public class NlbUserRestController {
     @Autowired
     private NlbUserService nlbUserService;
 
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(HttpSession session) {
+        session.setAttribute("userId", 1); // 세션에 userId 저장
+        return new ResponseEntity<>("Login successful", HttpStatus.OK);
+    }
 
     //회원 조회
     @RequestMapping(value = "/info/{userId}", method = RequestMethod.GET)
@@ -33,6 +40,7 @@ public class NlbUserRestController {
     public ResponseEntity<CMResDTO<String>> updateUser(@RequestBody NlbUserVO uvo) {
 
         int rows = nlbUserService.updateUser(uvo);
+
 
         return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
     }
