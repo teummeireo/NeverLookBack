@@ -12,8 +12,11 @@ import com.nlb.vo.ExamMongoVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,36 +91,30 @@ public class ExamServiceImpl implements ExamService {
 
   @Override
   @Transactional
-  public boolean updateExam(int examId, ExamReqDTO examReqDTO) {
+  public boolean updateExam(int examId, ExamVO examVO) {
+    System.out.println("examvo  = " +examVO);
     // RDB 업데이트 (ExamVO)
-    ExamVO examVO = examReqDTO.getExamVO();
-    examVO.setExamId(examId);  // examId 설정
-    int rowsUpdated = examMapper.updateExamById(examVO);  // RDB에 기본 정보 업데이트
+    examVO.setExamId(examId);
+    int rowsUpdated = examMapper.updateExam(examVO);  // RDB에 기본 정보 업데이트(mapperxml 에도 null아닐떄만 set 적용)
 
     // MongoDB 업데이트 (ExamMongoVO)
-    ExamMongoVO examMongoVO = examReqDTO.getExamMongoVO();
     Query query = Query.query(Criteria.where("examId").is(examId));  // examId로 MongoDB에서 찾기
-    Update update = new Update()
-        .set("title", examVO.getTitle())
-        .set("category", examVO.getCategory())
-        .set("entreeCode", examVO.getEntreeCode())
-        .set("examTime", examVO.getExamTime())
-        .set("startedAt", examVO.getStartedAt())
-        .set("finishedAt", examVO.getFinishedAt())
-        .set("questionCount",
-            examMongoVO.getQuestions() != null ? examMongoVO.getQuestions().size() : 0)  // 문제 개수
-        .set("questions", examMongoVO.getQuestions());
-    UpdateResult mongoResult = mongoTemplate.updateFirst(query, update, ExamMongoVO.class,
-        "exams");  // MongoDB 업데이트
+    // 기존 값 유지하며 업데이트 할 데이터만 수정
+    Map<String, Object> updateFields = new HashMap<>();
+    Optional.ofNullable(examVO.getTitle()).ifPresent(value -> updateFields.put("title", value));
+    Optional.ofNullable(examVO.getExamCode()).ifPresent(value -> updateFields.put("examCode", value));
+    Optional.ofNullable(examVO.getCategory()).ifPresent(value -> updateFields.put("category", value));
+    Optional.ofNullable(examVO.getEntreeCode()).ifPresent(value -> updateFields.put("entreeCode", value));
+    Optional.ofNullable(examVO.getExamTime()).ifPresent(value -> updateFields.put("examTime", value));
+    Optional.ofNullable(examVO.getStartedAt()).ifPresent(value -> updateFields.put("startedAt", value));
+    Optional.ofNullable(examVO.getFinishedAt()).ifPresent(value -> updateFields.put("finishedAt", value));
 
-    // RDB의 question_count 업데이트
-    if (examMongoVO.getQuestions() != null) {
-      int questionCount = examMongoVO.getQuestions().size();  // MongoDB의 questions 리스트 크기
-      examMapper.updateQuestionCount(examId, questionCount);  // RDB의 question_count 업데이트
-    }
+    // 업데이트 된 값들만 수정하도록 매핑
+    Update update = new Update();
+    updateFields.forEach(update::set);
+    UpdateResult mongoResult = mongoTemplate.updateFirst(query, update, ExamMongoVO.class, "exams");
 
     return rowsUpdated > 0 && mongoResult.getMatchedCount() > 0;
-
   }
 
   @Override

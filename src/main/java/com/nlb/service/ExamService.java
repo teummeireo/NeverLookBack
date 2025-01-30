@@ -16,7 +16,7 @@ public interface ExamService {
 
   int createExam(ExamReqDTO examReqDTO);
 
-  boolean updateExam(int examId, ExamReqDTO examReqDTO);
+  boolean updateExam(int examId, ExamVO examVO);
 
   int updateQuestions(int examId, List<QuestionVO> questions);
 

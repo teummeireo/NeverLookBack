@@ -78,9 +78,9 @@ public class ExamRestController {
   @PutMapping("/init/{examId}")
   public ResponseEntity<CMResDTO<String>> updateExam(
       @PathVariable int examId,
-      @RequestBody ExamReqDTO examReqDTO) {
+      @RequestBody ExamVO examVO) {
 
-    boolean success = examService.updateExam(examId, examReqDTO);
+    boolean success = examService.updateExam(examId, examVO);
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("시험 수정 성공, " + examId), HttpStatus.OK);
     } else {

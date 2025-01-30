@@ -23,6 +23,7 @@ import com.nlb.vo.ResultDetailVO;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,7 +187,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     ExamResultVO existingResult = examResultMapper.selectExamResultByExamIdandUser(examId,
         examineeId);
     if (existingResult != null) {
-      // 이미 참여한 경우 기존 resultId 반환
+      // 이미 참여한 경우 기존 resultId 반환 (새 result 생성 안함)
       System.out.println("기존 examResult 존재함 : " + existingResult.getResultId());
       return new ExamJoinResDTO(
           examId,
@@ -260,7 +261,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 시험 문제 가져오기
     List<QuestionVO> questions = examService.getExamQuestions(examId);
 
-    // 응시자가 제출한 데이터 가져오기
+    // 응시자가 제출한 (몽고)데이터 가져오기
     Map<String, Object> examResultData = getExamResultData(examId, examineeId);
 
     int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
@@ -283,9 +284,6 @@ public class ExamResultServiceImpl implements ExamResultService {
   public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
       int examId) {
 
-    System.out.println("answers = " + answers);
-    System.out.println("examResultVO = " + examResultVO);
-    System.out.println("examid = " + examId);
     int TotalScore = 0;
 
     // NPE 방지: resultDetailVOList가 null이면 초기화
@@ -320,12 +318,10 @@ public class ExamResultServiceImpl implements ExamResultService {
       TotalScore += answers.get(i).getPointsEarned();  //총점에 점수 추가
     }
 
-    examResultVO.setScore(TotalScore); // 총점 입력
-    System.out.println("점수 입력 됐냐..." + examResultVO.getScore());
+    examResultVO.setScore(TotalScore); // RDB에 총점 입력 후 저장
     examResultMapper.updateExamResult(examResultVO);
-    // ✅ resultDetailVOList가 비어 있지 않으면 DB에 저장
     if (!resultDetailVOList.isEmpty()) {
-      examResultMapper.insertResultDetail(resultDetailVOList);
+      examResultMapper.insertResultDetail(resultDetailVOList); // RDB에 result_detail 저장
     }
 
     return answers;
@@ -337,11 +333,37 @@ public class ExamResultServiceImpl implements ExamResultService {
   public ExamResultVO getResultDetail(int examineeId, int examId, int resultId) {
 
     ExamResultVO examResult = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId);
-
+    System.out.println("examResult = " + examResultMapper);
     List<ResultDetailVO> resultDetails = examResultMapper.selectResultDetailByResultId(resultId);
+    System.out.println("deatils = " + resultDetails);
     examResult.setResultDetails(resultDetails);
 
     return examResult;
+  }
+
+
+  @Override
+  public List<Map<String , Object>> getQuestionsState(int examId, int examineeId){
+
+    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId).getResultId();
+    Query query = Query.query(Criteria.where("resultId").is(resultId));
+    ExamResultMongoVO examResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
+
+    if (examResult == null) {
+      return Collections.emptyList(); // todo 없는 경우 빈 리스트 반환  or 빈 결과 예외처리
+    }
+
+    // 필드 추출하여 리스트로 반환
+    return examResult.getAnswers().stream()
+        .map(answer -> {
+          Map<String, Object> result = new HashMap<>();
+          result.put("questionId", answer.getQuestionId());
+          result.put("isCorrect", Boolean.TRUE.equals(answer.isCorrect()));
+          result.put("isObjection", Boolean.TRUE.equals(answer.isObjection()));
+          return result;
+        })
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -349,6 +371,74 @@ public class ExamResultServiceImpl implements ExamResultService {
     return examResultMapper.selectExamineeInfo(examId, examineeId);
 
   }
+
+  @Override
+  @Transactional
+  public boolean submitObjection(int examId, int examineeId, int questionId, String Comments) {
+    // RDB에서 resultId 가져오기
+    Integer resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
+    if (resultId == null) {
+      return false; // 예외처리
+    }
+    // MongoDB에서 resultId로 검색하여 기존 데이터 가져오기
+    Query query = Query.query(
+        Criteria.where("resultId").is(resultId)
+            .and("answers").elemMatch(Criteria.where("questionId").is(questionId))
+    );
+    // questionId가 존재하는지 먼저 확인 (전체 answers 배열 조회)
+    Query checkQuery = Query.query(
+        Criteria.where("resultId").is(resultId)
+            .and("answers.questionId").is(questionId)
+    );
+
+    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(checkQuery,
+        ExamResultMongoVO.class, "examResults");
+
+    if (existingExamResult == null) {
+      System.out.println("존재하지 않는 questionId");
+      throw new IllegalArgumentException("해당 questionId가 존재하지 않습니다.");
+    }
+
+    Update update = new Update()
+        .set("answers.$.isObjection", true)
+        .set("answers.$.objectionComments", Comments);
+    mongoTemplate.updateFirst(query, update, "examResults");
+    return true;
+  }
+
+
+  @Override
+  @Transactional
+  public boolean submitObjectionReply(int examId, int examineeId, int questionId,
+      String objectionReply) {
+    // RDB에서 resultId 가져오기
+    Integer resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
+    if (resultId == null) {
+      return false; // 예외 처리 (시험 응시 기록 없음)
+    }
+
+    // MongoDB에서 해당 문제(`questionId`)에 대한 이의제기 여부 확인
+    Query query = Query.query(
+        Criteria.where("resultId").is(resultId)
+            .and("answers.questionId").is(questionId)
+            .and("answers.isObjection").is(true));  // 이의제기된 문제만 업데이트 가능
+
+    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
+    if (existingExamResult == null) {
+      throw new IllegalArgumentException("해당 questionId에 대한 이의제기 정보가 존재하지 않습니다.");
+    }
+
+    // 해당 문제가 존재하면 `objectionReply` 추가
+    Update update = new Update().set("answers.$.objectionReply", objectionReply);
+    UpdateResult updateResult = mongoTemplate.updateFirst(query, update, "examResults");
+
+    return true;
+  }
+
+
 
 
 }

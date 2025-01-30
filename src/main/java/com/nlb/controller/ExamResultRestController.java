@@ -7,6 +7,7 @@ import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
+import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -127,15 +129,20 @@ public class ExamResultRestController {
   }
 
 
-  // 답안 상세 조회
+  // 제출 답안 상세 조회
   @GetMapping("/{examId}/answers")
   public ResponseEntity<CMResDTO<Map<String, Object>>> getExamData(
-      @PathVariable("examId") int examId) {
+      @PathVariable("examId") int examId,
+      @RequestParam(value = "examineeId", required = false) Integer examineeId,
+      HttpSession session
+      ) {
+    // 파라미터 없이 들어오면 세션으로 내 조회  vs  파라미터 있으면 해당 아이디 조회
+    int ExamineeId = (examineeId != null) ? examineeId : (Integer) session.getAttribute("userId");
 
     //todo 로그인 개발되면 세션으로 변경
-    int examineeId = 1;
+    //ExamineeId = 1;
 
-    Map<String, Object> resultData = examResultService.getExamResultData(examId, examineeId);
+    Map<String, Object> resultData = examResultService.getExamResultData(examId, ExamineeId);
     return new ResponseEntity<>(CMResDTO.successDataRes(resultData), HttpStatus.OK);
   }
 
@@ -154,8 +161,8 @@ public class ExamResultRestController {
   }
 
 
-  //제출한 답안 상세 조회
-  @GetMapping("/{examId}/{resultId}/{detailId}")
+  //
+  @GetMapping("/{examId}/{resultId}/details")
   public ResponseEntity<CMResDTO<ExamResultVO>> getResultDetail(
       @PathVariable("examId") int examId,
       @PathVariable("resultId") int resultId) {
@@ -170,6 +177,20 @@ public class ExamResultRestController {
   }
 
 
+  // 각 문제에 대한 채점/이의제기 상태 표기
+  @GetMapping("/details")
+  public ResponseEntity<CMResDTO<List<Map<String, Object>>>> getResultDetails(
+      @RequestParam("examId") int examId,
+      @RequestParam("examineeId") int examineeId){
+
+    List<Map<String, Object>> questionsState = examResultService.getQuestionsState(examId, examineeId);
+
+    return ResponseEntity.ok(CMResDTO.successDataRes(questionsState));
+  }
+
+
+
+
   //응시자 정보 조회
   @GetMapping("/examinee-info")
   public ResponseEntity<CMResDTO<ExamineeInfoResDTO>> getExamineeInfo(
@@ -178,5 +199,42 @@ public class ExamResultRestController {
     ExamineeInfoResDTO response = examResultService.getExamineeInfo(examId, examineeId);
     return ResponseEntity.ok(CMResDTO.successDataRes(response));
   }
+
+  //이의제기 등록
+  @PutMapping("/{examId}/dispute/{questionId}")
+  public ResponseEntity<CMResDTO<String>> submitObjection(
+      @PathVariable int examId,
+      @PathVariable int questionId,
+      @RequestBody Map<String, String> requestBody) {
+
+    int examineeId = 1; //todo 로그인 개발되면 세션으로 변경
+    boolean success = examResultService.submitObjection(examId, examineeId, questionId,
+        requestBody.get("objection"));
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 성공"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  //이의제기 답변 등록
+  @PutMapping("/{examId}/disputeReply/{questionId}")
+  public ResponseEntity<CMResDTO<String>> submitObjectionReply(
+      @PathVariable int examId,
+      @PathVariable int questionId,
+      @RequestBody Map<String, String> requestBody) {  // JSON에서 reply 추출
+
+    int examineeId = 1; // TODO: 로그인 개발되면 세션에서 가져오기
+    boolean success = examResultService.submitObjectionReply(examId, examineeId, questionId,
+        requestBody.get("objectionReply"));
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 답변 등록 성공"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }
 

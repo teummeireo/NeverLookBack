@@ -23,7 +23,7 @@ public interface ExamMapper {
 
   int insertExam(ExamVO examVO);
 
-  int updateExamById(ExamVO examVO);
+  int updateExam(ExamVO examVO);
 
   int updateQuestionCount(@Param("examId") int examId, @Param("questionCount") int questionCount);
 
