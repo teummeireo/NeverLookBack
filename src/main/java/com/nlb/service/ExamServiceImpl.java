@@ -143,7 +143,7 @@ public class ExamServiceImpl implements ExamService {
     int questionCount = Questions.size();
     examMapper.updateQuestionCount(examId, questionCount);
 
-    return (int) result.getMatchedCount();
+    return questionCount;
   }
 
   //고유 _id 가 없어서 examId를 찾을때 query 객체로 찾아야하는 용도 메서드
