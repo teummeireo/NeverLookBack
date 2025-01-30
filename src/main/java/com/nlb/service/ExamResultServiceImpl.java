@@ -349,7 +349,8 @@ public class ExamResultServiceImpl implements ExamResultService {
   @Transactional
   public boolean submitObjection(int examId, int examineeId, int questionId, String Comments) {
     // RDB에서 resultId 가져오기
-    Integer resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId).getResultId();
+    Integer resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
     if (resultId == null) {
       return false; // 예외처리
     }
@@ -364,7 +365,8 @@ public class ExamResultServiceImpl implements ExamResultService {
             .and("answers.questionId").is(questionId)
     );
 
-    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(checkQuery, ExamResultMongoVO.class, "examResults");
+    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(checkQuery,
+        ExamResultMongoVO.class, "examResults");
 
     if (existingExamResult == null) {
       System.out.println("존재하지 않는 questionId");
@@ -374,7 +376,38 @@ public class ExamResultServiceImpl implements ExamResultService {
     Update update = new Update()
         .set("answers.$.isObjection", true)
         .set("answers.$.objectionComments", Comments);
+    mongoTemplate.updateFirst(query, update, "examResults");
+    return true;
+  }
+
+
+  @Override
+  @Transactional
+  public boolean submitObjectionReply(int examId, int examineeId, int questionId,
+      String objectionReply) {
+    // RDB에서 resultId 가져오기
+    Integer resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
+    if (resultId == null) {
+      return false; // 예외 처리 (시험 응시 기록 없음)
+    }
+
+    // MongoDB에서 해당 문제(`questionId`)에 대한 이의제기 여부 확인
+    Query query = Query.query(
+        Criteria.where("resultId").is(resultId)
+            .and("answers.questionId").is(questionId)
+            .and("answers.isObjection").is(true));  // 이의제기된 문제만 업데이트 가능
+
+    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
+    if (existingExamResult == null) {
+      throw new IllegalArgumentException("해당 questionId에 대한 이의제기 정보가 존재하지 않습니다.");
+    }
+
+    // 해당 문제가 존재하면 `objectionReply` 추가
+    Update update = new Update().set("answers.$.objectionReply", objectionReply);
     UpdateResult updateResult = mongoTemplate.updateFirst(query, update, "examResults");
+
     return true;
   }
 

@@ -182,7 +182,6 @@ public class ExamResultRestController {
   }
 
   //이의제기 등록
-
   @PutMapping("/{examId}/dispute/{questionId}")
   public ResponseEntity<CMResDTO<String>> submitObjection(
       @PathVariable int examId,
@@ -190,7 +189,8 @@ public class ExamResultRestController {
       @RequestBody Map<String, String> requestBody) {
 
     int examineeId = 1; //todo 로그인 개발되면 세션으로 변경
-    boolean success = examResultService.submitObjection(examId, examineeId, questionId, requestBody.get("comments"));
+    boolean success = examResultService.submitObjection(examId, examineeId, questionId,
+        requestBody.get("objection"));
 
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 성공"), HttpStatus.OK);
@@ -198,5 +198,24 @@ public class ExamResultRestController {
       return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
   }
+
+  //이의제기 답변 등록
+  @PutMapping("/{examId}/disputeReply/{questionId}")
+  public ResponseEntity<CMResDTO<String>> submitObjectionReply(
+      @PathVariable int examId,
+      @PathVariable int questionId,
+      @RequestBody Map<String, String> requestBody) {  // JSON에서 reply 추출
+
+    int examineeId = 1; // TODO: 로그인 개발되면 세션에서 가져오기
+    boolean success = examResultService.submitObjectionReply(examId, examineeId, questionId,
+        requestBody.get("objectionReply"));
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 답변 등록 성공"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }
 

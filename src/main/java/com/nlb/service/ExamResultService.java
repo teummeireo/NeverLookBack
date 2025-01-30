@@ -41,4 +41,6 @@ public interface ExamResultService {
 
   public boolean submitObjection(int examId, int examineeId, int questionId, String objectionComments);
 
+  public boolean submitObjectionReply(int examId, int examineeId, int questionId, String objectionReply);
+
   }
