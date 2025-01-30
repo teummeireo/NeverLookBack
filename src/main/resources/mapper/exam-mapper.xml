@@ -110,4 +110,11 @@
     WHERE exam_id = #{examId}
   </select>
 
+  <select id="selectExamByCodeAndUser" parameterType="map" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE exam_code = #{examCode}
+      and examinee_id = #{examineeId}
+  </select>
+
 </mapper>

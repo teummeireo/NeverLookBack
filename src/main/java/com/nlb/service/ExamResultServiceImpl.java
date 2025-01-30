@@ -13,10 +13,12 @@ import com.nlb.exception.NotFoundException;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.vo.AnswerVO;
+import com.nlb.vo.ExamMongoVO;
 import com.nlb.vo.ExamResultMongoVO;
 import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
+import com.nlb.vo.ResultDetailVO;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,14 +73,16 @@ public class ExamResultServiceImpl implements ExamResultService {
   @Override
   @Transactional
   public int saveExamAnswers(int examineeId, ExamResultReqDTO examResultReqDTO) {
-
     int resultId = examResultReqDTO.getExamResultVO().getResultId();
     int dtoExamineeId = examResultReqDTO.getExamResultVO().getExamineeId();
+
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
       throw new CustomAccessDeniedException("잘못된 사용자 입니다");
     }
-    if (examResultReqDTO.getExamResultVO().getSubmittedAt() != null) {
+    if (examResultMapper.selectExamResultByExamIdandUser(
+            examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
+        .isAfter(LocalDateTime.of(1900, 1, 1, 0, 0, 0))) {
       throw new CustomAccessDeniedException("이미 시험이 제출되었습니다");
     }
 
@@ -111,19 +115,21 @@ public class ExamResultServiceImpl implements ExamResultService {
   public List<AnswerVO> submitExam(int examineeId, ExamResultReqDTO examResultReqDTO) {
     int resultId = examResultReqDTO.getExamResultVO().getResultId();
     int dtoExamineeId = examResultReqDTO.getExamResultVO().getExamineeId();
+
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
       throw new CustomAccessDeniedException("잘못된 사용자 입니다");
     }
-    if (examResultReqDTO.getExamResultVO().getSubmittedAt() != null) {
+    if (examResultMapper.selectExamResultByExamIdandUser(
+            examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
+        .isAfter(LocalDateTime.of(1900, 1, 1, 0, 0, 0))) {
       throw new CustomAccessDeniedException("이미 시험이 제출되었습니다");
     }
-    // MongoDB 업데이트
+    // 몽고DB에서 기존 제출 데이터 조회
     Query query = Query.query(
         Criteria.where("resultId").is(resultId).and("examineeId").is(examineeId));
     ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
-
     List<AnswerVO> existingAnswers = existingExamResult.getAnswers();
     List<AnswerVO> newAnswers = examResultReqDTO.getExamResultMongoVO().getAnswers();
     // 기존 데이터 맵핑
@@ -133,15 +139,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     for (AnswerVO newAnswer : newAnswers) {
       answerMap.put(newAnswer.getQuestionId(), newAnswer);
     }
-
-    // MongoDB 업데이트  (실제 제출에는 제출 시간 표기)
     List<AnswerVO> updatedAnswers = new ArrayList<>(answerMap.values());
-    Update update = new Update()
-        .set("answers", updatedAnswers)
-        .set("submittedAt", LocalDateTime.now());
-
-    mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
-        "examResults");
 
     // RDB 업데이트 (시험 제출 상태)
     ExamResultVO examResultVO = examResultReqDTO.getExamResultVO();
@@ -150,16 +148,25 @@ public class ExamResultServiceImpl implements ExamResultService {
     examResultVO.setReviewed(false);
     examResultMapper.updateExamResult(examResultVO);
 
+    // 📌 시험 채점 (내부에서 총점 + resultDetail RDB 업데이트 됨)
+    updatedAnswers = gradingExam(updatedAnswers, examResultVO, resultId,
+        examResultReqDTO.getExamResultVO().getExamId());
+
+    // MongoDB 업데이트  (실제 제출에는 제출 시간 표기)
+    Update update = new Update()
+        .set("answers", updatedAnswers)
+        .set("submittedAt", LocalDateTime.now());
+
+    mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
+        "examResults");
+
     return updatedAnswers;
   }
 
   @Override
   @Transactional
-  public ExamJoinResDTO joinExam(String examCode, int examineeId, String entreeCode) {
-    ExamVO examVO = examResultMapper.selectExamByCode(examCode);
-    System.out.println("examvo 조회 테스트 " + examVO);
-    int examId = examVO.getExamId(); // 조회한 examId 사용
-    System.out.println("examid 조회 세트스 " + examId);
+  public ExamJoinResDTO joinExam(int examId, String examCode, int examineeId, String entreeCode) {
+    ExamVO examVO = examMapper.selectExamById(examId);
 
     if (examVO == null) {
       // 시험이 존재하지 않음
@@ -174,14 +181,31 @@ public class ExamResultServiceImpl implements ExamResultService {
       throw new CustomAccessDeniedException("시험 입장 코드가 올바르지 않습니다.");
     }
 
+    // 재접속일 경우인 ResultId가 존재하는지 확인
+    ExamResultVO existingResult = examResultMapper.selectExamResultByExamIdandUser(examId,
+        examineeId);
+    if (existingResult != null) {
+      // 이미 참여한 경우 기존 resultId 반환
+      System.out.println("기존 examResult 존재함 : " + existingResult.getResultId());
+      return new ExamJoinResDTO(
+          examId,
+          existingResult.getResultId(),
+          examCode,
+          examineeId,
+          URI.create(String.format("/api/exams/%d/exam-data", examId)).toString()
+      );
+    }
+
     // RDB에 새로운 resultId 생성 및 저장
     ExamResultVO examResultVO = new ExamResultVO();
     examResultVO.setExamId(examId);
     examResultVO.setExamineeId(examineeId);
     examResultVO.setScore(0);
+    examResultVO.setSubmittedAt(LocalDateTime.of(1900, 1, 1, 0, 0, 0)); //기본값 설정
     examResultVO.setReviewed(false);
     examResultMapper.insertExamResult(examResultVO);
-    int generatedResultId = examResultVO.getResultId();
+    int generatedResultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
 
     // MongoDB에도 저장
     Query query = Query.query(Criteria.where("resultId").is(generatedResultId));
@@ -203,6 +227,7 @@ public class ExamResultServiceImpl implements ExamResultService {
   }
 
 
+  //답변 데이터 전체만 몽고
   @Override
   public Map<String, Object> getExamResultData(int examId, int examineeId) {
     // MongoDB에서 해당 시험의 응시 데이터 가져오기
@@ -210,11 +235,13 @@ public class ExamResultServiceImpl implements ExamResultService {
         .and("examineeId").is(examineeId));
     ExamResultMongoVO examResultMongo = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
-    int resultId = examResultMongo.getResultId();
 
+    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
     // 기존 응답 데이터 가져오기 (혹시 몰라 디폴트 빈 답변들 생성)
-    List<AnswerVO> answers =
-        examResultMongo.getAnswers() != null ? examResultMongo.getAnswers() : new ArrayList<>();
+    List<AnswerVO> answers = (examResultMongo != null && examResultMongo.getAnswers() != null)
+        ? examResultMongo.getAnswers()
+        : new ArrayList<>();
 
     // JSON 응답 구조 구성
     Map<String, Object> resultData = new HashMap<>();
@@ -226,6 +253,7 @@ public class ExamResultServiceImpl implements ExamResultService {
   }
 
 
+  // 시험 문제 전체 + 답변 데이터 전체
   @Override
   public ExamDataResDTO getExamData(int examId, int examineeId) {
     // 시험 문제 가져오기
@@ -234,7 +262,9 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 응시자가 제출한 데이터 가져오기
     Map<String, Object> examResultData = getExamResultData(examId, examineeId);
 
-    int resultId = (int) examResultData.get("resultId");
+    int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
+        .getResultId();
+    // 📌 빈 answers 최초 생성 지점 (추후 resultDetail 입력시 쓰임)
     List<AnswerVO> answers = (List<AnswerVO>) examResultData.getOrDefault("answers",
         new ArrayList<>());
 
@@ -246,6 +276,71 @@ public class ExamResultServiceImpl implements ExamResultService {
         questions,
         answers
     );
+  }
+
+  // 시험 채점 메서드
+  public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
+      int examId) {
+
+    System.out.println("answers = " + answers);
+    System.out.println("examResultVO = " + examResultVO);
+    System.out.println("examid = " + examId);
+    int TotalScore = 0;
+
+    // NPE 방지: resultDetailVOList가 null이면 초기화
+    if (examResultVO.getResultDetails() == null) {
+      examResultVO.setResultDetails(new ArrayList<>());
+    }
+    List<ResultDetailVO> resultDetailVOList = examResultVO.getResultDetails();
+
+    // 해당 시험에서 정답 리스트 조회
+    Query query = Query.query(
+        Criteria.where("examId").is(examId));
+    ExamMongoVO examMongoVO = mongoTemplate.findOne(query, ExamMongoVO.class, "exams");
+
+    List<QuestionVO> questions = examMongoVO.getQuestions();
+
+    //채점하며 필드값 수정
+    for (int i = 0; i < examMongoVO.getQuestions().size(); i++) {
+      resultDetailVOList.add(new ResultDetailVO());
+      resultDetailVOList.get(i).setExamId(examId);
+      resultDetailVOList.get(i).setResultId(resultId);
+      resultDetailVOList.get(i).setQuestionId(i);
+
+      if (answers.get(i).getAnswer().equals(questions.get(i).getCorrectAnswer())) {
+        answers.get(i).setCorrect(true);
+        answers.get(i)
+            .setPointsEarned(questions.get(i).getPointsAllocation());  // todo 주관식 답 여러개일 경우 처리
+        resultDetailVOList.get(i).setCorrect(true);
+      } else {
+        answers.get(i).setCorrect(false);
+        answers.get(i).setPointsEarned(0);  // 획득점수 추가
+      }
+      TotalScore += answers.get(i).getPointsEarned();  //총점에 점수 추가
+    }
+
+    examResultVO.setScore(TotalScore); // 총점 입력
+    System.out.println("점수 입력 됐냐..." + examResultVO.getScore());
+    examResultMapper.updateExamResult(examResultVO);
+    // ✅ resultDetailVOList가 비어 있지 않으면 DB에 저장
+    if (!resultDetailVOList.isEmpty()) {
+      examResultMapper.insertResultDetail(resultDetailVOList);
+    }
+
+    return answers;
+  }
+
+
+  // 채점 상태 조회
+  @Override
+  public ExamResultVO getResultDetail(int examineeId, int examId, int resultId) {
+
+    ExamResultVO examResult = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId);
+
+    List<ResultDetailVO> resultDetails = examResultMapper.selectResultDetailByResultId(resultId);
+    examResult.setResultDetails(resultDetails);
+
+    return examResult;
   }
 
 }

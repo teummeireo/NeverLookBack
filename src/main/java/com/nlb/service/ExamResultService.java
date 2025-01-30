@@ -25,9 +25,14 @@ public interface ExamResultService {
 
   List<AnswerVO> submitExam(int resultId, ExamResultReqDTO examResultReqDTO);
 
-  ExamJoinResDTO joinExam(String examId, int examineeId, String entreeCode);
+  public ExamJoinResDTO joinExam(int examId, String examCode, int examineeId, String entreeCode);
 
   Map<String, Object> getExamResultData(int examId, int examineeId);
 
   public ExamDataResDTO getExamData(int examId, int examineeId);
+
+  public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
+      int examId);
+
+  public ExamResultVO getResultDetail(int examineeId, int examId, int resultId);
 }

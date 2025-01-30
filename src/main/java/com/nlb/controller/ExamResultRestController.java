@@ -77,7 +77,6 @@ public class ExamResultRestController {
   }
 
   // 시험 결과 카드 데이터 조회
-
   @RequestMapping(value = "/{resultId}/card", method = RequestMethod.GET)
   public ResponseEntity<CMResDTO<ExamResultCardDTO>> examResultCard(
       @PathVariable("resultId") int resultId) {
@@ -87,9 +86,8 @@ public class ExamResultRestController {
 
 
   // 시험 제출
-  @PostMapping("/{resultId}/submit")
+  @PostMapping("/{examId}/submit")
   public ResponseEntity<CMResDTO<List<AnswerVO>>> submitExam(
-      @PathVariable int resultId,
       @RequestBody ExamResultReqDTO examResultReqDTO) {
 
     //todo 세션으로 아이디 가져오기
@@ -103,7 +101,6 @@ public class ExamResultRestController {
   //시험 응답 저장
   @PostMapping("/{resultId}/answers")
   public ResponseEntity<CMResDTO<String>> saveExamAnswers(
-      @PathVariable int resultId,
       @RequestBody ExamResultReqDTO examResultReqDTO) {
 
     //todo 세션으로 아이디 가져오기
@@ -117,31 +114,35 @@ public class ExamResultRestController {
   //시험 입장
   @PostMapping("/{examId}/join")
   public ResponseEntity<CMResDTO<ExamJoinResDTO>> joinExam(
+      @PathVariable int examId,
       @RequestParam String examCode,
       @RequestParam String entreeCode) {
     //Integer examineeId = (Integer) session.getAttribute("userId");
     //todo 로그인 개발되면 세션으로 변경
     int examineeId = 1;
-    ExamJoinResDTO response = examResultService.joinExam(examCode, examineeId, entreeCode);
+    ExamJoinResDTO response = examResultService.joinExam(examId, examCode, examineeId, entreeCode);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(response), HttpStatus.OK);
   }
 
-  @GetMapping("/{examId}/{examineeId}")
+
+  // 답안 상세 조회
+  @GetMapping("/{examId}/answers")
   public ResponseEntity<CMResDTO<Map<String, Object>>> getExamData(
-      @PathVariable("examId") int examId,
-      @PathVariable("examineeId") int examineeId
-  ) {
+      @PathVariable("examId") int examId) {
+
+    //todo 로그인 개발되면 세션으로 변경
+    int examineeId = 1;
+
     Map<String, Object> resultData = examResultService.getExamResultData(examId, examineeId);
     return new ResponseEntity<>(CMResDTO.successDataRes(resultData), HttpStatus.OK);
   }
 
-  //시험
+  //시험 입장 후 데이터 조회 ( 문제 + 내가 입력한 답안 )
   @GetMapping("/{examId}/exam-data")
   public ResponseEntity<CMResDTO<ExamDataResDTO>> getExamDataForUser(
       @PathVariable("examId") int examId,
       HttpSession session) {
-
     //todo 로그인 개발되면 사용
     //Integer examineeId = (Integer) session.getAttribute("userId");
 
@@ -152,5 +153,18 @@ public class ExamResultRestController {
   }
 
 
+  @GetMapping("/{examId}/{resultId}/{detailId}")
+  public ResponseEntity<CMResDTO<ExamResultVO>> getResultDetail(
+      @PathVariable("examId") int examId,
+      @PathVariable("resultId") int resultId) {
+
+    //todo 로그인 개발되면 세션으로 변경
+    int examineeId = 1;
+
+    // 시험 결과 조회
+    ExamResultVO examResultVO = examResultService.getResultDetail(examineeId, examId, resultId);
+
+    return new ResponseEntity<>(CMResDTO.successDataRes(examResultVO), HttpStatus.OK);
+  }
 }
 
