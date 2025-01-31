@@ -18,9 +18,11 @@ public interface ExamResultService {
   int setExamResultStatus(int resultId, Boolean isReviewed);
 
   List<ExamResultVO> getExamResultListOfUser(int userId, String sortBy, String order,
-      Boolean isReviewed);
+                                             Boolean isReviewed);
 
   ExamResultCardDTO getExamResultAndExam(int resultId);
+
+  List<ExamResultVO> getAllExamResults();
 
   int saveExamAnswers(int resultId, ExamResultReqDTO examResultReqDTO);
 
@@ -33,7 +35,7 @@ public interface ExamResultService {
   public ExamDataResDTO getExamData(int examId, int examineeId);
 
   public List<AnswerVO> gradingExam(List<AnswerVO> answers, ExamResultVO examResultVO, int resultId,
-      int examId);
+                                    int examId);
 
   public ExamResultVO getResultDetail(int examineeId, int examId, int resultId);
 
