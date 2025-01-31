@@ -11,9 +11,9 @@
 
 <%-- 그라파나 대시보드를 통째로 들고오는 iframe => 간편하지만 사용자의 자유도가 높아져서 불안정함--%>
 <iframe
-    src="http://professortoofast.store:3000/d/eeaql3rgxfg1se/exam-statistics?kiosk=1&orgId=1&refresh=5m&var-exam_id=1"
+    src="http://professortoofast.store:3000/d/eeaql3rgxfg1se/exam-statistics?kiosk=1&orgId=1&refresh=5m&from=now-15d&to=now&timezone=browser&var-exam_id=1"
     width="100%"
-    height="1000"
+    height="1300"
     frameborder="0">
 </iframe>
 
