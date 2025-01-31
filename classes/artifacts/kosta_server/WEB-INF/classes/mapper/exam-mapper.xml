@@ -1,104 +1,124 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nlb.mapper.ExamMapper">
 
-    <!-- 회원이 만든 시험 리스트 조회 -->
-    <select id="selectExamListByCreaterId"  resultType="ExamVO">
-        SELECT *
-        FROM exam
-        WHERE creater_id = #{userId}
-        <if test="category != null and category != ''">
-            AND category = #{category}
-        </if>
-        <choose>
-            <when test="sortBy == 'title'">
-                ORDER BY title ${order}
-            </when>
-            <when test="sortBy == 'createdAt'">
-                ORDER BY created_at ${order}
-            </when>
-            <when test="sortBy == 'examineeCount'">
-                ORDER BY examinee_count ${order}
-            </when>
-            <when test="sortBy == 'category'">
-                ORDER BY category ${order}
-            </when>
-            <otherwise>
-                ORDER BY created_at ASC
-            </otherwise>
-        </choose>
-    </select>
+  <!-- 회원이 만든 시험 리스트 조회 -->
+  <select id="selectExamListByCreaterId" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE creater_id = #{userId}
+    <if test="category != null and category != ''">
+      AND category = #{category}
+    </if>
+    <choose>
+      <when test="sortBy == 'title'">
+        ORDER BY title ${order}
+      </when>
+      <when test="sortBy == 'createdAt'">
+        ORDER BY created_at ${order}
+      </when>
+      <when test="sortBy == 'examineeCount'">
+        ORDER BY examinee_count ${order}
+      </when>
+      <when test="sortBy == 'category'">
+        ORDER BY category ${order}
+      </when>
+      <otherwise>
+        ORDER BY created_at ASC
+      </otherwise>
+    </choose>
+  </select>
 
-    <update id = "updateExamActivationStatus">
-        update exam
-        set activation_status = #{status}
-        where exam_id = #{examId}
-    </update>
+  <update id="updateExamActivationStatus">
+    update exam
+    set activation_status = #{status}
+    where exam_id = #{examId}
+  </update>
 
-    <delete id = "deleteExamByExamId">
-        delete from exam
-        where exam_id = #{examId}
-    </delete>
+  <delete id="deleteExamByExamId">
+    delete
+    from exam
+    where exam_id = #{examId}
+  </delete>
 
-    <!-- RDB에서 생성된 자동 id 필드를 가져오기 위한 설정들 추가 -->
-    <insert id="insertExam" parameterType="ExamVO" useGeneratedKeys="true" keyProperty="examId">
-        INSERT INTO exam (
-            creater_id, exam_code, title, category, entree_code,
-            question_count, examinee_count, created_at, started_at, finished_at,
-            exam_time, activation_status
-        ) VALUES (
-                     #{createrId}, #{examCode}, #{title}, #{category}, #{entreeCode},
-                     #{questionCount}, 0, NOW(), #{startedAt}, #{finishedAt},
-                     #{examTime}, #{activationStatus}
-                 )
-    </insert>
+  <!-- RDB에서 생성된 자동 id 필드를 가져오기 위한 설정들 추가 -->
+  <insert id="insertExam" parameterType="ExamVO" useGeneratedKeys="true" keyProperty="examId">
+    INSERT INTO exam (creater_id, exam_code, title, category, entree_code,
+                      question_count, examinee_count, created_at, started_at, finished_at,
+                      exam_time, activation_status)
+    VALUES (#{createrId}, #{examCode}, #{title}, #{category}, #{entreeCode},
+            0, 0, NOW(), #{startedAt}, #{finishedAt},
+            #{examTime}, COALESCE(#{activationStatus}, 'not_started'))
+  </insert>
 
-    <update id="updateExamById" parameterType="ExamVO">
-        UPDATE exam
-        SET
-            title = #{title},
-            category = #{category},
-            entree_code = #{entreeCode},
-            exam_time = #{examTime},
-            started_at = #{startedAt},
-            finished_at = #{finishedAt}
-        WHERE exam_id = #{examId}
-    </update>
+  <!-- 업데이트 된 값들만 업데이트 -->
+  <update id="updateExam" parameterType="ExamVO">
+    UPDATE exam
+    <set>
+      <if test="title != null">title = #{title},</if>
+      <if test="examCode != null">exam_code = #{examCode},</if>
+      <if test="category != null">category = #{category},</if>
+      <if test="entreeCode != null">entree_code = #{entreeCode},</if>
+      <if test="examTime != null">exam_time = #{examTime},</if>
+      <if test="startedAt != null">started_at = #{startedAt},</if>
+      <if test="finishedAt != null">finished_at = #{finishedAt},</if>
+    </set>
+    WHERE exam_id = #{examId}
+  </update>
 
-    <update id="updateQuestionCount" parameterType="map">
-        UPDATE exam
-        SET question_count = #{questionCount}
-        WHERE exam_id = #{examId}
-    </update>
+  <update id="updateQuestionCount" parameterType="map">
+    UPDATE exam
+    SET question_count = #{questionCount}
+    WHERE exam_id = #{examId}
+  </update>
 
 
-    <!-- 모든 시험 리스트 조회 -->
-    <select id="selectExamList"  resultType="ExamVO">
-        SELECT *
-        FROM exam
-        <if test="category != null and category != ''">
-            AND category = #{category}
-        </if>
-        <choose>
-            <when test="sortBy == 'title'">
-                ORDER BY title ${order}
-            </when>
-            <when test="sortBy == 'createdAt'">
-                ORDER BY created_at ${order}
-            </when>
-            <when test="sortBy == 'examineeCount'">
-                ORDER BY examinee_count ${order}
-            </when>
-            <when test="sortBy == 'category'">
-                ORDER BY category ${order}
-            </when>
-            <otherwise>
-                ORDER BY created_at ASC
-            </otherwise>
-        </choose>
-    </select>
+  <!-- 모든 시험 리스트 조회 -->
+  <select id="selectExamList" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    <if test="category != null and category != ''">
+      AND category = #{category}
+    </if>
+    <choose>
+      <when test="sortBy == 'title'">
+        ORDER BY title ${order}
+      </when>
+      <when test="sortBy == 'createdAt'">
+        ORDER BY created_at ${order}
+      </when>
+      <when test="sortBy == 'examineeCount'">
+        ORDER BY examinee_count ${order}
+      </when>
+      <when test="sortBy == 'category'">
+        ORDER BY category ${order}
+      </when>
+      <otherwise>
+        ORDER BY created_at ASC
+      </otherwise>
+    </choose>
+  </select>
 
+  <select id="selectExamResultByExamIdAndExamineeId" resultType="ExamResultVO">
+    SELECT *
+    FROM exam_result
+    WHERE exam_id = #{examId}
+      AND examinee_id = #{examineeId}
+  </select>
+
+  <select id="selectExamById" parameterType="int" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE exam_id = #{examId}
+  </select>
+
+  <select id="selectExamByCodeAndUser" parameterType="map" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE exam_code = #{examCode}
+      and examinee_id = #{examineeId}
+  </select>
 
 </mapper>

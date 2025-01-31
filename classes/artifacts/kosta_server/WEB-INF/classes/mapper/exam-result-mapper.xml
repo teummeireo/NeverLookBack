@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
 <mapper namespace="com.nlb.mapper.ExamResultMapper">
 
-    <delete id="deleteExamResultByExamId">
-        delete from exam_result
-        where exam_id = #{examId}
-    </delete>
+  <delete id="deleteExamResultByExamId">
+    delete
+    from exam_result
+    where exam_id = #{examId}
+  </delete>
 
     <!-- 전체 시험 결과 조회 -->
     <select id="selectAllExamResults" resultType="ExamResultVO">
@@ -18,64 +19,118 @@
         ORDER BY submitted_at DESC
     </select>
 
-    <!-- 시험 응시자 결과 조회 -->
-    <select id="selectExamResultList" resultType="ExamResultVO">
-        SELECT *
-        FROM exam_result
-        WHERE exam_id = #{examId}
-        <if test="isReviewed != null">
-            AND is_reviewed = #{isReviewed}
-        </if>
-        <choose>
-            <when test="sortBy == 'submittedAt'">
-                ORDER BY submitted_at ${order}
-            </when>
-            <when test="sortBy == 'score'">
-                ORDER BY score ${order}
-            </when>
-            <otherwise>
-                ORDER BY submitted_at ASC
-            </otherwise>
-        </choose>
-    </select>
+  <!-- 시험 응시자 결과 조회 -->
+  <select id="selectExamResultList" resultType="ExamResultVO">
+    SELECT *
+    FROM exam_result
+    WHERE exam_id = #{examId}
+    <if test="isReviewed != null">
+      AND is_reviewed = #{isReviewed}
+    </if>
+    <choose>
+      <when test="sortBy == 'submittedAt'">
+        ORDER BY submitted_at ${order}
+      </when>
+      <when test="sortBy == 'score'">
+        ORDER BY score ${order}
+      </when>
+      <otherwise>
+        ORDER BY submitted_at ASC
+      </otherwise>
+    </choose>
+  </select>
 
-    <update id="updateExamResultIsReviewed">
-        update exam_result
-        set is_reviewed = #{isReviewed}
-        where result_id = #{resultId}
-    </update>
+  <update id="updateExamResultIsReviewed">
+    update exam_result
+    set is_reviewed = #{isReviewed}
+    where result_id = #{resultId}
+  </update>
 
 
-    <!-- 회원이 응시한 시험 결과 리스트 조회 -->
-    <select id="selectExamResultListByUserId"  resultType="ExamResultVO">
-        SELECT *
-        FROM exam_result
-        WHERE examinee_id = #{userId}
-        <if test="isReviewed != null">
-            AND is_reviewed = #{isReviewed}
-        </if>
-        <choose>
-            <when test="sortBy == 'submittedAt'">
-                ORDER BY submitted_at ${order}
-            </when>
-            <when test="sortBy == 'score'">
-                ORDER BY score ${order}
-            </when>
-            <otherwise>
-                ORDER BY submitted_at ASC
-            </otherwise>
-        </choose>
-    </select>
+  <!-- 회원이 응시한 시험 결과 리스트 조회 -->
+  <select id="selectExamResultListByUserId" resultType="ExamResultVO">
+    SELECT *
+    FROM exam_result
+    WHERE examinee_id = #{userId}
+    <if test="isReviewed != null">
+      AND is_reviewed = #{isReviewed}
+    </if>
+    <choose>
+      <when test="sortBy == 'submittedAt'">
+        ORDER BY submitted_at ${order}
+      </when>
+      <when test="sortBy == 'score'">
+        ORDER BY score ${order}
+      </when>
+      <otherwise>
+        ORDER BY submitted_at ASC
+      </otherwise>
+    </choose>
+  </select>
 
-    <select id = "selectExamResultAndExamByResultId" resultType="ExamResultCardDTO">
-        SELECT
-            e.*, -- ExamVO의 모든 필드
-            er.result_id, er.examinee_id, er.score, er.submitted_at, er.is_reviewed -- ExamResultVO의 모든 필드
-        FROM
-            exam e
-                JOIN
-            exam_result er ON e.exam_id = er.exam_id
-        WHERE
-            er.result_id = #{resultId}
-    </select>
+  <select id="selectExamResultAndExamByResultId" resultType="ExamResultCardDTO">
+    SELECT e.*,           -- ExamVO의 모든 필드
+           er.result_id,
+           er.examinee_id,
+           er.score,
+           er.submitted_at,
+           er.is_reviewed -- ExamResultVO의 모든 필드
+    FROM exam e
+           JOIN
+         exam_result er ON e.exam_id = er.exam_id
+    WHERE er.result_id = #{resultId}
+  </select>
+
+  <!-- 시험 제출시 세팅 값들 업데이트 -->
+  <update id="updateExamResult">
+    update exam_result
+    set submitted_at = #{submittedAt},
+        is_reviewed  = #{isReviewed},
+        score        = #{score}
+    where result_id = #{resultId}
+  </update>
+
+
+  <!-- 첫 입장시 result 관련 초기 데이터 입력-->
+  <insert id="insertExamResult" parameterType="ExamResultVO" useGeneratedKeys="true"
+    keyProperty="resultId">
+    INSERT INTO exam_result (exam_id, examinee_id, score, submitted_at, is_reviewed)
+    VALUES (#{examId}, #{examineeId}, 0,
+            COALESCE(#{submittedAt, jdbcType=TIMESTAMP}, '1900-01-01 00:00:00'), false)
+  </insert>
+
+  <select id="selectExamResultByExamIdandUser" parameterType="map" resultType="ExamResultVO">
+    SELECT *
+    from exam_result
+    where exam_id = #{examId}
+      and examinee_id = #{examineeId}
+  </select>
+
+  <select id="selectResultDetailByResultId" parameterType="int" resultType="ResultDetailVO">
+    SELECT *
+    FROM result_detail
+    WHERE result_id = #{resultId}
+  </select>
+
+  <insert id="insertResultDetail" parameterType="list">
+    INSERT INTO result_detail (result_id, exam_id, question_id, is_correct)
+    VALUES
+    <foreach collection="details" item="detail" separator=",">
+      (#{detail.resultId}, #{detail.examId}, #{detail.questionId}, #{detail.isCorrect})
+    </foreach>
+  </insert>
+
+  <select id="selectExamineeInfo" resultType="ExamineeInfoResDTO">
+    SELECT
+      e.exam_code AS examCode, e.title AS title, e.started_at AS startedAt,
+      e.finished_at AS finishedAt, e.exam_time AS examTime,
+      er.result_id AS resultId, er.score AS score, er.submitted_at AS submittedAt, er.is_reviewed AS isReviewed,
+      u.nickname AS nickname, u.email AS email, u.login_id AS loginId, u.user_role AS userRole, u.reg_date AS regDate
+    FROM exam_result er
+           JOIN exam e ON er.exam_id = e.exam_id
+           JOIN nlbuser u ON er.examinee_id = u.user_id
+    WHERE er.exam_id = #{examId} AND er.examinee_id = #{examineeId}
+  </select>
+
+
 </mapper>
