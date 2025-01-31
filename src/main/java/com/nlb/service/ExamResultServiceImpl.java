@@ -62,7 +62,7 @@ public class ExamResultServiceImpl implements ExamResultService {
 
   @Override
   public List<ExamResultVO> getExamResultListOfUser(int userId, String sortBy, String order,
-                                                    Boolean isReviewed) {
+      Boolean isReviewed) {
     return examResultMapper.selectExamResultListByUserId(userId, sortBy, order, isReviewed);
   }
 
@@ -84,7 +84,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
-      throw new CustomAccessDeniedException("잘못된 사용자 입니다");}
+      throw new CustomAccessDeniedException("잘못된 사용자 입니다");
+    }
     // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
                     examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
@@ -124,7 +125,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
-      throw new CustomAccessDeniedException("잘못된 사용자 입니다");}
+      throw new CustomAccessDeniedException("잘못된 사용자 입니다");
+    }
     // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
                     examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
@@ -474,11 +476,12 @@ public class ExamResultServiceImpl implements ExamResultService {
 
   @Override
   @Transactional
-  public boolean updateQuestionScore(int resultId, int questionId, boolean isCorrected){
+  public boolean updateQuestionScore(int resultId, int questionId, boolean isCorrected) {
 
     //Answers 꺼내기 위한 ExamResult
     Query query = Query.query(Criteria.where("resultId").is(resultId));
-    ExamResultMongoVO examResultVO = mongoTemplate.findOne(query, ExamResultMongoVO.class, "examResults");
+    ExamResultMongoVO examResultVO = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
     //Questions 꺼내기 위한 Exam
     ExamVO examVO = examMapper.selectExamByResultId(resultId);
     Query query1 = Query.query(Criteria.where("examId").is(examVO.getExamId()));
@@ -487,9 +490,9 @@ public class ExamResultServiceImpl implements ExamResultService {
     List<AnswerVO> answers = examResultVO.getAnswers();
     List<QuestionVO> questions = examMongoVO.getQuestions(); //todo 없는 문제, 없는 결과, 같은 corrected 예외처리
 
-    int score=0;
+    int score = 0;
     for (int i = 0; i < answers.size(); i++) {
-      if(answers.get(i).getQuestionId() == questionId){
+      if (answers.get(i).getQuestionId() == questionId) {
         score = questions.get(i).getPointsAllocation();
         answers.get(i).setPointsEarned(score); // 획득점수 수정
         answers.get(i).setCorrect(isCorrected);// 정답여부 수정
@@ -506,7 +509,8 @@ public class ExamResultServiceImpl implements ExamResultService {
     examResultMapper.updateScoreAndIsCorrect(params);
 
     //몽고에도 변화 적용
-    Query updateQuery = Query.query(Criteria.where("resultId").is(resultId).and("answers.questionId").is(questionId));
+    Query updateQuery = Query.query(
+        Criteria.where("resultId").is(resultId).and("answers.questionId").is(questionId));
     Update update = new Update()
         .set("answers.$.pointsEarned", score)
         .set("answers.$.isCorrect", isCorrected);

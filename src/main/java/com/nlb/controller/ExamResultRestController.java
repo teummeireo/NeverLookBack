@@ -74,7 +74,7 @@ public class ExamResultRestController {
           @RequestParam(value = "isReviewed", required = false) Boolean isReviewed) {
 
     List<ExamResultVO> examResultVOList = examResultService.getExamResultListOfUser(userId, sortBy,
-            order, isReviewed);
+        order, isReviewed);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examResultVOList), HttpStatus.OK);
   }
@@ -189,7 +189,8 @@ public class ExamResultRestController {
           @RequestParam("examId") int examId,
           @RequestParam("examineeId") int examineeId){
 
-    List<Map<String, Object>> questionsState = examResultService.getQuestionsState(examId, examineeId);
+    List<Map<String, Object>> questionsState = examResultService.getQuestionsState(examId,
+        examineeId);
 
     return ResponseEntity.ok(CMResDTO.successDataRes(questionsState));
   }
@@ -220,7 +221,8 @@ public class ExamResultRestController {
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 성공"), HttpStatus.OK);
     } else {
-      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.FORBIDDEN_DISPUTE),
+          HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -238,7 +240,8 @@ public class ExamResultRestController {
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("이의제기 답변 등록 성공"), HttpStatus.OK);
     } else {
-      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.NO_DISPUTE_EXIST),
+          HttpStatus.BAD_REQUEST);
     }
   }
 

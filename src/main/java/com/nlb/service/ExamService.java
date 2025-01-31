@@ -5,6 +5,7 @@ import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
 import java.util.List;
+import java.util.Map;
 
 public interface ExamService {
 
@@ -25,4 +26,7 @@ public interface ExamService {
   String getExamStatus(int examId);
 
   List<QuestionVO> getExamQuestions(int examId);
+
+  public Map<String, Object> getExamDataCreated(int examId, int creatorId);
+
 }
