@@ -63,10 +63,10 @@ public class ExamServiceImpl implements ExamService {
   }
 
   @Override
-  public int createExam(ExamReqDTO examReqDTO) {
+  public int createExam(ExamReqDTO examReqDTO, int createrId) {
     //RDB 에 먼저 저장
     ExamVO examVO = examReqDTO.getExamVO();
-    examVO.setCreaterId(1); //todo 로그인 생기면 세션에서 가져오는 로직으로 변경
+    examVO.setCreaterId(createrId);
 
     //RDB에 저장하고 생성된 ID 값과 같은 examId 값으로 몽고db에 저장 (몽고의 _id랑 별개)
     examMapper.insertExam(examVO);
@@ -81,7 +81,8 @@ public class ExamServiceImpl implements ExamService {
         .set("entreeCode", examVO.getEntreeCode())
         .set("examTime", examVO.getExamTime())
         .set("startedAt", examVO.getStartedAt())
-        .set("finishedAt", examVO.getFinishedAt());
+        .set("finishedAt", examVO.getFinishedAt())
+        .set("createrId", createrId);
 //        .set("questionCount",
 //            examMongoVO.getQuestions() != null ? examMongoVO.getQuestions().size() : 0)
 //        .set("questions", examMongoVO.getQuestions());
@@ -93,7 +94,7 @@ public class ExamServiceImpl implements ExamService {
   @Override
   @Transactional
   public boolean updateExam(int examId, ExamVO examVO) {
-    System.out.println("examvo  = " + examVO);
+
     // RDB 업데이트 (ExamVO)
     examVO.setExamId(examId);
     int rowsUpdated = examMapper.updateExam(
@@ -190,7 +191,6 @@ public class ExamServiceImpl implements ExamService {
     // MongoDB에서 해당 시험 데이터 직접 조회
     Query query = Query.query(Criteria.where("createrId").is(creatorId).and("examId").is(examId));
     Map<String, Object> examData = mongoTemplate.findOne(query, Map.class, "exams");
-    System.out.println(examData);
 
     if (examData == null) {
       return Collections.emptyMap();  // 비어있는 맵 반환하여 Null 방지

@@ -15,7 +15,7 @@ public interface ExamService {
 
   List<Integer> deleteExam(int examId);
 
-  int createExam(ExamReqDTO examReqDTO);
+  public int createExam(ExamReqDTO examReqDTO, int createrId);
 
   boolean updateExam(int examId, ExamVO examVO);
 

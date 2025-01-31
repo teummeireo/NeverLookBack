@@ -365,9 +365,7 @@ public class ExamResultServiceImpl implements ExamResultService {
   public ExamResultVO getResultDetail(int examineeId, int examId, int resultId) {
 
     ExamResultVO examResult = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId);
-    System.out.println("examResult = " + examResultMapper);
     List<ResultDetailVO> resultDetails = examResultMapper.selectResultDetailByResultId(resultId);
-    System.out.println("deatils = " + resultDetails);
     examResult.setResultDetails(resultDetails);
 
     return examResult;

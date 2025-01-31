@@ -75,7 +75,9 @@ public class ExamRestController {
   public ResponseEntity<CMResDTO<String>> createExam(
       @RequestBody ExamReqDTO examReqDTO) {
 
-    int examId = examService.createExam(examReqDTO);
+    int createrId = 1;  //todo 로그인 완료되면 세션 아이디 등록
+
+    int examId = examService.createExam(examReqDTO, createrId);
     return new ResponseEntity<>(CMResDTO.successDataRes("시험 등록 성공, " + examId), HttpStatus.OK);
   }
 
