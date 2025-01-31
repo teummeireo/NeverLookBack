@@ -7,7 +7,6 @@ import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ResultDetailVO;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.parameters.P;
@@ -54,5 +53,8 @@ public interface ExamResultMapper {
     List<ExamResultVO> selectAllExamResults();
 
     void updateScoreAndIsCorrect(Map<String, Object> params);
-}
+  void updateScoreAndIsCorrect(Map<String, Object> params);
 
+  void updateIsCorrect(Map<String, Object> params);
+  void updateExamTotalScore(Map<String, Object> params);
+}

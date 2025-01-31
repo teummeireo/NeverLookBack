@@ -121,4 +121,11 @@
       and examinee_id = #{examineeId}
   </select>
 
+  <select id="selectExamByResultId" parameterType="int">
+    SELECT *
+    FROM exam_result
+    where result_id = #{resultId}
+  </select>
+
+
 </mapper>

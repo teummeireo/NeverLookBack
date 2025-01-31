@@ -132,5 +132,41 @@
     WHERE er.exam_id = #{examId} AND er.examinee_id = #{examineeId}
   </select>
 
+  <select id="selectExamResultByResultId" parameterType="int" resultType="ExamResultVO">
+    SELECT *
+    FROM exam_result
+    where result_id =#{resultId}
+  </select>
+
+  <update id="updateScoreByResultId" parameterType="map">
+    UPDATE exam_result
+    SET score = score + #{score}
+    where result_id=#{resultId}
+  </update>
+
+  <update id="updateScoreAndIsCorrect" parameterType="map">
+    UPDATE exam_result
+    SET score = score + #{score}
+    WHERE result_id = #{resultId};
+
+    UPDATE result_detail
+    SET is_correct = #{isCorrect}
+    WHERE result_id = #{resultId} AND question_id = #{questionId};
+  </update>
+
+  <!-- result_detail 테이블에서 정답 여부 수정 -->
+  <update id="updateIsCorrect">
+    UPDATE result_detail
+    SET is_correct = #{isCorrect}
+    WHERE result_id = #{resultId} AND question_id = #{questionId};
+  </update>
+
+  <!-- exam_result 테이블에서 기존 점수 수정 -->
+  <update id="updateExamTotalScore">
+    UPDATE exam_result
+    SET score = score + #{scoreDifference}
+    WHERE result_id = #{resultId};
+  </update>
+
 
 </mapper>

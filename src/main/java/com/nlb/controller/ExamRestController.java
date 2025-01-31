@@ -4,10 +4,13 @@ package com.nlb.controller;
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.exception.ErrorCode;
+import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +30,8 @@ public class ExamRestController {
 
   @Autowired
   private ExamService examService;
+  @Autowired
+  private ExamResultService examResultService;
 
   // 정렬기능(제목, 생성일, 응시자수, 카테고리) & 필터기능(카테고리)
   @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
@@ -70,7 +75,9 @@ public class ExamRestController {
   public ResponseEntity<CMResDTO<String>> createExam(
       @RequestBody ExamReqDTO examReqDTO) {
 
-    int examId = examService.createExam(examReqDTO);
+    int createrId = 1;  //todo 로그인 완료되면 세션 아이디 등록
+
+    int examId = examService.createExam(examReqDTO, createrId);
     return new ResponseEntity<>(CMResDTO.successDataRes("시험 등록 성공, " + examId), HttpStatus.OK);
   }
 
@@ -114,6 +121,27 @@ public class ExamRestController {
   public ResponseEntity<CMResDTO<String>> getExamStatus(@PathVariable("examId") int examId) {
     String status = examService.getExamStatus(examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(status), HttpStatus.OK);
+  }
+
+
+  // 기존 작성한 답안 불러오기
+  @GetMapping("/exam-data/created")
+  public ResponseEntity<CMResDTO<Map<String, Object>>> getExamDataForCreator(
+      @RequestParam("examId") int examId,
+      HttpSession session) {
+    //todo 로그인 개발되면 사용
+    //Integer creatorId = (Integer) session.getAttribute("userId");
+
+    int creatorId = 1;
+
+    Map<String, Object> examData = examService.getExamDataCreated(examId, creatorId);
+
+    if (examData == null || examData.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body(
+              (CMResDTO<Map<String, Object>>) (Object) CMResDTO.errorRes(ErrorCode.EXAM_NOT_FOUND));
+    }
+    return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
 

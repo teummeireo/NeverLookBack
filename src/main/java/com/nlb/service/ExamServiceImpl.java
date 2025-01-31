@@ -12,6 +12,7 @@ import com.nlb.vo.ExamMongoVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -62,10 +63,10 @@ public class ExamServiceImpl implements ExamService {
   }
 
   @Override
-  public int createExam(ExamReqDTO examReqDTO) {
+  public int createExam(ExamReqDTO examReqDTO, int createrId) {
     //RDB 에 먼저 저장
     ExamVO examVO = examReqDTO.getExamVO();
-    examVO.setCreaterId(1); //todo 로그인 생기면 세션에서 가져오는 로직으로 변경
+    examVO.setCreaterId(createrId);
 
     //RDB에 저장하고 생성된 ID 값과 같은 examId 값으로 몽고db에 저장 (몽고의 _id랑 별개)
     examMapper.insertExam(examVO);
@@ -80,7 +81,8 @@ public class ExamServiceImpl implements ExamService {
         .set("entreeCode", examVO.getEntreeCode())
         .set("examTime", examVO.getExamTime())
         .set("startedAt", examVO.getStartedAt())
-        .set("finishedAt", examVO.getFinishedAt());
+        .set("finishedAt", examVO.getFinishedAt())
+        .set("createrId", createrId);
 //        .set("questionCount",
 //            examMongoVO.getQuestions() != null ? examMongoVO.getQuestions().size() : 0)
 //        .set("questions", examMongoVO.getQuestions());
@@ -92,22 +94,29 @@ public class ExamServiceImpl implements ExamService {
   @Override
   @Transactional
   public boolean updateExam(int examId, ExamVO examVO) {
-    System.out.println("examvo  = " +examVO);
+
     // RDB 업데이트 (ExamVO)
     examVO.setExamId(examId);
-    int rowsUpdated = examMapper.updateExam(examVO);  // RDB에 기본 정보 업데이트(mapperxml 에도 null아닐떄만 set 적용)
+    int rowsUpdated = examMapper.updateExam(
+        examVO);  // RDB에 기본 정보 업데이트(mapperxml 에도 null아닐떄만 set 적용)
 
     // MongoDB 업데이트 (ExamMongoVO)
     Query query = Query.query(Criteria.where("examId").is(examId));  // examId로 MongoDB에서 찾기
     // 기존 값 유지하며 업데이트 할 데이터만 수정
     Map<String, Object> updateFields = new HashMap<>();
     Optional.ofNullable(examVO.getTitle()).ifPresent(value -> updateFields.put("title", value));
-    Optional.ofNullable(examVO.getExamCode()).ifPresent(value -> updateFields.put("examCode", value));
-    Optional.ofNullable(examVO.getCategory()).ifPresent(value -> updateFields.put("category", value));
-    Optional.ofNullable(examVO.getEntreeCode()).ifPresent(value -> updateFields.put("entreeCode", value));
-    Optional.ofNullable(examVO.getExamTime()).ifPresent(value -> updateFields.put("examTime", value));
-    Optional.ofNullable(examVO.getStartedAt()).ifPresent(value -> updateFields.put("startedAt", value));
-    Optional.ofNullable(examVO.getFinishedAt()).ifPresent(value -> updateFields.put("finishedAt", value));
+    Optional.ofNullable(examVO.getExamCode())
+        .ifPresent(value -> updateFields.put("examCode", value));
+    Optional.ofNullable(examVO.getCategory())
+        .ifPresent(value -> updateFields.put("category", value));
+    Optional.ofNullable(examVO.getEntreeCode())
+        .ifPresent(value -> updateFields.put("entreeCode", value));
+    Optional.ofNullable(examVO.getExamTime())
+        .ifPresent(value -> updateFields.put("examTime", value));
+    Optional.ofNullable(examVO.getStartedAt())
+        .ifPresent(value -> updateFields.put("startedAt", value));
+    Optional.ofNullable(examVO.getFinishedAt())
+        .ifPresent(value -> updateFields.put("finishedAt", value));
 
     // 업데이트 된 값들만 수정하도록 매핑
     Update update = new Update();
@@ -143,7 +152,7 @@ public class ExamServiceImpl implements ExamService {
     int questionCount = Questions.size();
     examMapper.updateQuestionCount(examId, questionCount);
 
-    return (int) result.getMatchedCount();
+    return questionCount;
   }
 
   //고유 _id 가 없어서 examId를 찾을때 query 객체로 찾아야하는 용도 메서드
@@ -162,6 +171,7 @@ public class ExamServiceImpl implements ExamService {
     return examMongoVO != null ? examMongoVO.getQuestions() : new ArrayList<>();
   }
 
+
   @Override
   public String getExamStatus(int examId) {
     ExamVO examVO = examMapper.selectExamById(examId);
@@ -173,4 +183,20 @@ public class ExamServiceImpl implements ExamService {
   public List<ExamVO> getAllExams(String sortBy, String order, String category) {
     return examMapper.selectExamList(sortBy, order, category);
   }
+
+
+  // 시험 문제 전체만 (creator 기준으로)
+  @Override
+  public Map<String, Object> getExamDataCreated(int examId, int creatorId) {
+    // MongoDB에서 해당 시험 데이터 직접 조회
+    Query query = Query.query(Criteria.where("createrId").is(creatorId).and("examId").is(examId));
+    Map<String, Object> examData = mongoTemplate.findOne(query, Map.class, "exams");
+
+    if (examData == null) {
+      return Collections.emptyMap();  // 비어있는 맵 반환하여 Null 방지
+    }
+
+    return examData;
+  }
+
 }
