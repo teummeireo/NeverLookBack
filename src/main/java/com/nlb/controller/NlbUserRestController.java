@@ -6,6 +6,7 @@ import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -46,17 +47,14 @@ public class NlbUserRestController {
     }
 
 
-    @RequestMapping(value = "/deactivate/{userId}", method = RequestMethod.PUT)
-    public ResponseEntity<CMResDTO<String>> setUserDeactivate(@PathVariable("userId") int userId) {
+    @RequestMapping(value = "/deactivate", method = RequestMethod.PUT)
+    public ResponseEntity<CMResDTO<String>> setUserDeactivate(@RequestBody NlbUserVO uvo) {
 
 
-        int rows = nlbUserService.setUserDeactivate(userId);
+        int rows = nlbUserService.setUserDeactivate(uvo);
 
         return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
     }
-
-
-
 
 
 }
