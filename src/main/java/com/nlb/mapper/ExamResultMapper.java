@@ -53,4 +53,8 @@ public interface ExamResultMapper {
     List<ExamResultVO> selectAllExamResults();
 
     void updateScoreAndIsCorrect(Map<String, Object> params);
+  void updateScoreAndIsCorrect(Map<String, Object> params);
+
+  void updateIsCorrect(Map<String, Object> params);
+  void updateExamTotalScore(Map<String, Object> params);
 }

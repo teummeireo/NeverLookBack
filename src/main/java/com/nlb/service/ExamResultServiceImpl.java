@@ -519,5 +519,54 @@ public class ExamResultServiceImpl implements ExamResultService {
   }
 
 
+  @Override
+  @Transactional
+  public boolean updateShortAnswerAndScore(int resultId, int questionId, boolean isCorrected,
+      String correctedAnswer, Integer newScore) {
+
+    // 기존 채점 결과 가져오기
+    Query query = Query.query(
+        Criteria.where("resultId").is(resultId)
+            .and("answers.questionId").is(questionId)
+    );
+    ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
+        "examResults");
+
+    if (existingExamResult == null) {
+      throw new IllegalArgumentException("해당 문제에 대한 기존 채점 데이터가 없습니다.");
+    }
+
+    // 기존 점수 조회
+    AnswerVO existingAnswer = existingExamResult.getAnswers().stream()
+        .filter(a -> a.getQuestionId() == questionId)
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("해당 문제의 답변이 존재하지 않습니다."));
+
+    int oldScore = existingAnswer.getPointsEarned();
+    int scoreDifference = newScore - oldScore; //총점 교체용
+
+    // MongoDB 업데이트
+    Update update = new Update()
+        .set("answers.$.isCorrect", isCorrected)
+        .set("answers.$.pointsEarned", newScore);
+    mongoTemplate.updateFirst(query, update, "examResults");
+
+    // RDB 업데이트
+    Map<String, Object> params = new HashMap<>();
+    params.put("resultId", resultId);
+    params.put("questionId", questionId);
+    params.put("isCorrect", isCorrected);
+    params.put("scoreDifference", scoreDifference);
+
+    // result_detail 테이블 업데이트 (is_correct 변경)
+    examResultMapper.updateIsCorrect(params);
+
+    // exam_result 테이블 총점 업데이트 (score 변경)
+    examResultMapper.updateExamTotalScore(params);
+
+    return true;
+  }
+
+
 }
 

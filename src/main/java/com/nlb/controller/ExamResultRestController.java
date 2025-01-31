@@ -196,8 +196,6 @@ public class ExamResultRestController {
   }
 
 
-
-
   //응시자 정보 조회
   @GetMapping("/examinee-info")
   public ResponseEntity<CMResDTO<ExamineeInfoResDTO>> getExamineeInfo(
@@ -262,6 +260,28 @@ public class ExamResultRestController {
       return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
   }
+
+
+  @PutMapping("/{resultId}/{questionId}/subj-update")
+  public ResponseEntity<CMResDTO<String>> editShortAnswerAndScore(
+      @PathVariable int resultId,
+      @PathVariable int questionId,
+      @RequestBody Map<String, Object> requestBody) {
+
+    // JSON에서 수정할 답안과 부분 점수 가져오기 (없으면 null 처리)
+    String correctedAnswer = (String) requestBody.get("correctedAnswer");
+    Integer partialScore = (Integer) requestBody.get("score");
+    Boolean isCorrected = (Boolean) requestBody.get("isCorrected");
+
+    boolean success = examResultService.updateShortAnswerAndScore(resultId, questionId, isCorrected ,correctedAnswer, partialScore);
+
+    if (success) {
+      return new ResponseEntity<>(CMResDTO.successDataRes("답안 수정 및 점수 반영 완료"), HttpStatus.OK);
+    } else {
+      return new ResponseEntity<>(CMResDTO.errorRes(ErrorCode.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+    }
+  }
+
 }
 
 

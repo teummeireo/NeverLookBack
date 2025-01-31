@@ -154,5 +154,19 @@
     WHERE result_id = #{resultId} AND question_id = #{questionId};
   </update>
 
+  <!-- result_detail 테이블에서 정답 여부 수정 -->
+  <update id="updateIsCorrect">
+    UPDATE result_detail
+    SET is_correct = #{isCorrect}
+    WHERE result_id = #{resultId} AND question_id = #{questionId};
+  </update>
+
+  <!-- exam_result 테이블에서 기존 점수 수정 -->
+  <update id="updateExamTotalScore">
+    UPDATE exam_result
+    SET score = score + #{scoreDifference}
+    WHERE result_id = #{resultId};
+  </update>
+
 
 </mapper>
