@@ -45,14 +45,9 @@ public interface ExamResultService {
 
   public boolean submitObjectionReply(int examId, int examineeId, int questionId, String objectionReply);
 
-  ExamResultCardDTO getExamResultAndExam(int resultId);
-
-  List<ExamResultVO> getAllExamResults();
-
   public List<Map<String , Object>> getQuestionsState(int examId, int examineeId);
 
   public boolean updateQuestionScore(int resultId, int questionId, boolean isCorrected);
-
 
   public boolean updateShortAnswerAndScore(int resultId, int questionId, boolean isCorrected ,String correctedAnswer, Integer partialScore);
 
