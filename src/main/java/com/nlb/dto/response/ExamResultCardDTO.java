@@ -1,8 +1,10 @@
 package com.nlb.dto.response;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ExamVO;
+import java.time.LocalDateTime;
 import lombok.*;
 
 @Getter
@@ -19,9 +21,12 @@ public class ExamResultCardDTO {
     private String entreeCode;
     private int questionCount;
     private int examineeCount; // Default: 0
-    private String createdAt; // Default: sysdate
-    private String startedAt;
-    private String finishedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt; // Default: sysdate
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime startedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime finishedAt;
     private int examTime;  //  분단위
     private String activationStatus; // 'not_started', 'on_going', 'closed'
     
@@ -29,7 +34,8 @@ public class ExamResultCardDTO {
     private int resultId;
     private int examineeId;
     private int score; // Range: 0-100
-    private String submittedAt; // Default: sysdate
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime submittedAt; // Default: sysdate
     private boolean isReviewed; // Default: false
 
 }

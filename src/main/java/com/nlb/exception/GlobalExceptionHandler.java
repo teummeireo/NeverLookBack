@@ -152,4 +152,21 @@ public class GlobalExceptionHandler {
         ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
         return new ResponseEntity<>(CMResDTO.errorRes(errorCode), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    // 권한 없음 (403)
+    @ExceptionHandler(CustomAccessDeniedException.class)
+    public ResponseEntity<CMResDTO<String>> handleAccessDeniedException(CustomAccessDeniedException e) {
+        log.error("[CustomAccessDeniedException] message: {}", e.getMessage());
+        return new ResponseEntity<>(
+            CMResDTO.errorWithMsgRes(ErrorCode.FORBIDDEN, e.getMessage()),
+            HttpStatus.FORBIDDEN
+        );    }
+
+    @ExceptionHandler(DuplicatedQuestionException.class)
+    public ResponseEntity<CMResDTO<String>> handleDuplicatedQuestionException(DuplicatedQuestionException e) {
+        log.error("[DuplicatedQuestionException] message: {}", e.getMessage());
+        return new ResponseEntity<>(CMResDTO.errorWithMsgRes(e.getErrorCode(), e.getMessage()), HttpStatus.CONFLICT);
+    }
+
+
 }

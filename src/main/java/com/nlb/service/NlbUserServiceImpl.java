@@ -2,11 +2,13 @@ package com.nlb.service;
 
 
 import com.nlb.exception.BadRequestException;
+import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.NlbUserMapper;
 import com.nlb.util.PasswordUtil;
 import com.nlb.vo.NlbUserVO;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,8 +39,16 @@ public class NlbUserServiceImpl implements NlbUserService {
     }
 
     @Override
-    public int setUserDeactivate(int userId) {
-        return userMapper.updateUserDeactivate(userId);
+    public int setUserDeactivate(NlbUserVO uvo) {
+        int rows = 0;
+        NlbUserVO checkvo = userMapper.selectUserByUserId(uvo.getUserId());
+        if(checkvo.getLoginId().equals(uvo.getLoginId()) && PasswordUtil.checkPassword(uvo.getPassword(), checkvo.getPassword()) ) {
+            rows = userMapper.updateUserDeactivate(uvo.getUserId());
+        } else {
+            throw new BadRequestException(ErrorCode.BAD_REQUEST);
+        }
+
+        return rows;
     }
 
     @Override

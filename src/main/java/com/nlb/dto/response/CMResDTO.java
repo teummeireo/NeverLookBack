@@ -1,5 +1,6 @@
 package com.nlb.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nlb.exception.ErrorCode;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
@@ -14,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 public class CMResDTO<T> {
 
     private int code;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     private LocalDateTime time;
     private String msg;
 

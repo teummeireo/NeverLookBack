@@ -30,6 +30,7 @@ replay_pid*
 pom.xml
 target/
 out/
+classes/
 
 # Ignore IDE specific files
 .idea/

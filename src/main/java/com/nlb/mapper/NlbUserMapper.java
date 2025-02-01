@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface NlbUserMapper {
 
-
     List<NlbUserVO> selectUsers();
 
     int updateUserIsActive(@Param("userId") int userId,
