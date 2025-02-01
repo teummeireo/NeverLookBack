@@ -27,6 +27,7 @@ public interface NlbUserService {
     // 이메일 관련
     boolean isEmailExist(String email);
 
-
+    // loginId로 사용자 조회
+    NlbUserVO getUserByLoginId(String loginId);
 
 }

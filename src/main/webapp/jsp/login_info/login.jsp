@@ -1,20 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/login_register_find.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="/css/login_register_find.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="signup-container">
-    <form id="signupForm" class="signup-form">
+    <form id="loginForm" class="signup-form">
         <h2>Login</h2>
 
         <div class="form-group">
-            <input type="text" id="id" name="id" placeholder="User" required>
+            <input type="text" id="loginId" name="loginId" placeholder="User" required>
         </div>
 
         <div class="form-group password-group">
@@ -23,16 +24,43 @@
 
         <button type="submit" class="btn-submit">Login</button>
 
+        <p id="error-message" style="color: red; display: none;">로그인 실패. 아이디 또는 비밀번호를 확인하세요.</p>
+
         <div class="form-footer">
-            <a href="/jsp/login_info/find_id.jspfind_id.jsp">아이디 찾기</a>
-            <a href="/jsp/login_info/find_pw.jspfind_pw.jsp">비밀번호 찾기</a>
+            <a href="/jsp/login_info/find_id.jsp">아이디 찾기</a>
+            <a href="/jsp/login_info/find_pw.jsp">비밀번호 찾기</a>
         </div>
 
         <div class="form-footer">
             <a href="/jsp/register.jsp">회원가입</a>
         </div>
-
     </form>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $('#loginForm').submit(function(event) {
+      event.preventDefault(); // 폼 기본 제출 방지
+
+      var loginData = {
+        loginId: $('#loginId').val(),
+        password: $('#password').val()
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "/api/users/login",
+        contentType: "application/json",
+        data: JSON.stringify(loginData),
+        success: function() {
+          window.location.href = "/jsp/main.jsp";
+        },
+        error: function() {
+          $('#error-message').show();
+        }
+      });
+    });
+  });
+</script>
 </body>
 </html>

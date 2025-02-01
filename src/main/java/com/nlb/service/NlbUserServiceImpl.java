@@ -82,6 +82,7 @@ public class NlbUserServiceImpl implements NlbUserService {
         return userMapper.updateUser(uvo);
     }
 
+    // 아래 3개 중복확인
     @Override
     public boolean isLoginIdExist(String loginId) {
         if (loginId == null || loginId.trim().isEmpty()) {
@@ -123,6 +124,11 @@ public class NlbUserServiceImpl implements NlbUserService {
         return userMapper.insertUser(uvo);
     }
 
+    // 비밀번호 확인
+    @Override
+    public NlbUserVO getUserByLoginId(String loginId) {
+        return userMapper.selectUserByLoginId(loginId);
+    }
 
 
 }

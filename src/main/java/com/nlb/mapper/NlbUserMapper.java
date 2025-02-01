@@ -32,4 +32,6 @@ public interface NlbUserMapper {
     long countByNickname(@Param("nickname") String nickname);
     long countByEmail(@Param("email") String email);
 
+    // 로그인
+    NlbUserVO selectUserByLoginId(@Param("loginId") String loginId);
 }
