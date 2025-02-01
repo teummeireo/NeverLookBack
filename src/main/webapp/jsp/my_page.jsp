@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/my_page.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+
     <title>My Page</title>
 </head>
 <body>
@@ -23,14 +25,14 @@
             <hr class="divider">
         </div>
         <div class="card-container">
-            <a href="/jsp/page_edit.jsp" class="card-link">
+            <a href="/edit-info" class="card-link">
                 <div class="card">
                     <i class="fas fa-user-edit"></i>
                     <p class="card-title">회원정보 수정</p>
                     <p class="card-description">회원 정보, 비밀번호 및 닉네임 변경 등 <br> 내 정보를 수정하세요.</p>
                 </div>
             </a>
-            <a href="/jsp/unregister_user.jsp" class="card-link">
+            <a href="/unregister" class="card-link">
                 <div class="card">
                     <i class="fas fa-user-times"></i>
                     <p class="card-title">회원 탈퇴</p>

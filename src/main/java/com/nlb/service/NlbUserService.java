@@ -15,7 +15,7 @@ public interface NlbUserService {
 
     NlbUserVO getUser(int userId);
 
-    int setUserDeactivate(int userId);
+    int setUserDeactivate(NlbUserVO uvo);
 
     int updateUser(NlbUserVO uvo);
 }
