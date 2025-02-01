@@ -86,17 +86,20 @@ public class NlbUserRestController {
         try {
             int result = nlbUserService.registerUser(uvo);
             if (result > 0) {
-                return ResponseEntity.status(HttpStatus.CREATED).body(CMResDTO.successDataRes("회원가입이 완료되었습니다."));
+                return ResponseEntity
+                    .status(HttpStatus.CREATED) // 명시적으로 201 상태 설정
+                    .body(CMResDTO.successDataRes("회원가입이 완료되었습니다.")); // 성공 메시지
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST) // 실패 시 400 상태 반환
                     .body(CMResDTO.errorWithMsgRes(null, "회원가입에 실패하였습니다. 다시 시도해주세요."));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR) // 500 상태 반환
                 .body(CMResDTO.errorWithMsgRes(null, "서버 오류 발생: " + e.getMessage()));
         }
     }
-
 
     @PostMapping("/send-email")
     public ResponseEntity<?> sendEmail(@RequestBody Map<String, String> request) {
@@ -147,5 +150,81 @@ public class NlbUserRestController {
         }
         return new ResponseEntity<>(CMResDTO.errorWithMsgRes(null, "아이디 또는 비밀번호가 올바르지 않습니다."), HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/find-id")
+    public ResponseEntity<CMResDTO<String>> findUserId(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String loginId = nlbUserService.findLoginIdByEmail(email);
+        if (loginId != null) {
+            return new ResponseEntity<>(CMResDTO.successDataRes(loginId), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(CMResDTO.errorWithMsgRes(null, "등록된 이메일이 없습니다."), HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/find-password")
+    public ResponseEntity<CMResDTO<String>> verifyUserForPasswordReset(@RequestBody Map<String, String> request) {
+        String loginId = request.get("loginId");
+        String email = request.get("email");
+
+        if (loginId == null || email == null || loginId.trim().isEmpty() || email.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                .body(CMResDTO.errorWithMsgRes(null, "아이디와 이메일을 입력하세요."));
+        }
+
+        boolean isUserValid = nlbUserService.validateUserByLoginIdAndEmail(loginId, email);
+        if (isUserValid) {
+            return ResponseEntity.ok(CMResDTO.successNoRes());
+        }
+
+        return ResponseEntity.badRequest()
+            .body(CMResDTO.errorWithMsgRes(null, "아이디 또는 이메일이 일치하지 않습니다."));
+    }
+
+    @PostMapping("/find-password/send-email")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        String newPassword = request.get("newPassword");
+        String confirmNewPassword = request.get("confirmNewPassword");
+
+        if (email == null || newPassword == null || confirmNewPassword == null ||
+            email.trim().isEmpty() || newPassword.trim().isEmpty() || confirmNewPassword.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("code", 400, "errorMessage", "필수 입력값을 입력하세요."));
+        }
+
+        // 비밀번호 일치 여부 확인
+        if (!newPassword.equals(confirmNewPassword)) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("code", 400, "errorMessage", "새 비밀번호가 일치하지 않습니다."));
+        }
+
+        // 이메일에 해당하는 사용자가 있는지 확인
+        NlbUserVO user = nlbUserService.getUserByLoginId(nlbUserService.findLoginIdByEmail(email));
+        if (user == null) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("code", 400, "errorMessage", "등록된 이메일이 없습니다."));
+        }
+
+        // 이전 비밀번호와 같은지 확인
+        if (PasswordUtil.checkPassword(newPassword, user.getPassword())) {
+            return ResponseEntity.badRequest()
+                .body(Map.of("code", 400, "errorMessage", "이전과 다른 비밀번호를 설정하세요."));
+        }
+
+        // 새 비밀번호 해싱 후 업데이트
+        String hashedPassword = PasswordUtil.hashPassword(newPassword);
+        int updateResult = nlbUserService.updateUserPassword(user.getLoginId(), hashedPassword);
+
+        if (updateResult > 0) {
+            return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "message", "비밀번호가 성공적으로 변경되었습니다."
+            ));
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(Map.of("code", 500, "errorMessage", "비밀번호 변경에 실패하였습니다."));
+    }
+
 
 }

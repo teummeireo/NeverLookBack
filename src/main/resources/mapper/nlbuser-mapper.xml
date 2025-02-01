@@ -83,4 +83,18 @@
         SELECT * FROM nlbuser WHERE login_id = #{loginId}
     </select>
 
+    <select id="selectLoginIdByEmail" parameterType="String" resultType="String">
+        SELECT login_id FROM nlbuser WHERE email = #{email}
+    </select>
+
+    <select id="selectUserByLoginIdAndEmail" parameterType="map" resultType="NlbUserVO">
+        SELECT * FROM nlbuser WHERE login_id = #{loginId} AND email = #{email}
+    </select>
+
+    <update id="updateUserPassword">
+        UPDATE nlbuser
+        SET password = #{password}
+        WHERE login_id = #{loginId}
+    </update>
+
 </mapper>

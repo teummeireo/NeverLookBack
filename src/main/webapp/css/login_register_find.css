@@ -123,3 +123,38 @@ input[type="text"] {
     color: #7E57E4; /* 마우스를 올리면 색상이 변경됨 */
     text-align: center;
 }
+
+/* 모달창 스타일 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 3;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 400px;
+    background-color: #7E57E4;
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    margin: 10px;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: white;
+}
+
+.close-btn:hover {
+    color: #ff6666;
+}
