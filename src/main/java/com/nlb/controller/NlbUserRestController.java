@@ -1,6 +1,7 @@
 package com.nlb.controller;
 
 import com.nlb.dto.response.CMResDTO;
+import com.nlb.exception.ErrorCode;
 import com.nlb.service.EmailService;
 import com.nlb.service.NlbUserService;
 import com.nlb.util.PasswordUtil;
@@ -10,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
@@ -136,16 +140,27 @@ public class NlbUserRestController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<CMResDTO<String>> login(@RequestBody Map<String, String> request, HttpSession session) {
+    public ResponseEntity<CMResDTO<String>> login(@RequestBody Map<String, String> request, HttpSession session
+            , HttpServletResponse response) {
         String loginId = request.get("loginId");
         String password = request.get("password");
 
         NlbUserVO user = nlbUserService.getUserByLoginId(loginId);
         if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
             session.setAttribute("userId", user.getUserId());
+            session.setAttribute("loginId", user.getLoginId());
+            session.setAttribute("nickname", user.getNickname());
+            session.setAttribute("userRole", user.getUserRole().toString());
+
+            // 세션 ID를 클라이언트 쿠키로 저장
+            Cookie sessionCookie = new Cookie("SESSIONID", session.getId());
+            sessionCookie.setHttpOnly(true); // 클라이언트 스크립트에서 접근 불가
+            sessionCookie.setPath("/"); // 루트 경로에 대해 유효
+            sessionCookie.setMaxAge(60 * 60); // 1시간
+            response.addCookie(sessionCookie);
             return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(CMResDTO.errorWithMsgRes(null, "아이디 또는 비밀번호가 올바르지 않습니다."), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(CMResDTO.errorWithMsgRes(ErrorCode.INVALID_USER_PASSWORD, "아이디 또는 비밀번호가 올바르지 않습니다."), HttpStatus.BAD_REQUEST);
     }
 
 }
