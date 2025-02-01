@@ -49,6 +49,7 @@
             type: "GET",
             dataType: "json",
             success: function(data) {
+
                 let tableBody = "";
                 data.forEach(user => {
                     tableBody += "<tr>" +
