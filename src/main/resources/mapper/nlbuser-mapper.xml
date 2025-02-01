@@ -79,5 +79,8 @@
         SELECT COUNT(*) FROM nlbuser WHERE email = #{email}
     </select>
 
+    <select id="selectUserByLoginId" parameterType="String" resultType="NlbUserVO">
+        SELECT * FROM nlbuser WHERE login_id = #{loginId}
+    </select>
 
 </mapper>

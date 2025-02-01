@@ -3,6 +3,7 @@ package com.nlb.controller;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.service.EmailService;
 import com.nlb.service.NlbUserService;
+import com.nlb.util.PasswordUtil;
 import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,6 @@ public class NlbUserRestController {
 
     @Autowired
     private EmailService emailService;
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(HttpSession session) {
-        session.setAttribute("userId", 1); // 세션에 userId 저장
-        return new ResponseEntity<>("Login successful", HttpStatus.OK);
-    }
 
     //회원 조회
     @RequestMapping(value = "/info/{userId}", method = RequestMethod.GET)
@@ -140,5 +135,17 @@ public class NlbUserRestController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<CMResDTO<String>> login(@RequestBody Map<String, String> request, HttpSession session) {
+        String loginId = request.get("loginId");
+        String password = request.get("password");
+
+        NlbUserVO user = nlbUserService.getUserByLoginId(loginId);
+        if (user != null && PasswordUtil.checkPassword(password, user.getPassword())) {
+            session.setAttribute("userId", user.getUserId());
+            return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(CMResDTO.errorWithMsgRes(null, "아이디 또는 비밀번호가 올바르지 않습니다."), HttpStatus.BAD_REQUEST);
+    }
 
 }
