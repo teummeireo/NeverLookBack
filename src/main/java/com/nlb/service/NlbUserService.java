@@ -30,4 +30,12 @@ public interface NlbUserService {
     // loginId로 사용자 조회
     NlbUserVO getUserByLoginId(String loginId);
 
+    // 아이디 찾기
+    String findLoginIdByEmail(String email);
+
+    // 비밀번호 찾기 사용자 검증
+    boolean validateUserByLoginIdAndEmail(String loginId, String email);
+
+    // 비밀번호 재설정
+    int updateUserPassword(String loginId, String newPassword);
 }
