@@ -15,12 +15,21 @@
            http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd"
 >
 
-	<!-- Spring MVC 설정 -->
-	<mvc:annotation-driven />
+
+
 	<context:component-scan base-package="com.nlb" />
 
+	<!-- Spring MVC 설정 -->
+	<mvc:annotation-driven />
+
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/images/**" location="/images/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:resources mapping="/js/**" location="/js/" />
+
+
 	<!-- 데이터 소스 설정 -->
-	<context:property-placeholder location="classpath:mongo-config.properties,classpath:postgre-config.properties" ignore-unresolvable="false" />
+	<context:property-placeholder location="classpath:google-mail-config.properties,classpath:postgre-config.properties,classpath:mongo-config.properties" ignore-unresolvable="false"/>
 
 	<bean id="MY_tomcat_ds" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
 		<property name="driverClassName" value="${postgre.driverClassName}" />
@@ -38,13 +47,6 @@
 		<constructor-arg value="${mongodb.database}" />
 	</bean>
 
-
-
-	<mvc:resources mapping="/css/**" location="/css/" />
-	<mvc:resources mapping="/images/**" location="/images/" />
-	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/js/**" location="/js/" />
-
 	<!-- MyBatis 설정 -->
 	<bean id="ID_sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="MY_tomcat_ds" />
@@ -58,6 +60,24 @@
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.nlb.mapper" />
+	</bean>
+
+	<!-- JavaMailSender 설정 -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="teummeireoprj@gmail.com" />
+		<property name="password" value="xwuhcgdzxrgebfwx" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.starttls.required">true</prop>
+				<prop key="mail.smtp.ssl.protocols">TLSv1.2</prop>
+				<prop key="mail.debug">true</prop>
+			</props>
+		</property>
 	</bean>
 
 	<!-- 트랜잭션 설정 -->

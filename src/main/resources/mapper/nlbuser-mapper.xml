@@ -54,4 +54,23 @@
         </set>
         WHERE user_id = #{uvo.userId}
     </update>
+
+    <insert id="insertUser" parameterType="NlbUserVO">
+        INSERT INTO nlbuser (login_id, password, nickname, email, user_role, is_active, reg_date)
+        VALUES (#{loginId}, #{password}, #{nickname}, #{email}, #{userRole}, TRUE, NOW())
+    </insert>
+
+    <select id="countByLoginId" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM nlbuser WHERE login_id = #{loginId}
+    </select>
+
+    <select id="countByNickname" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM nlbuser WHERE nickname = #{nickname}
+    </select>
+
+    <select id="countByEmail" parameterType="String" resultType="long">
+        SELECT COUNT(*) FROM nlbuser WHERE email = #{email}
+    </select>
+
+
 </mapper>

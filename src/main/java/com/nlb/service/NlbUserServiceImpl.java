@@ -5,6 +5,7 @@ import com.nlb.exception.BadRequestException;
 import com.nlb.mapper.NlbUserMapper;
 import com.nlb.util.PasswordUtil;
 import com.nlb.vo.NlbUserVO;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -70,4 +71,48 @@ public class NlbUserServiceImpl implements NlbUserService {
         }
         return userMapper.updateUser(uvo);
     }
+
+    @Override
+    public boolean isLoginIdExist(String loginId) {
+        if (loginId == null || loginId.trim().isEmpty()) {
+            return false;  // 🔴 NULL이 들어오면 false 반환
+        }
+
+        Long count = userMapper.countByLoginId(loginId);  // 🟢 NULL 방지
+        return count != null && count > 0; // 🔴 count가 null이면 false 반환
+    }
+
+    @Override
+    public boolean isEmailExist(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return false;
+        }
+
+        Long count = userMapper.countByEmail(email);
+        return count != null && count > 0;
+    }
+
+    @Override
+    public boolean isNicknameExist(String nickname) {
+        if (nickname == null || nickname.trim().isEmpty()) {
+            return false;
+        }
+
+        Long count = userMapper.countByNickname(nickname);
+        return count != null && count > 0;
+    }
+
+    @Override
+    @Transactional
+    public int registerUser(NlbUserVO uvo) {
+        // 비밀번호 해싱
+        String hashedPassword = PasswordUtil.hashPassword(uvo.getPassword());
+        uvo.setPassword(hashedPassword);
+
+        // 회원가입 진행
+        return userMapper.insertUser(uvo);
+    }
+
+
+
 }

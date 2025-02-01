@@ -74,17 +74,32 @@ input[type="text"] {
     font-size: 16px;
 }
 
-/* Submit button styling */
+/* 버튼 기본 스타일 */
 .btn-submit {
-    width: 100%; /* 부모 요소 크기에 맞춤 */
+    width: 100%;
     padding: 15px;
     border: none;
     border-radius: 5px;
-    background: #9877E2; /* 버튼 색상 */
+    background: #9877E2;
     color: #fff;
     font-size: 18px;
     cursor: pointer;
     transition: background 0.3s;
+}
+
+/* 버튼 활성화 */
+.btn-submit.active {
+    background: #7E57E4;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* 버튼 비활성화 */
+.btn-submit.disabled {
+    background-color: #d6d6d6;
+    color: #a1a1a1;
+    cursor: not-allowed;
+    border: 1px solid #ccc;
 }
 
 .btn-submit:hover {
@@ -99,7 +114,12 @@ input[type="text"] {
 }
 
 .form-footer a {
-    color: #7E57E4;
+    color: #898787;
     text-decoration: none;
     margin: 0 10px;
+}
+
+.form-footer a:hover {
+    color: #7E57E4; /* 마우스를 올리면 색상이 변경됨 */
+    text-align: center;
 }

@@ -18,4 +18,15 @@ public interface NlbUserService {
     int setUserDeactivate(int userId);
 
     int updateUser(NlbUserVO uvo);
+
+    // 회원가입 관련
+    boolean isLoginIdExist(String loginId);
+    boolean isNicknameExist(String nickname);
+    int registerUser(NlbUserVO uvo);
+
+    // 이메일 관련
+    boolean isEmailExist(String email);
+
+
+
 }
