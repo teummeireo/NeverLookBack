@@ -26,5 +26,10 @@ public interface NlbUserMapper {
 
     int updateUser(@Param("uvo") NlbUserVO uvo);
 
+    int insertUser(NlbUserVO uvo);
+
+    long countByLoginId(@Param("loginId") String loginId);
+    long countByNickname(@Param("nickname") String nickname);
+    long countByEmail(@Param("email") String email);
 
 }

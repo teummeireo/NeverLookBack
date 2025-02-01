@@ -1,0 +1,183 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #FFF;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background-color: #000;
+}
+
+/* 왼쪽 NLB 텍스트 */
+header .header-left .logo-text {
+    font-size: 24px;
+    font-weight: bold;
+    color: #9877E2;
+}
+
+/* 오른쪽 로그아웃 */
+header .header-right .logout {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #000;
+    border-bottom: 2px solid #9877E2;
+}
+
+/* 로고 텍스트 */
+header .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #9877E2; /* NLB 글씨 색상 */
+}
+
+header .logout {
+    color: #FFF;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.content {
+    display: flex;
+    border: 2px solid #9877E2;
+    margin: 20px;
+    background-color: #000;
+}
+
+/* 추가된 sidebar 스타일 */
+.sidebar-wrapper {
+    display: flex;
+    flex-direction: row; /* 가로로 배치 */
+    border-right: 2px solid #9877E2;
+}
+
+/* Sidebar 전체 */
+.sidebar {
+    width: 200px;
+    background-color: #1A1A1A;
+    border-right: 2px solid #9877E2;
+    display: flex;
+    flex-direction: column; /* 세로 배치 */
+}
+
+/* Sidebar Extra (상단 배치) */
+.sidebar-extra {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 2px solid #9877E2;
+}
+
+.sidebar.extra {
+    width: 200px; /* 추가 sidebar 크기 */
+    background-color: #1A1A1A; /* 배경색 */
+    padding: 20px;
+    border-left: 2px solid #9877E2; /* 테두리 구분 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 콘텐츠 가운데 정렬 */
+}
+
+.sidebar-extra img {
+    width: 100px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+/* 리스트 스타일 */
+.sidebar.extra ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
+.sidebar.extra li {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #9877E2;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #9877E2;
+}
+
+.sidebar .active {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+main {
+    padding: 40px;
+    background-color: #000;
+}
+
+main h1 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+main p {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+main .highlight {
+    color: #9877E2;
+}
+
+form label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    background-color: #1A1A1A;
+    color: #FFF;
+    border-radius: 4px;
+}
+
+form .info {
+    font-size: 12px;
+    color: #AAA;
+    margin-bottom: 20px;
+}
+
+form .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #9877E2;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+form .btn:hover {
+    background-color: #7D61C0;
+}
