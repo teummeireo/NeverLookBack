@@ -8,7 +8,10 @@
     <title>Main Dashboard</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/search_filter.css">
+    <title>NeverLookBack</title>
+    <link rel="stylesheet" href="../css/main.css">
+
+    
 
 </head>
 <body>

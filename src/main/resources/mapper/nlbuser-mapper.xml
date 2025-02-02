@@ -7,11 +7,15 @@
 <mapper namespace="com.nlb.mapper.NlbUserMapper">
 
 
-    <select id = "selectUsers" resultType="NlbUserVO">
-        select *
-        from nlbuser
-    </select>
+<!--    <select id = "selectUsers" resultType="NlbUserVO">-->
+<!--        select *-->
+<!--        from nlbuser-->
+<!--    </select>-->
 
+    <select id="selectUsers" resultType="NlbUserVO">
+        SELECT login_id AS loginId, nickname, email, user_role AS userRole
+        FROM nlbuser
+    </select>
     <!-- 전체 조회 -->
 <!--    <select id="selectAllExamResults" resultType="ExamResultVO">-->
 <!--        SELECT exam_id, examinee_id, score, submitted_at, is_reviewed-->
