@@ -32,10 +32,17 @@ public class NlbUserController {
     public String main(HttpSession session) {
 
         //로그인 구현 안되서 하드코딩 합니다. todo: 하드코딩 지우기
-        session.setAttribute("SESS_USERID"   , 8);
-        session.setAttribute("SESS_NICKNAME" , "UserOne");
+//        session.setAttribute("SESS_USERID"   , 8);
+//        session.setAttribute("SESS_NICKNAME" , "UserOne");
 
         return "/jsp/main";
+
+    }
+
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public String login() {
+
+        return "/jsp/login_info/login";
 
     }
 
