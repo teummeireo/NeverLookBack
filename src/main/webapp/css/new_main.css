@@ -1,0 +1,230 @@
+@charset "UTF-8";
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    height: 100vh;
+    font-family: 'Pretendard', sans-serif;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 전체 컨테이너 */
+.main-container {
+    display: flex;
+    width: 100%;
+}
+
+/* 사이드바 기본 스타일 */
+.sidebar {
+    width: 60px;
+    background: #1e1e1e;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    position: fixed;
+    height: 100vh;
+    z-index: 1000;
+}
+
+/* 사이드바 hover 시 너비 증가 */
+.sidebar:hover {
+    width: 200px;
+}
+
+/* 메인 콘텐츠 영역 */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 60px;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+/* 사이드바 hover 시 콘텐츠 이동 */
+.sidebar:hover ~ .content {
+    margin-left: 200px;
+}
+/* 사이드바 hover 시 Hero 이미지도 같이 이동 */
+.sidebar:hover ~ .content .hero-image {
+    margin-left: 200px; /* 사이드바 확장 시 이미지 이동 */
+}
+
+/* Hero 섹션 */
+.hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    margin-top: 50px;
+    margin-left: 200px;
+}
+
+.hero-text {
+    max-width: 60%;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+}
+
+.hero p {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+.hero .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.hero .link {
+    display: block;
+    margin-top: 10px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.hero-image {
+    flex-grow: 1; /* 유동적으로 크기 조정 */
+    display: flex;
+    justify-content: flex-start; /* 오른쪽 정렬 */
+    transition: margin-left 0.3s ease-in-out; /* 부드러운 이동 효과 */
+    margin-left: 200px;
+    margin-top: 50px;
+}
+
+.hero .hero-image img {
+    width: 400px;
+    height: auto;
+}
+
+/* Poll types 섹션 */
+.poll-types {
+    display: flex;
+    justify-content: center; /* 가운데 정렬 */
+    flex-wrap: wrap;
+    gap: 100px;
+    margin-bottom: 50px;
+    transition: gap 0.3s ease-in-out;
+    margin-left: -100px;
+}
+
+.poll-type {
+    display: flex;
+    flex-direction: column; /* 이미지와 텍스트를 세로로 정렬 */
+    align-items: center;
+    margin: 10px; /* 개별 요소 간 마진 조정 */
+    text-align: center;
+}
+.sidebar:hover ~ .content .poll-types {
+    gap: 70px; /* 요소 간의 간격을 좁게 */
+}
+
+.poll-type img {
+    width: 50px;
+    height: 50px;
+}
+
+/* 정보 섹션 */
+.info-section {
+    margin-top: 150px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.info-section h1 {
+    font-size: 2.5em;
+    text-align: center;
+    margin-left: -800px;
+
+}
+
+.info-section iframe {
+    text-align: center;
+    margin-right: -800px;
+    margin-top: -150px;
+}
+
+/* Poll example 섹션 */
+.poll-example {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.example-image img {
+    width: 400px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.accordion {
+    width: 50%;
+}
+
+.accordion-item {
+    background-color: #1e1e1e;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
+.accordion-title {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.accordion-content {
+    display: none;
+    padding-top: 5px;
+}
+
+.accordion-item.active .accordion-content {
+    display: block;
+}
+
+/* 반응형 대응 */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 50px;
+    }
+
+    .sidebar:hover {
+        width: 200px;
+    }
+
+    .content {
+        margin-left: 50px;
+    }
+
+    .sidebar:hover ~ .content {
+        margin-left: 200px;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+    }
+
+    .poll-example {
+        flex-direction: column;
+    }
+
+    .accordion {
+        width: 100%;
+    }
+}
