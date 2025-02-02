@@ -96,9 +96,9 @@ public class ExamRestController {
   }
 
   // 문제 데이터 입력
-  @PutMapping("/{examId}/questions")
+  @PutMapping("/questions")
   public ResponseEntity<CMResDTO<String>> updateQuestion(
-      @PathVariable int examId,
+      @RequestParam int examId,
       @RequestBody List<QuestionVO> questions) {
 
     int updatedCount = examService.updateQuestions(examId, questions);
@@ -108,9 +108,9 @@ public class ExamRestController {
   }
 
   // 전체 문제 조회 (시험 아이디로)
-  @GetMapping("/{examId}/questions")
+  @GetMapping("/questions")
   public ResponseEntity<CMResDTO<List<QuestionVO>>> getExamQuestions(
-      @PathVariable("examId") int examId) {
+      @RequestParam int examId) {
     List<QuestionVO> questions = examService.getExamQuestions(examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(questions), HttpStatus.OK);
   }
