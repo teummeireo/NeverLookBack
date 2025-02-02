@@ -34,4 +34,17 @@ public interface NlbUserMapper {
 
     // 로그인
     NlbUserVO selectUserByLoginId(@Param("loginId") String loginId);
+
+    // 아이디 찾기
+    String selectLoginIdByEmail(@Param("email") String email);
+
+    // 비밀번호 찾기
+    NlbUserVO selectUserByLoginIdAndEmail(@Param("loginId") String loginId, @Param("email") String email);
+
+    // 비밀번호 재설정
+    int updateUserPassword(@Param("loginId") String loginId, @Param("password") String password);
+
+
+
+
 }
