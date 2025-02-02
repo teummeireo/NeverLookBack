@@ -13,6 +13,7 @@
     <li><a href="/jsp/exam.jsp"><i class="fas fa-file-alt"></i><span>응시한 시험</span></a></li>
     <li><a href="/mypage"><i class="fas fa-user"></i><span>마이페이지</span></a></li>
     <li><a href="/admin/main"><i class="fas fa-user"></i><span>운영자페이지</span></a></li>
+
     <c:choose>
     <c:when test="${not empty sessionScope.userId}">
       <li><a href="/jsp/logout.jsp"><i class="fas fa-sign-out-alt"></i><span>로그아웃</span></a></li>
@@ -21,6 +22,7 @@
       <li><a href="/login"><i class="fas fa-sign-out-alt"></i><span>로그인</span></a></li>
     </c:otherwise>
   </c:choose>
+
 
   </ul>
 </aside>

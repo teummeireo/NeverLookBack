@@ -31,6 +31,7 @@ public class AdminRestController {
         return new ResponseEntity<>(CMResDTO.successDataRes(ulist), HttpStatus.OK);
     }
 
+
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<CMResDTO<String>> setUserStatus(@PathVariable("userId") int userId,
                                                           @RequestParam("isActive") Boolean isActive) {

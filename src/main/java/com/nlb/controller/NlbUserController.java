@@ -47,7 +47,6 @@ public class NlbUserController {
     }
 
 
-
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)
     public ModelAndView mypage(ModelAndView modelAndView) {
         int userId = 1; // 임시 user_id
