@@ -1,8 +1,11 @@
 package com.nlb.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import org.springframework.stereotype.Controller;
 
-@Controller
+@RestController
+@RequestMapping("/api/exams")
 public class ExamController {
+
 }

@@ -144,5 +144,12 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
+  // 시험명 검색
+  @GetMapping("/search")
+  public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
+    List<ExamVO> examList = examService.searchExamsByName(name);
+
+    return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
+  }
 
 }
