@@ -16,7 +16,7 @@
 
     <c:choose>
     <c:when test="${not empty sessionScope.userId}">
-      <li><a href="/jsp/logout.jsp"><i class="fas fa-sign-out-alt"></i><span>로그아웃</span></a></li>
+      <li><a href="/logout"><i class="fas fa-sign-out-alt"></i><span>로그아웃</span></a></li>
     </c:when>
     <c:otherwise>
       <li><a href="/login"><i class="fas fa-sign-out-alt"></i><span>로그인</span></a></li>
