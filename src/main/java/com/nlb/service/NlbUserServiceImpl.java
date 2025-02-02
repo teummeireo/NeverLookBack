@@ -6,6 +6,7 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.NlbUserMapper;
 import com.nlb.util.PasswordUtil;
 import com.nlb.vo.NlbUserVO;
+import java.util.UUID;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -86,11 +87,11 @@ public class NlbUserServiceImpl implements NlbUserService {
     @Override
     public boolean isLoginIdExist(String loginId) {
         if (loginId == null || loginId.trim().isEmpty()) {
-            return false;  // 🔴 NULL이 들어오면 false 반환
+            return false;  // NULL이 들어오면 false 반환
         }
 
-        Long count = userMapper.countByLoginId(loginId);  // 🟢 NULL 방지
-        return count != null && count > 0; // 🔴 count가 null이면 false 반환
+        Long count = userMapper.countByLoginId(loginId);  // NULL 방지
+        return count != null && count > 0; // count가 null이면 false 반환
     }
 
     @Override
@@ -130,5 +131,24 @@ public class NlbUserServiceImpl implements NlbUserService {
         return userMapper.selectUserByLoginId(loginId);
     }
 
+    @Override
+    public String findLoginIdByEmail(String email) {
+        return userMapper.selectLoginIdByEmail(email);
+    }
+
+    @Override
+    public boolean validateUserByLoginIdAndEmail(String loginId, String email) {
+        // loginId를 통해 사용자를 조회
+        NlbUserVO user = userMapper.selectUserByLoginId(loginId);
+
+        // 사용자가 존재하고 이메일이 일치하는지 확인
+        return user != null && user.getEmail().equals(email);
+    }
+
+    @Override
+    @Transactional
+    public int updateUserPassword(String loginId, String newPassword) {
+        return userMapper.updateUserPassword(loginId, newPassword);
+    }
 
 }
