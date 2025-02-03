@@ -8,21 +8,14 @@ import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/exams")
@@ -115,14 +108,12 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(questions), HttpStatus.OK);
   }
 
-
   //시험 상태 확인
   @GetMapping("/{examId}/status")
   public ResponseEntity<CMResDTO<String>> getExamStatus(@PathVariable("examId") int examId) {
     String status = examService.getExamStatus(examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(status), HttpStatus.OK);
   }
-
 
   // 기존 작성한 답안 불러오기
   @GetMapping("/exam-data/created")
@@ -143,6 +134,4 @@ public class ExamRestController {
     }
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
-
-
 }
