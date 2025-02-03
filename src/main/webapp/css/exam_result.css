@@ -119,34 +119,14 @@ body {
     font-size: 18px;
 }
 
-/* Dashboard grid */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3개의 열 */
-    grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
-    gap: 20px;
-    height: 100%; /* 그리드 영역 전체 사용 */
-}
-
-.dashboard-card {
-    background: rgba(33, 32, 38, 0.55);
-    border-radius: 10px;
-    padding: 20px;
-    min-height: 200px; /* 카드 높이 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* 콘텐츠 간격 조정 */
-}
-
 
 .dashboard-card h3 {
-    color: #fff;
+    color: #000000;
     margin-bottom: 10px;
 }
 
 .dashboard-card p {
-    color: #ddd;
+    color: #000000;
 }
 
 .project-list ul {
@@ -276,4 +256,23 @@ body {
 
 .filter-menu label:hover {
     color: #111827;
+}
+
+
+#examResultsContainer {
+    display: flex !important;  /* 🚀 강제로 보이게 설정 */
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dashboard-card {
+    display: block !important; /* 🚀 강제 표시 */
+    width: 300px;
+    min-height: 150px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }

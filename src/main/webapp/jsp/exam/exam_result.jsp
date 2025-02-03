@@ -17,32 +17,38 @@
             <h1>이전 응시 내역</h1>
         </header>
         <div class="divider"></div>
+
+        <!-- ✅ 검색 입력창: id 및 name 추가 -->
         <div class="search-bar">
-            <input type="text" placeholder="검색해보세용">
+            <input type="text" id="searchInput" name="searchKeyword" placeholder="검색해보세용">
             <i class="icon-search"></i>
         </div>
+        <br>
+
+        <!-- ✅ 정렬 드롭다운: name 추가 -->
         <div class="sort-dropdown">
+            <label for="sortOrder">정렬:</label>
             <select id="sortOrder" name="sortOrder" onchange="handleSortChange()">
                 <option value="latest">최신순</option>
                 <option value="oldest">오래된 순</option>
             </select>
         </div>
+
+        <!-- ✅ 필터 체크박스: id 추가 -->
         <div class="filter-container">
             <button class="filter-button" onclick="toggleFilterMenu()">필터 ▼</button>
             <div class="filter-menu" id="filterMenu">
-                <label><input type="checkbox" name="filter" value="option1">진행전</label>
-                <label><input type="checkbox" name="filter" value="option2">진행후</label>
-                <label><input type="checkbox" name="filter" value="option3">검토완료</label>
+                <label for="filterOption1"><input type="checkbox" id="filterOption1" name="filter" value="option1"> 진행전</label>
+                <label for="filterOption2"><input type="checkbox" id="filterOption2" name="filter" value="option2"> 진행후</label>
+                <label for="filterOption3"><input type="checkbox" id="filterOption3" name="filter" value="option3"> 검토완료</label>
             </div>
         </div>
 
         <!-- 🚀 결과를 표시할 컨테이너 -->
         <div id="examResultsContainer"></div>
-<br>
+        <br>
     </main>
 
-
-    </main>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -59,16 +65,17 @@
             });
 
             // 검색 기능 추가
-            $(".search-bar input").on("input", function () {
+            $("#searchInput").on("input", function () {
                 loadExamResults();
             });
         });
+
         function loadExamResults() {
             let userId = 1; // 세션 적용 시 수정 필요
             let sortBy = "submittedAt"; // 기본 정렬 기준
             let order = $("#sortOrder").val() === "latest" ? "desc" : "asc"; // 정렬 순서
             let isReviewed = getFilterValues(); // 필터 값 가져오기
-            let searchKeyword = $(".search-bar input").val().trim(); // 검색어
+            let searchKeyword = $("#searchInput").val().trim(); // 검색어 가져오기
 
             $.ajax({
                 url: `/api/exams/results/user/1`,
@@ -95,29 +102,31 @@
             let resultContainer = $("#examResultsContainer");
             resultContainer.empty(); // 기존 내용 초기화
 
-            if (examResults.length === 0) {
+            console.log("렌더링 시작: 데이터 개수 ->", examResults.length);
+
+            if (!examResults || examResults.length === 0) {
+                console.warn("표시할 데이터가 없습니다.");
                 resultContainer.append("<p>응시 내역이 없습니다.</p>");
                 return;
             }
 
-            examResults.forEach(function (result) {
-                // 검색어 필터 적용 (examTitle 기준)
-                if (searchKeyword && !result.examTitle.includes(searchKeyword)) return;
+            resultContainer.css("display", "flex");
+
+            examResults.forEach(function (result, index) {
+                console.log(`(${index + 1}) 개별 데이터 ->`, result);
 
                 let card = `
             <div class="dashboard-card">
-                <h3>시험 제목: ${result.examTitle}</h3>
-                <p>응시일: ${result.submittedAt}</p>
+                <h3>시험 ID: ${result.examId}</h3>
+                <p>응시일: ${result.formattedSubmittedAt}</p>
                 <p>점수: ${result.score}점</p>
                 <p>검토 상태: ${result.isReviewed ? "검토 완료" : "미검토"}</p>
-                <p>시험 ID: ${result.examId}</p>
                 <p>결과 ID: ${result.resultId}</p>
             </div>`;
+
                 resultContainer.append(card);
             });
         }
-
-
 
         function getFilterValues() {
             let selectedFilters = [];
@@ -127,24 +136,6 @@
             return selectedFilters.length > 0 ? selectedFilters[0] : null;
         }
     </script>
-
-<%--    <script>--%>
-<%--        function handleSortChange() {--%>
-<%--            const sortOrder = document.getElementById('sortOrder').value;--%>
-<%--            if (sortOrder === 'latest') {--%>
-<%--                // 최신순 정렬 로직 추가--%>
-<%--            } else if (sortOrder === 'oldest') {--%>
-<%--                // 오래된 순 정렬 로직 추가--%>
-
-<%--            }--%>
-<%--        }--%>
-
-<%--        function toggleFilterMenu() {--%>
-<%--            const filterMenu = document.getElementById('filterMenu');--%>
-<%--            filterMenu.style.display = filterMenu.style.display === 'block' ? 'none' : 'block';--%>
-<%--        }--%>
-
-<%--    </script>--%>
 </div>
 </body>
 </html>
