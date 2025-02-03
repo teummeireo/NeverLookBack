@@ -1,25 +1,17 @@
 package com.nlb.controller;
 
 
-import javax.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import com.nlb.service.NlbUserService;
 import com.nlb.vo.NlbUserVO;
-import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 public class NlbUserController {
@@ -46,6 +38,24 @@ public class NlbUserController {
 
     }
 
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String Logout(HttpSession session, HttpServletResponse response) {
+        Cookie sessionCookie = new Cookie("SESSIONID", session.getId());
+        sessionCookie.setHttpOnly(true); // 클라이언트 스크립트에서 접근 불가
+        sessionCookie.setPath("/"); // 루트 경로에 대해 유효
+        sessionCookie.setMaxAge(0);
+        response.addCookie(sessionCookie);
+
+        session.invalidate();
+        session.setMaxInactiveInterval(0);
+
+
+        response.setHeader("Expires", "0");
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "private, no-cache, no-store, must-revalidate"); //정적 리소스는 캐싱 가능, 민감한 데이터는 캐싱 비활성화.
+
+        return "redirect:/";
+    }
 
 
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)

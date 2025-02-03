@@ -23,7 +23,7 @@
             <h1>My exam Dashboard</h1>
         </header>
         <div class="divider"></div>
-        <div class="dashboard-card project-list">
+        <div class="dashboard-card project-list" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/exam_result.jsp'" style="cursor: pointer;">
             <h3>이전 응시 내역</h3>
             <ul>
                 <li>Project 1 - In Progress</li>

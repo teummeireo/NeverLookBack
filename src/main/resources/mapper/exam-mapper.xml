@@ -127,5 +127,10 @@
     where result_id = #{resultId}
   </select>
 
+  <select id="findExamsByName" resultType="ExamVO">
+    SELECT * FROM exam
+    WHERE title ILIKE CONCAT('%', #{name}, '%')
+  </select>
+
 
 </mapper>

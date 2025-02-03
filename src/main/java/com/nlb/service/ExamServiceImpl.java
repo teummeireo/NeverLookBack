@@ -199,4 +199,10 @@ public class ExamServiceImpl implements ExamService {
     return examData;
   }
 
+  // 시험명 검색
+  @Override
+  public List<ExamVO> searchExamsByName(String name) {
+    return examMapper.findExamsByName(name);
+  }
+
 }

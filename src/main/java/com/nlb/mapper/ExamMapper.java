@@ -38,5 +38,7 @@ public interface ExamMapper {
 
   ExamVO selectExamByResultId(@Param("resultId") int resultId);
 
+  List<ExamVO> findExamsByName(@Param("name") String name);
+
 }
 

@@ -29,4 +29,6 @@ public interface ExamService {
 
   public Map<String, Object> getExamDataCreated(int examId, int creatorId);
 
+  List<ExamVO> searchExamsByName(String name);
+
 }

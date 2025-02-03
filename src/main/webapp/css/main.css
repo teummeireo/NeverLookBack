@@ -5,7 +5,7 @@ body {
     margin: 0;
     padding: 0;
     background: #121212;
-    colr: #fff;
+    color: #fff;
     display: flex;
     height: 100vh;
     font-family: 'Pretendard', sans-serif; /* Pretendard 사용 */
@@ -101,12 +101,12 @@ body {
     color: #ddd;
 }
 
-.project-list ul {
+.dashboard-card ul {
     list-style: none;
     padding: 0;
 }
 
-.project-list li {
+.dashboard-card li {
     padding: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     color: #ccc;
@@ -158,4 +158,172 @@ body {
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* 기존 스타일 유지하면서 result-table 크기 조정 */
+
+/* result-dashboard 내부의 테이블 크기를 맞춤 */
+#result-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 가운데 정렬 */
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* result-table이 부모 요소에 맞게 크기를 조정하도록 설정 */
+.result-table {
+    width: 90%; /* 부모 요소인 #result-dashboard의 90%를 차지하도록 설정 */
+    max-width: 1000px; /* 너무 넓어지지 않도록 최대 너비 제한 */
+    height: auto; /* 높이를 자동으로 조정 */
+    border-collapse: collapse;
+    background-color: #1e1e1e;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+/* 테이블 헤더 스타일 */
+.result-table thead tr {
+    background-color: #2d2d2d;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+}
+
+/* 테이블 셀 스타일 */
+.result-table th,
+.result-table td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+    text-align: center;
+    word-break: break-word; /* 긴 텍스트가 있을 경우 줄바꿈 */
+}
+
+/* 테이블 행 색상 설정 */
+.result-table tbody tr:nth-child(even) {
+    background-color: #252525;
+}
+
+.result-table tbody tr:hover {
+    background-color: #333;
+}
+
+/* 테이블이 부모 요소 크기에 맞게 확장되도록 설정 */
+.dashboard-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* 테이블 크기를 유동적으로 조정 */
+@media (max-width: 1024px) {
+    .result-table {
+        width: 95%;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .result-table {
+        width: 100%;
+        font-size: 13px;
+    }
+
+    .result-table th,
+    .result-table td {
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-table {
+        font-size: 12px;
+    }
+
+    .result-table th,
+    .result-table td {
+        padding: 6px;
+    }
+}
+
+
+.cell {
+    flex: 1;
+    text-align: center;
+    padding: 5px;
+    overflow-wrap: break-word;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 검색 결과 섹션 스타일 */
+.search-results {
+    margin-top: 20px;
+}
+
+/* 검색 결과 테이블 스타일 */
+.result-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+    background-color: #1e1e1e; /* 테이블 배경색 */
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.result-table thead tr {
+    background-color: #2d2d2d; /* 헤더 배경색 */
+    font-weight: bold;
+    color: #fff;
+}
+
+.result-table th, .result-table td {
+    padding: 10px;
+    border-bottom: 1px solid #444;
+    text-align: center; /* 가운데 정렬 */
+}
+
+.result-table tbody tr:nth-child(even) {
+    background-color: #252525; /* 짝수 행 배경색 */
+}
+
+.result-table tbody tr:hover {
+    background-color: #333; /* 행에 마우스 오버 시 배경색 */
+}
+
+.result-table tbody tr td {
+    font-size: 14px;
+}
+
+/* 상태 아이콘 스타일 (필요 시) */
+.status-icon {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-icon.not_started {
+    background-color: red;
+}
+
+.status-icon.on_going {
+    background-color: yellow;
+}
+
+.status-icon.closed {
+    background-color: green;
 }

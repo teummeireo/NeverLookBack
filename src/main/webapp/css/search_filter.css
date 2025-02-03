@@ -1,0 +1,47 @@
+@charset "UTF-8";
+/* 필터 컨테이너 스타일 */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 필터 옵션 정렬 */
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+}
+
+/* 필터 입력 필드 스타일 */
+.filter-input,
+.filter-select {
+    background: #1e1e1e;
+    border: 1px solid #444;
+    color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* 필터 입력 필드 hover & focus 효과 */
+.filter-input:hover, .filter-input:focus,
+.filter-select:hover, .filter-select:focus {
+    border-color: #aaa;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1024px) {
+    .filter-options {
+        flex-direction: column;
+        align-items: center;
+    }
+}
