@@ -3,10 +3,9 @@ package com.nlb.controller;
 
 import com.nlb.dto.request.ExamResultReqDTO;
 import com.nlb.dto.response.CMResDTO;
-import com.nlb.dto.response.ExamDataResDTO;
-import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
+import com.nlb.dto.response.FullExamDataResDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
@@ -119,20 +118,6 @@ public class ExamResultRestController {
         HttpStatus.OK);
   }
 
-  //시험 입장
-  @PostMapping("/{examId}/join")
-  public ResponseEntity<CMResDTO<ExamJoinResDTO>> joinExam(
-      @PathVariable int examId,
-      @RequestParam String examCode,
-      @RequestParam String entreeCode) {
-    //Integer examineeId = (Integer) session.getAttribute("userId");
-    //todo 로그인 개발되면 세션으로 변경
-    int examineeId = 1;
-    ExamJoinResDTO response = examResultService.joinExam(examId, examCode, examineeId,
-        entreeCode);
-
-    return new ResponseEntity<>(CMResDTO.successDataRes(response), HttpStatus.OK);
-  }
 
   // 제출 답안 상세 조회
   @GetMapping("/{examId}/answers")
@@ -154,17 +139,19 @@ public class ExamResultRestController {
 
   //시험 입장 후 데이터 조회 ( 문제 + 내가 입력한 답안 )
   @GetMapping("/{examId}/exam-data")
-  public ResponseEntity<CMResDTO<ExamDataResDTO>> getExamDataForUser(
+  public ResponseEntity<CMResDTO<FullExamDataResDTO>> getExamDataForUser(
       @PathVariable("examId") int examId,
       HttpSession session) {
-    //todo 로그인 개발되면 사용
-    //Integer examineeId = (Integer) session.getAttribute("userId");
+    // 로그인 기능 개발 시 사용
+    // Integer examineeId = (Integer) session.getAttribute("userId");
 
     int examineeId = 1;
 
-    ExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
+    FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
+    System.out.println(examData);
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
+
 
   //
   @GetMapping("/{examId}/{resultId}/details")

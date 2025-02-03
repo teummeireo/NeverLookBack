@@ -407,6 +407,7 @@
         });
     }
 
+    // 문제 순서 변경 드래그 함수
     function enableDragAndDrop() {
         new Sortable(document.getElementById("question-list"), {
             animation: 150,

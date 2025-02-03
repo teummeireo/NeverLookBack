@@ -3,10 +3,10 @@ package com.nlb.service;
 
 import com.mongodb.client.result.UpdateResult;
 import com.nlb.dto.request.ExamResultReqDTO;
-import com.nlb.dto.response.ExamDataResDTO;
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
+import com.nlb.dto.response.FullExamDataResDTO;
 import com.nlb.exception.BadRequestException;
 import com.nlb.exception.CustomAccessDeniedException;
 import com.nlb.exception.ErrorCode;
@@ -22,8 +22,10 @@ import com.nlb.vo.QuestionVO;
 import com.nlb.vo.ResultDetailVO;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -263,27 +265,61 @@ public class ExamResultServiceImpl implements ExamResultService {
 
   // 시험 문제 전체 + 답변 데이터 전체
   @Override
-  public ExamDataResDTO getExamData(int examId, int examineeId) {
+  public FullExamDataResDTO getExamData(int examId, int examineeId) {
     // 시험 문제 가져오기
     List<QuestionVO> questions = examService.getExamQuestions(examId);
 
-    // 응시자가 제출한 (몽고)데이터 가져오기
-    Map<String, Object> examResultData = getExamResultData(examId, examineeId);
+    // 응시자가 제출한 (몽고) 데이터 가져오기
+    Map<String, Object> examResultData = getExamResultDataAll(examId, examineeId);
+    System.out.println("examresultData 테스트 = " + examResultData);
 
+    // 시험 결과 ID 가져오기
     int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
         .getResultId();
-    // 📌 빈 answers 최초 생성 지점 (추후 resultDetail 입력시 쓰임)
+
+    // 응시자가 제출한 답안 (없으면 빈 리스트)
     List<AnswerVO> answers = (List<AnswerVO>) examResultData.getOrDefault("answers",
         new ArrayList<>());
 
-    // 응답 DTO 구성
-    return new ExamDataResDTO(
+    // MongoDB에서 가져온 시험 메타데이터 사용
+    return new FullExamDataResDTO(
         examId,
+        (String) examResultData.getOrDefault("title", "제목 없음"),
+        (String) examResultData.getOrDefault("category", "카테고리 없음"),
+        ((Number) examResultData.getOrDefault("createrId", 0)).intValue(), //몽고DB타입과 호환성때문에 Number해봄
+        (String) examResultData.getOrDefault("entreeCode", ""),
+        ((Number) examResultData.getOrDefault("examTime", 0)).intValue(),
+        convertDateToLocalDateTime(examResultData.get("startedAt")),
+        convertDateToLocalDateTime(examResultData.get("finishedAt")),
+        ((Number) examResultData.getOrDefault("questionCount", 0)).intValue(),
         resultId,
         examineeId,
         questions,
         answers
     );
+
+  }
+
+  public Map<String, Object> getExamResultDataAll(int examId, int examineeId) {
+    // exam_result컬렉션에서 데이터 가져오기
+    Query queryResult = new Query(Criteria.where("examId").is(examId)
+        .and("examineeId").is(examineeId));
+    Map<String, Object> examResultData = mongoTemplate.findOne(queryResult, Map.class,
+        "exam_results");
+
+    // exam컬렉션에서 메타데이터 가져오기
+    Query queryExam = new Query(Criteria.where("examId").is(examId));
+    Map<String, Object> examMetaData = mongoTemplate.findOne(queryExam, Map.class, "exams");
+
+    if (examResultData == null) {
+      examResultData = new HashMap<>();
+    }
+    if (examMetaData != null) {
+      examResultData.putAll(examMetaData);
+    }
+    System.out.println("최종 examResultData: " + examResultData);
+
+    return examResultData;
   }
 
 
@@ -565,6 +601,13 @@ public class ExamResultServiceImpl implements ExamResultService {
     examResultMapper.updateExamTotalScore(params);
 
     return true;
+  }
+
+  private LocalDateTime convertDateToLocalDateTime(Object dateObj) {
+    if (dateObj instanceof Date) {
+      return ((Date) dateObj).toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    }
+    return null; // 변환 실패 시 `null` 반환
   }
 
 
