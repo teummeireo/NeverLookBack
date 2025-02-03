@@ -25,24 +25,25 @@
         </div>
         <br>
 
-        <!-- ✅ 정렬 드롭다운: name 추가 -->
+        <!-- ✅ 정렬 드롭다운 -->
         <div class="sort-dropdown">
-            <label for="sortOrder">정렬:</label>
             <select id="sortOrder" name="sortOrder" onchange="handleSortChange()">
+                <option value="">정렬</option>
                 <option value="latest">최신순</option>
                 <option value="oldest">오래된 순</option>
             </select>
         </div>
 
-        <!-- ✅ 필터 체크박스: id 추가 -->
-        <div class="filter-container">
-            <button class="filter-button" onclick="toggleFilterMenu()">필터 ▼</button>
-            <div class="filter-menu" id="filterMenu">
-                <label for="filterOption1"><input type="checkbox" id="filterOption1" name="filter" value="option1"> 진행전</label>
-                <label for="filterOption2"><input type="checkbox" id="filterOption2" name="filter" value="option2"> 진행후</label>
-                <label for="filterOption3"><input type="checkbox" id="filterOption3" name="filter" value="option3"> 검토완료</label>
-            </div>
+        <!-- ✅ 필터 드롭다운 -->
+        <div class="filter-dropdown">
+            <select id="filterSelect" name="filterSelect" onchange="handleFilterChange()">
+                <option value="">필터</option>
+                <option value="option1">진행전</option>
+                <option value="option2">진행후</option>
+                <option value="option3">검토완료</option>
+            </select>
         </div>
+
 
         <!-- 🚀 결과를 표시할 컨테이너 -->
         <div id="examResultsContainer"></div>
@@ -134,6 +135,21 @@
                 selectedFilters.push($(this).val() === "option3"); // 검토 완료 여부
             });
             return selectedFilters.length > 0 ? selectedFilters[0] : null;
+        }
+    </script>
+
+    <script>
+
+        function handleFilterChange() {
+            var selectedValue = document.getElementById("filterSelect").value;
+            console.log("선택된 필터:", selectedValue);
+            // 필터 적용 로직 추가
+        }
+
+        function handleSortChange() {
+            var selectedSort = document.getElementById("sortOrder").value;
+            console.log("선택된 정렬:", selectedSort);
+            // 정렬 적용 로직 추가
         }
     </script>
 </div>
