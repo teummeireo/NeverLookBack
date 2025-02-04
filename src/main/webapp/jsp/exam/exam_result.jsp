@@ -107,10 +107,11 @@
                 let htmlContent = ""; // 🔥 누적할 HTML 변수
 
                 examResults.forEach(function (result, index) {
+
                     let card = `
                         <div class="dashboard-card">
                             <h3>시험 ID: ` + result.examId + `</h3>
-                            <p>응시일: ` + result.formattedSubmittedAt + `</p>
+                            <p>응시일: ` + result.submittedAt + `</p>
                             <p>점수: ` + result.score + `점</p>
                             <p>검토 상태: ` + (result.isReviewed ? "검토 완료" : "미검토") + `</p>
                             <p>결과 ID: ` + result.resultId + `</p>
