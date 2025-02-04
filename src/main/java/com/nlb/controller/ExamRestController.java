@@ -143,4 +143,20 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
+  // 검색된 데이터에서 필터링만 수행
+  @GetMapping("/filter")
+  public ResponseEntity<?> searchExams(
+      @RequestParam(value = "name", required = false) String name,
+      @RequestParam(value = "category", required = false) String category,
+      @RequestParam(value = "creator", required = false) String creator,
+      @RequestParam(value = "createdAt", required = false) String createdAt,
+      @RequestParam(value = "activationStatus", required = false) String activationStatus,
+      @RequestParam(value = "examTime", required = false) Integer examTime) {
+
+    // null 값을 그대로 유지하면서 전달
+    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
+  }
+
+
 }

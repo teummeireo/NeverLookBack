@@ -52,7 +52,12 @@
         url: "/api/users/login",
         contentType: "application/json",
         data: JSON.stringify(loginData),
-        success: function() {
+        success: function(response) {
+          // 로그인 성공 시 로컬스토리지에 userId 저장
+          localStorage.setItem("userId", response.userId);
+          localStorage.setItem("nickname", response.nickname);
+
+          // 메인 페이지로 이동
           window.location.href = "/jsp/main.jsp";
         },
         error: function() {

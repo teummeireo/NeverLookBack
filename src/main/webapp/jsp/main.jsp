@@ -11,7 +11,7 @@
     <title>NeverLookBack</title>
     <link rel="stylesheet" href="../css/main.css">
 
-    
+
 
 </head>
 <body>
@@ -70,6 +70,7 @@
                 <thead>
                 <tr>
                     <th>시험명</th>
+                    <th>시험코드</th>
                     <th>카테고리</th>
                     <th>생성자</th>
                     <th>생성일자</th>
@@ -90,6 +91,7 @@
 <script>
   $(document).ready(function () {
     let timer;
+    let tableBody = "";
 
     $('.search-bar input').on('input', function () {
       clearTimeout(timer);
@@ -109,29 +111,33 @@
           dataType: 'json',
           success: function (response) {
             if (!response || !response.data || response.data.length === 0) {
-              tableBody += `<tr>
-                                <td colspan="6" style="text-align:center;">검색된 데이터가 없습니다.</td>
-                            </tr>`;
+              tableBody = "<tr>" +
+                  "<td colspan='1' style='text-align: center; font-weight: bold; padding: 20px;'>검색된 데이터가 없습니다.</td>" +
+                  "</tr>";
 
-              $('#default-dashboard').show();
-              $('#result-dashboard').hide();
+              $('#result-rows').html(tableBody);
+
+              $('#default-dashboard').hide();
+              $('#result-dashboard').show();
               return;
             }
 
             $('#default-dashboard').hide();
             $('#result-dashboard').show();
-            let tableBody = "";
+            tableBody = "";
 
             response.data.forEach(function (exam) {
               let title = exam.title ?? "N/A";
               let category = exam.category ?? "N/A";
               let creator = exam.createrId ?? "N/A";
+              let examCode = exam.examCode ?? "N/A";
               let createdAt = exam.createdAt ? formatDate(exam.createdAt) : "N/A";
               let status = getStatusText(exam.activationStatus);
-              let examTime = exam.examTime ? `${exam.examTime}분` : "0분";
+              let examTime = exam.examTime ?? `${exam.examTime}분`;
 
               tableBody += "<tr>" +
                   "<td>" + title + "</td>" +
+                  "<td>" + examCode + "</td>" +
                   "<td>" + category + "</td>" +
                   "<td>" + creator + "</td>" +
                   "<td>" + createdAt + "</td>" +
@@ -141,6 +147,8 @@
             });
 
             $('#result-rows').html(tableBody);
+
+            localStorage.setItem('searchName', query);
           },
           error: function () {
             console.error('검색 요청 실패');
@@ -149,6 +157,7 @@
       }, 500);
     });
   });
+
 
   // ISO 8601 → 일반 날짜 변환 , T를 공백으로 제거
   function formatDate(dateString) {
@@ -176,4 +185,3 @@
 
 </body>
 </html>
-
