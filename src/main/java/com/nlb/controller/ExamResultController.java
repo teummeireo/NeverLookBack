@@ -27,10 +27,9 @@ public class ExamResultController {
       @PathVariable("examId") int examId,
       @RequestParam("examCode") String examCode,
       @RequestParam("entreeCode") String entreeCode,
-      HttpSession session,
-      Model model) {
+      HttpSession session) {
 
-    // 세션에서 가져오도록 변경 (현재는 1로 하드코딩)
+    // todo세션에서 가져오도록 변경 (현재는 1로 하드코딩)
     int examineeId =
         (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
 

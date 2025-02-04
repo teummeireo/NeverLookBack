@@ -57,4 +57,8 @@ public interface ExamResultMapper {
   void updateIsCorrect(Map<String, Object> params);
 
   void updateExamTotalScore(Map<String, Object> params);
+
+  List<ExamResultVO> selectResultByExamIdAndSubmittedAtIsNull(@Param("examId") int examId);
+
+  void insertExamResultsList(@Param("examResults") List<ExamResultVO> examResults);
 }

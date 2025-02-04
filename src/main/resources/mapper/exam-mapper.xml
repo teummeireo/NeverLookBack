@@ -160,7 +160,16 @@
     ORDER BY exam_time;
   </select>
 
+  <select id="updateSubmittedAtByExamId" parameterType="int">
+    SELECT * FROM exam
+    where exam_id =#{examId}
+  </select>
 
+  <select id="getExamStatusById" parameterType="int" resultType="String">
+    SELECT activation_status
+    FROM exam
+    WHERE exam_id =#{examId}
+  </select>
 
 
 </mapper>

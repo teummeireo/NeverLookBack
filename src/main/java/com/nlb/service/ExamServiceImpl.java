@@ -9,8 +9,11 @@ import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.mapper.ResultDetailMapper;
 import com.nlb.vo.ExamMongoVO;
+import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,6 +53,23 @@ public class ExamServiceImpl implements ExamService {
 
   @Override
   public int setExamStatus(int examId, String status) {
+    // 현재 시험 상태 조회
+    String currentState = examMapper.getExamStatusById(examId);
+    if("on_going".equals(currentState) && "not_started".equals(status)){
+      throw new IllegalStateException("시험이 진행 중이면 not_started로 변경할 수 없습니다.");
+    }
+
+    // 시험 종료(Closed) 연계 로직들
+    if ("closed".equals(status)) {
+      examMapper.updateSubmittedAtByExamId(examId);
+      // 미제출 응시자 강제 제출
+      List<ExamResultVO> unsubmitted = examResultMapper.selectResultByExamIdAndSubmittedAtIsNull(examId);
+      for (ExamResultVO result : unsubmitted) {
+        result.setSubmittedAt(LocalDateTime.now());
+      }
+      examResultMapper.insertExamResultsList(unsubmitted);
+    }
+
     return examMapper.updateExamActivationStatus(examId, status);
   }
 

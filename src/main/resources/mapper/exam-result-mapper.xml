@@ -168,5 +168,17 @@
     WHERE result_id = #{resultId};
   </update>
 
+  <select id="selectResultByExamIdAndSubmittedAtIsNull" parameterType="int" resultType="ExamResultVO">
+    SELECT * FROM exam_result
+    WHERE exam_id=#{examID} and submmited_at = CAST('1900-01-01 00:00:00' as timestamp)
+  </select>
+
+  <insert id="insertExamResultsList" parameterType="java.util.List">
+    INSERT INTO exam_result (result_id, exam_id, examinee_id, score, submitted_at, is_reviewed)
+    VALUES
+    <foreach collection="examResults" item="result" separator=",">
+      (#{result.resultId}, #{result.examId}, #{result.examineeId}, #{result.score}, #{result.submittedAt, jdbcType=TIMESTAMP}, #{result.isReviewed})
+    </foreach>
+  </insert>
 
 </mapper>

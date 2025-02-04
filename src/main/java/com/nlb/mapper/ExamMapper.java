@@ -47,4 +47,7 @@ public interface ExamMapper {
       @Param("activationStatus") String activationStatus,
       @Param("examTime") Integer examTime);
 
+  void updateSubmittedAtByExamId(@Param("examId") int examId);
+
+  String getExamStatusById(@Param("examId") int examId);
 }
