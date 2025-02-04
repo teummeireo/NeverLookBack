@@ -40,5 +40,11 @@ public interface ExamMapper {
 
   List<ExamVO> findExamsByName(@Param("name") String name);
 
-}
+  List<ExamVO> searchExams(@Param("name") String name,
+      @Param("category") String category,
+      @Param("creator") String creator,
+      @Param("createdAt") String createdAt,
+      @Param("activationStatus") String activationStatus,
+      @Param("examTime") Integer examTime);
 
+}

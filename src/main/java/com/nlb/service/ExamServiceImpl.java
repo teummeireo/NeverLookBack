@@ -205,4 +205,10 @@ public class ExamServiceImpl implements ExamService {
     return examMapper.findExamsByName(name);
   }
 
+  // 시험 상세 검색 필터링
+  @Override
+  public List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime) {
+    return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
+  }
+
 }

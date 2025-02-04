@@ -132,5 +132,35 @@
     WHERE title ILIKE CONCAT('%', #{name}, '%')
   </select>
 
+  <select id="searchExams" resultType="ExamVO">
+    SELECT * FROM exam
+    WHERE title ILIKE '%' || #{name} || '%'  <!-- 시험명 검색 -->
+
+    <if test="category != null and category != ''">
+      AND category = #{category}  <!-- 카테고리 필터 -->
+    </if>
+
+    <if test="creator != null">
+      AND creater_id = CAST(#{creator} AS INTEGER)  <!-- 생성자 필터 -->
+    </if>
+
+    <if test="createdAt != null and createdAt != ''">
+      AND created_at::text LIKE #{createdAt} || '%'  <!-- 날짜 필터 -->
+    </if>
+
+    <if test="activationStatus != null and activationStatus != ''">
+      AND activation_status = #{activationStatus}  <!-- 상태 필터 -->
+    </if>
+
+    <if test="examTime != null">
+      AND exam_time &lt;= #{examTime}  <!-- '≤' 연산자를 엔티티 코드로 변환 -->
+    </if>
+
+
+    ORDER BY exam_time;
+  </select>
+
+
+
 
 </mapper>

@@ -6,6 +6,7 @@ import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 public interface ExamService {
 
@@ -27,8 +28,10 @@ public interface ExamService {
 
   List<QuestionVO> getExamQuestions(int examId);
 
-  public Map<String, Object> getExamDataCreated(int examId, int creatorId);
+  Map<String, Object> getExamDataCreated(int examId, int creatorId);
 
   List<ExamVO> searchExamsByName(String name);
+
+  List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime);
 
 }

@@ -50,12 +50,6 @@
             <span id="emailCodeCheckResult"></span>
         </div>
 
-
-        <div class="form-group">
-            <input type="text" id="userRole" name="userRole" placeholder="role" required>
-            <span id="roleValidationResult"></span>
-        </div>
-
         <button type="submit" class="btn-submit" id="registerBtn" disabled>Join</button>
 
         <div class="form-footer">
@@ -72,7 +66,6 @@
     let isIdValid = false;
     let isNicknameValid = false;
     let isPasswordValid = false;
-    let isRoleValid = false;
     let isEmailValid = false;
     let isEmailAvailable = false;
     let isEmailVerified = false;
@@ -89,7 +82,6 @@
           isIdValid && isIdAvailable &&
           isNicknameValid && isNicknameAvailable &&
           isPasswordValid && isPasswordMatching &&
-          isRoleValid &&
           isEmailValid && isEmailAvailable && isEmailVerified
       ) {
         $("#registerBtn").prop("disabled", false).removeClass("disabled").addClass("active");
@@ -154,19 +146,6 @@
       } else {
         $("#passwordMatchResult").text("비밀번호가 일치하지 않습니다.").css("color", "red");
         isPasswordMatching = false;
-      }
-      validateForm();
-    });
-
-    // 역할(userRole) 입력 시 유효성 검사
-    $("#userRole").on("input", function () {
-      let role = $(this).val().toLowerCase();
-      if (role === "user" || role === "admin") {
-        $("#roleValidationResult").text("유효한 역할입니다.").css("color", "green");
-        isRoleValid = true;
-      } else {
-        $("#roleValidationResult").text("역할은 'user' 또는 'admin'만 가능합니다.").css("color", "red");
-        isRoleValid = false;
       }
       validateForm();
     });
