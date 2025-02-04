@@ -119,34 +119,14 @@ body {
     font-size: 18px;
 }
 
-/* Dashboard grid */
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3개의 열 */
-    grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
-    gap: 20px;
-    height: 100%; /* 그리드 영역 전체 사용 */
-}
-
-.dashboard-card {
-    background: rgba(33, 32, 38, 0.55);
-    border-radius: 10px;
-    padding: 20px;
-    min-height: 200px; /* 카드 높이 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* 콘텐츠 간격 조정 */
-}
-
 
 .dashboard-card h3 {
-    color: #fff;
+    color: #000000;
     margin-bottom: 10px;
 }
 
 .dashboard-card p {
-    color: #ddd;
+    color: #000000;
 }
 
 .project-list ul {
@@ -207,20 +187,44 @@ body {
         grid-template-columns: 1fr;
     }
 }
-
-.sort-dropdown {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-#sortOrder {
+/* 공통 스타일 */
+.sort-dropdown select,
+.filter-dropdown select {
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
     cursor: pointer;
+    background-color: #fff;
+    appearance: none; /* 기본 스타일 제거 */
+    width: 150px;
 }
+
+/* 드롭다운 아이콘 스타일 */
+.sort-dropdown,
+.filter-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.sort-dropdown::after,
+.filter-dropdown::after {
+    content: "▼";
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+}
+
+/* 드롭다운 호버 효과 */
+.sort-dropdown select:hover,
+.filter-dropdown select:hover {
+    border-color: #888;
+}
+
 /* 구분선 스타일 */
 .divider {
     width: 100%;
@@ -276,4 +280,22 @@ body {
 
 .filter-menu label:hover {
     color: #111827;
+}
+
+
+#examResultsContainer {
+    display: flex !important;  /* 🚀 강제로 보이게 설정 */
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dashboard-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    width: 250px; /* 카드 크기 지정 */
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    background: #fff;
 }

@@ -46,6 +46,16 @@
     where result_id = #{resultId}
   </update>
 
+  <select id="getResultsByUser" resultType="ExamResultVO">
+    SELECT exam_id AS examId,
+           submitted_at AS submittedAt,
+           score,
+           is_reviewed AS reviewed,
+           result_id AS resultId,
+    FROM exam_result
+    WHERE examinee_id = #{userId}
+  </select>
+
 
   <!-- 회원이 응시한 시험 결과 리스트 조회 -->
   <select id="selectExamResultListByUserId" resultType="ExamResultVO">
