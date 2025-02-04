@@ -61,7 +61,7 @@
                         "<td>" + user.nickname + "</td>" +
                         "<td>" + user.email + "</td>" +
                         "<td>" +
-                        "<select class='user-role-select' data-user-id='" + user.userId + "'>" +
+                        "<select class='user-role-select' id='user-role-select'  data-user-id='" + user.userId + "'>" +
                         "<option value='" + user.userRole + "' selected>" + user.userRole + "</option>" + // 기존 역할 유지
                         (user.userRole !== "admin" ? "<option value='ADMIN'>admin</option>" : "") +
                         (user.userRole !== "user" ? "<option value='USER'>user</option>" : "") +
@@ -77,11 +77,12 @@
                 });
 
             // 역할 변경 이벤트 바인딩
-                $(".user-role-select").change(function() {
+                $(document).on("change", ".user-role-select", function() {
                     var userId = $(this).data("user-id");
                     var newRole = $(this).val();
                     updateUserRole(userId, newRole);
                 });
+
                 document.querySelector("#userTable tbody").innerHTML = tableBody;
                 // 삭제 버튼 클릭 이벤트 바인딩
                 var deleteButtons = document.querySelectorAll(".delete-user-btn");
@@ -116,11 +117,11 @@
     }
 
     function updateUserRole(userId, newRole) {
+        console.log("역할변경 : userid", userId, "newrole = ", newRole);
         $.ajax({
-            url: "/api/admin/users/role/" + userId,  // API 요청 URL
+            url: "/api/admin/users/role/" + userId + "?role=" + newRole,  // API 요청 URL
             method: "PUT",
             contentType: "application/x-www-form-urlencoded",
-            data: { role: newRole },  // 변경할 역할 전달
             success: function(response) {
                 console.log("역할 변경 성공:", response); // 응답 데이터 확인
                 alert("사용자 역할이 변경되었습니다."); // 알림 추가
