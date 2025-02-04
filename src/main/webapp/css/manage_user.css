@@ -164,3 +164,62 @@ body {
 td {
     vertical-align: middle;
 }
+/* 역할 선택 드롭다운 스타일 */
+.user-role-select {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 2px solid #3498db;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    appearance: none; /* 기본 스타일 제거 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    min-width: 120px;
+}
+/* 역할 선택 드롭다운 스타일 */
+.user-role-select {
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: #3498db; /* 파란색 배경 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: block;
+    margin: 0 auto; /* 중앙 정렬 */
+    text-align: center;
+    appearance: none; /* 기본 스타일 제거 */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+/* 호버 효과 */
+.user-role-select:hover {
+    background-color: #217dbb; /* 진한 파란색 */
+}
+
+/* 포커스 효과 */
+.user-role-select:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(52, 152, 219, 0.7);
+}
+
+/* 옵션 스타일 */
+.user-role-select option {
+    background: #fff;
+    color: #333;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* 비활성화 옵션 스타일 */
+.user-role-select option:disabled {
+    color: #ccc;
+    background: #f4f4f4;
+}
