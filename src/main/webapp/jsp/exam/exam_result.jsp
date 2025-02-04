@@ -50,93 +50,91 @@
         <br>
     </main>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            loadExamResults(); // 페이지 로드 시 실행
+        <!-- 🔥 loadExamResults가 실행되는 코드 -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            // 정렬 드롭다운 변경 시 호출
-            $("#sortOrder").change(function () {
-                loadExamResults();
+        <script>
+            $(document).ready(function () {
+                console.log("🚀 페이지 로딩 완료: loadExamResults 실행");
+                loadExamResults(); // ✅ 페이지가 로드되면 실행
             });
 
-            // 필터 체크박스 변경 시 호출
-            $("input[name='filter']").change(function () {
-                loadExamResults();
-            });
+                function loadExamResults() {
+                    let userId = 1; // 세션 적용 시 수정 필요
+                    let sortBy = "submittedAt"; // 기본 정렬 기준
+                    let order = $("#sortOrder").val() === "latest" ? "desc" : "asc"; // 정렬 순서
+                    let isReviewed = getFilterValues(); // 필터 값 가져오기
+                    let searchKeyword = $("#searchInput").val().trim(); // 검색어 가져오기
 
-            // 검색 기능 추가
-            $("#searchInput").on("input", function () {
-                loadExamResults();
-            });
-        });
+                    $.ajax({
+                        url: `/api/exams/results/user/1`,
+                        type: "GET",
+                        data: { sortBy: sortBy, order: order, isReviewed: isReviewed },
+                        success: function (response) {
+                            console.log("📌 API 응답 데이터:", response);
 
-        function loadExamResults() {
-            let userId = 1; // 세션 적용 시 수정 필요
-            let sortBy = "submittedAt"; // 기본 정렬 기준
-            let order = $("#sortOrder").val() === "latest" ? "desc" : "asc"; // 정렬 순서
-            let isReviewed = getFilterValues(); // 필터 값 가져오기
-            let searchKeyword = $("#searchInput").val().trim(); // 검색어 가져오기
+                            if (!response.data || response.data.length === 0) {
+                                console.warn("❌ 데이터가 없습니다.");
+                                $("#examResultsContainer").html("<p>응시 내역이 없습니다.</p>");
+                                return;
+                            }
 
-            $.ajax({
-                url: `/api/exams/results/user/1`,
-                type: "GET",
-                data: { sortBy: sortBy, order: order, isReviewed: isReviewed },
-                success: function (response) {
-                    console.log("데이터 로드 성공:", response.data);
+                            globalExamResults = response.data; // ✅ 전역 변수에 데이터 저장
 
-                    if (!response.data || response.data.length === 0) {
-                        console.warn("데이터가 없습니다.");
-                        $("#examResultsContainer").html("<p>응시 내역이 없습니다.</p>");
-                        return;
-                    }
-
-                    renderExamResults(response.data, searchKeyword);
-                },
-                error: function (xhr, status, error) {
-                    console.error("데이터 불러오기 실패:", error);
+                            console.log("📌 전역 변수 업데이트 완료:", globalExamResults);
+                            renderExamResults(globalExamResults, ""); // ✅ 데이터 렌더링
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("❌ 데이터 불러오기 실패:", error);
+                        }
+                    });
                 }
-            });
-        }
 
-        function renderExamResults(examResults, searchKeyword) {
-            let resultContainer = $("#examResultsContainer");
-            resultContainer.empty(); // 기존 내용 초기화
+            function renderExamResults(examResults, searchKeyword) {
+                let resultContainer = $("#examResultsContainer");
+                resultContainer.empty(); // 기존 내용 초기화
 
-            console.log("렌더링 시작: 데이터 개수 ->", examResults.length);
+                console.log("📌 최종 결과 데이터:", examResults);
 
-            if (!examResults || examResults.length === 0) {
-                console.warn("표시할 데이터가 없습니다.");
-                resultContainer.append("<p>응시 내역이 없습니다.</p>");
-                return;
+                if (!examResults || examResults.length === 0) {
+                    console.warn("❌ 데이터 없음. '응시 내역이 없습니다.' 추가");
+                    resultContainer.append("<p>응시 내역이 없습니다.</p>");
+                    return;
+                }
+
+                resultContainer.css("display", "block");
+
+                let htmlContent = ""; // 🔥 누적할 HTML 변수
+
+                examResults.forEach(function (result, index) {
+                    let card = `
+                        <div class="dashboard-card">
+                            <h3>시험 ID: ` + result.examId + `</h3>
+                            <p>응시일: ` + result.formattedSubmittedAt + `</p>
+                            <p>점수: ` + result.score + `점</p>
+                            <p>검토 상태: ` + (result.isReviewed ? "검토 완료" : "미검토") + `</p>
+                            <p>결과 ID: ` + result.resultId + `</p>
+                        </div>`;
+                    htmlContent += card;
+                });
+
+                console.log("📌 최종 HTML Content:", htmlContent); // ✅ 최종 HTML 확인
+
+                resultContainer.html(htmlContent); // ✅ HTML 추가 실행
+
+                console.log("📌 resultContainer 업데이트 후 HTML:", resultContainer.html()); // ✅ 최종 결과 확인
             }
 
-            resultContainer.css("display", "flex");
 
-            examResults.forEach(function (result, index) {
-                console.log(`(${index + 1}) 개별 데이터 ->`, result);
 
-                let card = `
-            <div class="dashboard-card">
-                <h3>시험 ID: ${result.examId}</h3>
-                <p>응시일: ${result.formattedSubmittedAt}</p>
-                <p>점수: ${result.score}점</p>
-                <p>검토 상태: ${result.isReviewed ? "검토 완료" : "미검토"}</p>
-                <p>결과 ID: ${result.resultId}</p>
-            </div>`;
-
-                resultContainer.append(card);
-            });
-        }
-
-        function getFilterValues() {
-            let selectedFilters = [];
-            $("input[name='filter']:checked").each(function () {
-                selectedFilters.push($(this).val() === "option3"); // 검토 완료 여부
-            });
-            return selectedFilters.length > 0 ? selectedFilters[0] : null;
-        }
-    </script>
+            function getFilterValues() {
+                let selectedFilters = [];
+                $("input[name='filter']:checked").each(function () {
+                    selectedFilters.push($(this).val() === "option3"); // 검토 완료 여부
+                });
+                return selectedFilters.length > 0 ? selectedFilters[0] : null;
+            }
+        </script>
 
     <script>
 
