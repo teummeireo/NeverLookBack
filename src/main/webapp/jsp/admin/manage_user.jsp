@@ -24,7 +24,6 @@
                     <th>닉네임</th>
                     <th>이메일</th>
                     <th>User role</th>
-                    <th>User delete</th>
                     <th>활성화 여부</th>
                 </tr>
                 </thead>
@@ -54,43 +53,40 @@
                 let tableBody = "";
 
                 users.forEach(function(user) {
-                    let statusClass = user.active === true ? "status-active" : "status-inactive"; // 클래스 적용
-                    let statusText = user.active === true ? "활성화" : "비활성화"; // 텍스트 설정
+                    let statusClass = user.active ? "status-active" : "status-inactive"; // 클래스 적용
+                    let statusText = user.active ? "활성화" : "비활성화"; // 텍스트 설정
+
                     tableBody += "<tr>" +
                         "<td>" + user.loginId + "</td>" +
                         "<td>" + user.nickname + "</td>" +
                         "<td>" + user.email + "</td>" +
                         "<td>" +
-                        "<select class='user-role-select' id='user-role-select'  data-user-id='" + user.userId + "'>" +
-                        "<option value='" + user.userRole + "' selected>" + user.userRole + "</option>" + // 기존 역할 유지
+                        "<select class='user-role-select' data-user-id='" + user.userId + "'>" +
+                        "<option value='" + user.userRole + "' selected>" + user.userRole + "</option>" +
                         (user.userRole !== "admin" ? "<option value='ADMIN'>admin</option>" : "") +
                         (user.userRole !== "user" ? "<option value='USER'>user</option>" : "") +
                         "</select>" +
                         "</td>" +
-                        "<td>" +
-                        "<button class='delete-user-btn' data-user-id='" + user.userId + "'>" +
-                        "Delete" +
-                        "</button>" +
+                        "<td class='toggle-status " + statusClass + "' data-user-id='" + user.userId + "' data-active='" + user.active + "'>" +
+                        statusText +
                         "</td>" +
-                        "<td class='" + statusClass + "'>" + statusText + "</td>" + // 활성화 여부 색상 추가
                         "</tr>";
                 });
 
-            // 역할 변경 이벤트 바인딩
-                $(document).on("change", ".user-role-select", function() {
+                document.querySelector("#userTable tbody").innerHTML = tableBody;
+
+                // 역할 변경 이벤트 바인딩
+                $(document).off("change", ".user-role-select").on("change", ".user-role-select", function() {
                     var userId = $(this).data("user-id");
                     var newRole = $(this).val();
                     updateUserRole(userId, newRole);
                 });
 
-                document.querySelector("#userTable tbody").innerHTML = tableBody;
-                // 삭제 버튼 클릭 이벤트 바인딩
-                var deleteButtons = document.querySelectorAll(".delete-user-btn");
-                deleteButtons.forEach(function(button) {
-                    button.addEventListener("click", function () {
-                        var userId = this.getAttribute("data-user-id");
-                        deleteUser(userId); // 삭제 요청 함수 호출
-                    });
+                // 활성화 여부 클릭 이벤트 바인딩
+                $(document).off("click", ".toggle-status").on("click", ".toggle-status", function() {
+                    var userId = $(this).data("user-id");
+                    var currentStatus = $(this).data("active");
+                    toggleUserStatus(userId, !currentStatus);
                 });
             },
             error: function(xhr, status, error) {
@@ -98,41 +94,42 @@
             }
         });
     }
-    function deleteUser(userId) {
-        if (confirm("정말로 이 사용자를 삭제하시겠습니까?")) {
+
+    function toggleUserStatus(userId, newStatus) {
+        var confirmMsg = newStatus ? "이 사용자를 활성화하시겠습니까?" : "이 사용자를 비활성화하시겠습니까?";
+        if (confirm(confirmMsg)) {
             $.ajax({
-                url: "/api/admin/users/" + userId + "?isActive=false", // URL에 직접 추가
-                method: 'PUT',
+                url: "/api/admin/users/" + userId + "?isActive=" + newStatus,
+                method: "PUT",
                 contentType: "application/x-www-form-urlencoded",
                 success: function(response) {
-                    alert("사용자가 비활성화되었습니다.");
-                    loadUserList(); // 테이블 갱신
+                    alert(newStatus ? "사용자가 활성화되었습니다." : "사용자가 비활성화되었습니다.");
+                    loadUserList(); // UI 갱신
                 },
                 error: function(xhr, status, error) {
-                    console.error("사용자를 삭제하는 중 오류 발생:", error);
-                    alert("사용자 삭제 중 오류가 발생했습니다.");
+                    console.error("사용자 상태 변경 중 오류 발생:", error);
+                    alert("사용자 상태 변경 중 오류가 발생했습니다.");
                 }
             });
         }
     }
 
     function updateUserRole(userId, newRole) {
-        console.log("역할변경 : userid", userId, "newrole = ", newRole);
         $.ajax({
-            url: "/api/admin/users/role/" + userId + "?role=" + newRole,  // API 요청 URL
+            url: "/api/admin/users/role/" + userId + "?role=" + newRole,
             method: "PUT",
             contentType: "application/x-www-form-urlencoded",
             success: function(response) {
-                console.log("역할 변경 성공:", response); // 응답 데이터 확인
-                alert("사용자 역할이 변경되었습니다."); // 알림 추가
+                alert("사용자 역할이 변경되었습니다.");
                 loadUserList(); // UI 갱신
             },
             error: function(xhr, status, error) {
                 console.error("역할 변경 중 오류 발생:", error);
-                alert("사용자 역할 변경 중 오류가 발생했습니다."); // 오류 시 알림 표시
+                alert("사용자 역할 변경 중 오류가 발생했습니다.");
             }
         });
     }
+
 </script>
 </body>
 </html>

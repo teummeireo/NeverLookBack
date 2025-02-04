@@ -74,7 +74,7 @@ body {
     background-color: #333; /* 헤더 배경 어두운 회색 */
     color: #f5f5f5; /* 글자 흰색 */
     padding: 15px; /* 여백 추가 */
-    text-align: center; /* 텍스트 왼쪽 정렬 */
+    text-align: center;
     font-weight: bold; /* 글자 굵게 */
     text-transform: uppercase; /* 대문자로 변환 */
     border-bottom: 2px solid #444; /* 헤더와 본문 구분선 */
@@ -124,29 +124,12 @@ body {
         padding: 10px; /* 좁은 화면에서는 패딩 줄임 */
     }
 }
-/* Delete 버튼 스타일 */
-.delete-user-btn {
-    padding: 8px 14px;
-    font-size: 14px;
-    background-color: #ff4d4d; /* 붉은색 버튼 */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s ease;
-    display: block;
-    margin: 0 auto; /* 중앙 정렬 */
-}
-
-.delete-user-btn:hover {
-    background-color: #cc0000; /* 진한 붉은색 */
-}
-
 
 /* 활성화 여부 스타일 */
 .status-active {
     color: white;
     background-color: #28a745; /* 초록색 */
+    text-align: center;
     padding: 5px 10px;
     border-radius: 8px;
     font-weight: bold;
@@ -155,6 +138,7 @@ body {
 .status-inactive {
     color: white;
     background-color: #dc3545; /* 빨간색 */
+    text-align: center;
     padding: 5px 10px;
     border-radius: 8px;
     font-weight: bold;
@@ -164,23 +148,7 @@ body {
 td {
     vertical-align: middle;
 }
-/* 역할 선택 드롭다운 스타일 */
-.user-role-select {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 2px solid #3498db;
-    border-radius: 6px;
-    background-color: #fff;
-    color: #333;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.3s ease-in-out;
-    appearance: none; /* 기본 스타일 제거 */
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    position: relative;
-    min-width: 120px;
-}
+
 /* 역할 선택 드롭다운 스타일 */
 .user-role-select {
     padding: 8px 14px;
