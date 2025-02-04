@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>사용자 계정 관리</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/submission_check.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage_user.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
 </head>
 <body>
@@ -103,5 +103,3 @@
 <%--        });--%>
 <%--    });--%>
 <%--</script>--%>
-</body>
-</html>

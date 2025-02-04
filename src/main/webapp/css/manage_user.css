@@ -1,0 +1,126 @@
+@charset "UTF-8";
+
+/* General styling */
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    color: #000000;
+    display: flex;
+    height: 100vh;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* 메인 컨테이너 */
+.main-container {
+    display: flex;
+}
+
+/* 상태 아이콘 스타일 */
+.status-icon {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+/* 색상 지정 */
+.status-icon.in-stock {
+    background-color: green;
+}
+
+.status-icon.backorder {
+    background-color: red;
+}
+
+.status-icon.out-of-stock {
+    background-color: gray;
+}
+
+/* 테이블 컨테이너 */
+.content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: transparent; /* 투명한 배경 */
+}
+
+/* 제목 스타일 */
+.header h1 {
+        color: #fff;
+        margin-top: 10px;
+    }
+/* 테이블 스타일 */
+#userTable {
+    width: 200%; /* 테이블 너비를 100%로 설정 */
+    border-collapse: collapse; /* 셀 경계 없앰 */
+    margin-top: 20px;
+    font-size: 14px;
+    color: white;
+    background-color: #1e1e1e; /* 테이블 배경 어두운 색 */
+    border: 1px solid #333; /* 테이블 외곽 경계 */
+    border-radius: 10px; /* 둥근 모서리 */
+    overflow: hidden; /* 둥근 모서리 안쪽 영역 깔끔히 처리 */
+}
+
+/* 테이블 헤더 스타일 */
+#userTable th {
+    background-color: #333; /* 헤더 배경 어두운 회색 */
+    color: #f5f5f5; /* 글자 흰색 */
+    padding: 15px; /* 여백 추가 */
+    text-align: center; /* 텍스트 왼쪽 정렬 */
+    font-weight: bold; /* 글자 굵게 */
+    text-transform: uppercase; /* 대문자로 변환 */
+    border-bottom: 2px solid #444; /* 헤더와 본문 구분선 */
+}
+
+/* 테이블 행 스타일 */
+#userTable td {
+    padding: 15px; /* 동일한 패딩 적용 */
+    text-align: left; /* 텍스트 왼쪽 정렬 */
+    color: #dcdcdc; /* 본문 텍스트 연한 회색 */
+    border-bottom: 1px solid #444; /* 행 구분선 */
+}
+
+/* 테이블 홀수 행 배경색 */
+#userTable tr:nth-child(odd) {
+    background-color: #2a2a2a; /* 어두운 배경 */
+}
+
+/* 테이블 짝수 행 배경색 */
+#userTable tr:nth-child(even) {
+    background-color: #1e1e1e; /* 더 어두운 배경 */
+}
+
+/* 행 hover 효과 */
+#userTable tr:hover {
+    background-color: #444; /* hover 시 배경색 강조 */
+    color: white; /* 텍스트 색상 흰색 */
+    transition: background-color 0.3s ease-in-out; /* 부드러운 효과 */
+}
+
+/* 테이블 경계선 효과 */
+#userTable td:first-child, #userTable th:first-child {
+    border-left: none;
+}
+
+#userTable td:last-child, #userTable th:last-child {
+    border-right: none;
+}
+
+/* 반응형 테이블 */
+@media (max-width: 768px) {
+    #userTable {
+        font-size: 12px;
+    }
+
+    #userTable th, #userTable td {
+        padding: 10px; /* 좁은 화면에서는 패딩 줄임 */
+    }
+}
