@@ -168,7 +168,7 @@
     WHERE result_id = #{resultId};
   </update>
 
-  <select id="selectResultByExamIdAndSubmittedAtIsNull" parameterType="int" resultType="ExamResultVO">
+  <select id="selectResultByExamIdAndNotSubmittedAt" parameterType="int" resultType="ExamResultVO">
     SELECT * FROM exam_result
     WHERE exam_id=#{examID} and submmited_at = CAST('1900-01-01 00:00:00' as timestamp)
   </select>

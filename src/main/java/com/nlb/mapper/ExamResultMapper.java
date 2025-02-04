@@ -58,7 +58,7 @@ public interface ExamResultMapper {
 
   void updateExamTotalScore(Map<String, Object> params);
 
-  List<ExamResultVO> selectResultByExamIdAndSubmittedAtIsNull(@Param("examId") int examId);
+  List<ExamResultVO> selectResultByExamIdAndNotSubmittedAt(@Param("examId") int examId);
 
   void insertExamResultsList(@Param("examResults") List<ExamResultVO> examResults);
 }

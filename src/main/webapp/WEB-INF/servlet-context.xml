@@ -5,7 +5,7 @@
 	   xmlns:aop="http://www.springframework.org/schema/aop"
 	   xmlns:tx="http://www.springframework.org/schema/tx"
 	   xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:websocket="http://www.springframework.org/schema/c"
 	   xsi:schemaLocation="
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
@@ -107,6 +107,19 @@
 		</aop:aspect>
 	</aop:config>
 
+	<!-- ✅ WebSocket 설정 추가 -->
+	<websocket:message-broker>
+		<!-- 클라이언트가 구독할 수 있는 경로 설정 -->
+		<websocket:simple-broker prefix="/topic"/>
+
+		<!-- 클라이언트가 메시지를 보낼 경로 설정 -->
+		<websocket:application-destination-prefixes prefix="/app"/>
+
+		<!-- WebSocket 엔드포인트 설정 -->
+		<websocket:stomp-endpoint path="/ws/exam">
+			<websocket:sockjs/>
+		</websocket:stomp-endpoint>
+	</websocket:message-broker>
 
 
 	<!-- View Resolver -->
