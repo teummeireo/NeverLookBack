@@ -31,7 +31,7 @@
                 <li>Project 3 - Pending</li>
             </ul>
         </div>
-        <div class="dashboard-card project-list">
+        <div class="dashboard-card project-list" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/exam_result.jsp'" style="cursor: pointer;">
             <h3>내 시험 답안 상세보기</h3>
             <ul>
                 <li>Project 1 - In Progress</li>
@@ -39,7 +39,7 @@
                 <li>Project 3 - Pending</li>
             </ul>
         </div>
-        <div class="dashboard-card project-list">
+        <div class="dashboard-card project-list" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/exam_result.jsp'" style="cursor: pointer;">
             <h3>시험 응시 바로가기</h3>
             <ul>
                 <li>Project 1 - In Progress</li>

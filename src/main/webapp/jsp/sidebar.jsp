@@ -7,10 +7,9 @@
   <h2>NeverLookBack</h2>
   <ul>
     <li><a href="/jsp/main.jsp"><i class="fas fa-home"></i><span>메인페이지</span></a></li>
-    <li><a href="/jsp/make_exam.jsp"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
-    <li><a href="/jsp/exam_apply.jsp"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
-    <li><a href="/jsp/manageExam.jsp"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
-    <li><a href="/jsp/exam.jsp"><i class="fas fa-file-alt"></i><span>응시한 시험</span></a></li>
+    <li><a href="/jsp/exam/create_exam.jsp"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
+    <li><a href="/jsp/exam/take_exam.jsp"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
+    <li><a href="/jsp/exam/my_exam.jsp"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
     <li><a href="/mypage"><i class="fas fa-user"></i><span>마이페이지</span></a></li>
     <li><a href="/admin/main"><i class="fas fa-user"></i><span>운영자페이지</span></a></li>
 
