@@ -124,3 +124,43 @@ body {
         padding: 10px; /* 좁은 화면에서는 패딩 줄임 */
     }
 }
+/* Delete 버튼 스타일 */
+.delete-user-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    background-color: #ff4d4d; /* 붉은색 버튼 */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    display: block;
+    margin: 0 auto; /* 중앙 정렬 */
+}
+
+.delete-user-btn:hover {
+    background-color: #cc0000; /* 진한 붉은색 */
+}
+
+
+/* 활성화 여부 스타일 */
+.status-active {
+    color: white;
+    background-color: #28a745; /* 초록색 */
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.status-inactive {
+    color: white;
+    background-color: #dc3545; /* 빨간색 */
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* 테이블 셀 수직 중앙 정렬 */
+td {
+    vertical-align: middle;
+}

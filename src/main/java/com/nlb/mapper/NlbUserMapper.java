@@ -45,6 +45,6 @@ public interface NlbUserMapper {
     int updateUserPassword(@Param("loginId") String loginId, @Param("password") String password);
 
 
-
-
+    int updateUserRole(@Param("userId") int userId,
+                       @Param("userRole") String userRole);
 }
