@@ -38,4 +38,6 @@ public interface NlbUserService {
 
     // 비밀번호 재설정
     int updateUserPassword(String loginId, String newPassword);
+
+    int setUserRole(int userId, String role);
 }
