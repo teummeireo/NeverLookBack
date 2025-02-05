@@ -47,4 +47,6 @@ public interface ExamMapper {
       @Param("activationStatus") String activationStatus,
       @Param("examTime") Integer examTime);
 
+  List<ExamVO> searchAllExams();
+
 }

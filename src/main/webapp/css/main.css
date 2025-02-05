@@ -45,19 +45,40 @@ body {
     margin-top: 10px;
 }
 
-/* Search bar styling */
+/* 기본 검색창 스타일 */
+.search-bar input {
+    flex: 1;
+    border: 1px solid #ccc; /* 기본 테두리 */
+    outline: none;
+    background: transparent;
+    color: #fff;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 검색창 클릭 시 (포커스 상태) → 테두리 제거 */
+.search-bar input.search-input-focus {
+    border: none;
+    background-color: #2b2b2b; /* 내부 배경과 동일한 색상 */
+}
+
+/* 검색창 컨테이너 */
 .search-bar {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1); /* 검색창 배경색 */
+    padding: 5px 15px; /* 패딩 추가 */
+    border: 2px solid #00ff00; /* 초록색 테두리 */
+    border-radius: 30px; /* 둥근 모서리 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     flex: 1;
 }
 
+/* 검색창 입력 필드 */
 .search-bar input[type="text"] {
-    background: transparent;
+    background: transparent; /* 투명 배경 */
     border: none;
     color: #fff;
     flex: 1;
@@ -69,6 +90,29 @@ body {
 .search-bar .icon-search {
     color: #aaa;
     font-size: 18px;
+}
+
+/* 로고 이미지 스타일 */
+.search-bar .search-logo {
+    width: 24px; /* 로고 너비 */
+    height: 24px; /* 로고 높이 */
+    margin-right: 10px; /* 검색창과 간격 */
+    object-fit: contain; /* 로고 비율 유지 */
+}
+
+/* 검색 버튼 스타일 */
+.search-bar #search-btn {
+    background: none;
+    border: none;
+    color: #00ff00; /* 초록색 아이콘 */
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+
+/* 검색 버튼 Hover 효과 */
+.search-bar #search-btn:hover {
+    color: #00cc00; /* Hover 시 약간 어두운 초록색 */
 }
 
 /* Dashboard grid */
@@ -326,4 +370,149 @@ body {
 
 .status-icon.closed {
     background-color: green;
+}
+
+
+/* 검색창 css */
+/* 검색창 스타일 */
+.search-bar-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* 기본 검색창 스타일 */
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc; /* 기본 테두리 */
+    border-radius: 5px;
+    padding: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* 검색창 클릭 시 (포커스 상태) → 테두리 제거 */
+.search-bar-focus {
+    border: none !important;
+}
+
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+}
+
+#search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 최근 검색어 목록 스타일 */
+#recent-searches-container {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    background-color: #2b2b2b;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: none; /* 기본적으로 숨김 */
+    z-index: 1000;
+}
+
+/* 최근 검색어 영역 제목 스타일 */
+.recent-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    font-size: 14px; /* 제목 크기 조정 */
+    color: #ddd;
+    border-top: 1px solid #444;
+    font-weight: bold;
+}
+
+#recent-searches {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* 버튼 Hover 효과 */
+.recent-header button:hover {
+    background-color: #444;
+}
+
+/* 최근 검색어 리스트 스타일 */
+#recent-searches li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px;
+    margin-left: 5px;
+    margin-right: 3px;
+    font-size: 13px; /* 글씨 크기 조정 */
+    color: #ccc;
+}
+
+/* 최근 검색어 Hover 효과 */
+#recent-searches li:hover {
+    background-color: #333;
+}
+
+/* 검색어 앞 아이콘 */
+#recent-searches li::before {
+    content: '⏲'; /* 시계 모양 아이콘 */
+    margin-right: 10px;
+    font-size: 14px;
+    color: #aaa;
+}
+
+/* 삭제 버튼 스타일 */
+#recent-searches li button {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    font-size: 12px; /* 버튼 크기 */
+    transition: color 0.3s ease;
+}
+
+/* 삭제 버튼 Hover 효과 */
+#recent-searches li button:hover {
+    color: #ff4444;
+}
+
+#close-recent-searches {
+    margin-left: auto;
+    display: block;
+    margin-top : 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border: none;
+    background-color: #444;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#close-recent-searches:hover {
+    background-color: #555; /* Hover 시 살짝 밝은 색 */
+}
+
+
+/* "전체삭제" 버튼 스타일 */
+.recent-header button {
+    background-color: #333;
+    border: none;
+    color: #fff;
+    font-size: 12px; /* 버튼 글자 크기 */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }

@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,11 +9,13 @@
     <title>Main Dashboard</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-    <title>NeverLookBack</title>
-    <link rel="stylesheet" href="../css/main.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-
-
+<%-- 현재 로그인한 사용자 ID를 세션에서 가져옴 --%>
+    <c:set var="currentUserId" value="${sessionScope.userId}" />
+    <script>
+      var CURRENT_USER_ID = "${currentUserId}";
+    </script>
 </head>
 <body>
 <div class="main-container">
@@ -20,13 +23,28 @@
 
     <main class="content">
         <header class="header">
-            <div class="search-bar">
-                <input type="text" placeholder="Search (Ctrl+/)">
+            <div class="search-bar-container">
+                <div class="search-bar">
+                    <img src="${pageContext.request.contextPath}/images/nlblogo.png" alt="Logo" class="search-logo">
+                    <input type="text" id="search-input">
+                    <button id="search-btn">🔍</button>
+                </div>
+
+                <!-- 최근 검색어 영역 -->
+                <div id="recent-searches-container" class="hidden">
+                    <div class="recent-header">
+                        <span>최근 검색어</span>
+                        <button id="clear-all-btn">전체삭제</button>
+                    </div>
+                    <ul id="recent-searches"></ul>
+                    <button id="close-recent-searches">닫기</button>
+                </div>
             </div>
+
+            <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
             <h1>Dashboard Analytics</h1>
         </header>
 
-        <!-- 기본 메인 폼 -->
         <section id="default-dashboard" class="dashboard-grid">
             <div class="dashboard-card">
                 <h3>Statistics</h3>
@@ -53,18 +71,15 @@
                 </ul>
             </div>
             <div class="dashboard-card">
-                <h3>Project List</h3>
+                <h3>시험 목록</h3>
                 <ul>
-                    <li>Project 1 - In Progress</li>
-                    <li>Project 2 - Completed</li>
-                    <li>Project 3 - Pending</li>
+                    <li>시험 목록 누르면 전체 다 나오는 SQL</li>
                 </ul>
             </div>
         </section>
 
-        <!-- 검색 결과 및 필터링 UI 포함 -->
         <section id="result-dashboard" class="dashboard-grid">
-            <%@ include file="search_filter.jsp" %>  <!-- 필터링 UI 포함 -->
+            <%@ include file="search_filter.jsp" %>
 
             <table class="result-table">
                 <thead>
@@ -78,54 +93,34 @@
                     <th>시험시간</th>
                 </tr>
                 </thead>
-                <tbody id="result-rows">
-                <!-- 검색 결과 데이터가 여기에 추가됨 -->
-                </tbody>
+                <tbody id="result-rows"></tbody>
             </table>
         </section>
-
     </main>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function () {
-    let timer;
     let tableBody = "";
 
-    $('.search-bar input').on('input', function () {
-      clearTimeout(timer);
-      let query = $(this).val().trim();
-
+    function executeSearch() {
+      let query = $('#search-input').val().trim();
       if (query.length === 0) {
         $('#default-dashboard').show();
         $('#result-dashboard').hide();
         return;
       }
 
-      timer = setTimeout(function () {
-        $.ajax({
-          url: '/api/exams/search',
-          type: 'GET',
-          data: {name: query},
-          dataType: 'json',
-          success: function (response) {
-            if (!response || !response.data || response.data.length === 0) {
-              tableBody = "<tr>" +
-                  "<td colspan='1' style='text-align: center; font-weight: bold; padding: 20px;'>검색된 데이터가 없습니다.</td>" +
-                  "</tr>";
-
-              $('#result-rows').html(tableBody);
-
-              $('#default-dashboard').hide();
-              $('#result-dashboard').show();
-              return;
-            }
-
-            $('#default-dashboard').hide();
-            $('#result-dashboard').show();
+      $.ajax({
+        url: '/api/exams/search',
+        type: 'GET',
+        data: { name: query },
+        dataType: 'json',
+        success: function (response) {
+          if (!response || !response.data || response.data.length === 0) {
+            tableBody = "<tr><td colspan='7' style='text-align: center; font-weight: bold; padding: 20px;'>검색된 데이터가 없습니다.</td></tr>";
+          } else {
             tableBody = "";
-
             response.data.forEach(function (exam) {
               let title = exam.title ?? "N/A";
               let category = exam.category ?? "N/A";
@@ -133,7 +128,7 @@
               let examCode = exam.examCode ?? "N/A";
               let createdAt = exam.createdAt ? formatDate(exam.createdAt) : "N/A";
               let status = getStatusText(exam.activationStatus);
-              let examTime = exam.examTime ?? `${exam.examTime}분`;
+              let examTime = exam.examTime != null ? exam.examTime + "분" : "N/A";
 
               tableBody += "<tr>" +
                   "<td>" + title + "</td>" +
@@ -145,43 +140,45 @@
                   "<td>" + examTime + "</td>" +
                   "</tr>";
             });
-
-            $('#result-rows').html(tableBody);
-
-            localStorage.setItem('searchName', query);
-          },
-          error: function () {
-            console.error('검색 요청 실패');
           }
-        });
-      }, 500);
+
+          $('#result-rows').html(tableBody);
+          $('#default-dashboard').toggle(tableBody === "");
+          $('#result-dashboard').toggle(tableBody !== "");
+          localStorage.setItem('searchName', query);
+        },
+        complete: function () {
+          $.ajax({
+            url: '/api/search-history/save',
+            type: 'POST',
+            data: { userId: CURRENT_USER_ID, searchTerm: query },
+          });
+        }
+      });
+    }
+
+    $('#search-btn').on('click', executeSearch);
+    $('#search-input').on('keypress', function (event) {
+      if (event.which === 13) {
+        event.preventDefault();
+        executeSearch();
+      }
     });
   });
 
-
-  // ISO 8601 → 일반 날짜 변환 , T를 공백으로 제거
   function formatDate(dateString) {
-    let date = new Date(dateString);
-    return date.toISOString().slice(0, 19).replace("T", " ");
+    return new Date(dateString).toISOString().slice(0, 19).replace("T", " ");
   }
 
-  // 영어 상태값을 한글로 변환하는 함수
   function getStatusText(status) {
     switch (status) {
-      case "not_started":
-        return "시험 전";
-      case "on_going":
-        return "시험 중";
-      case "closed":
-        return "시험 종료";
-      default:
-        return "알 수 없음"; // 예외 처리
+      case "not_started": return "시험 전";
+      case "on_going": return "시험 중";
+      case "closed": return "시험 종료";
+      default: return "알 수 없음";
     }
   }
-
-
 </script>
-
 
 </body>
 </html>
