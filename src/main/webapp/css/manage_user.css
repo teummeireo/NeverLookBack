@@ -199,3 +199,23 @@ tr:hover td {
     margin: 10px 0 20px;
     border: none;
 }
+
+/* 스타일링 추가 */
+.user-role-select {
+    padding: 8px;
+    font-size: 14px;
+    border: 2px solid #4CAF50;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-role-select:hover {
+    background-color: #e6ffe6;
+}
+
+.user-role-select:focus {
+    outline: none;
+    border-color: #2e7d32;
+}

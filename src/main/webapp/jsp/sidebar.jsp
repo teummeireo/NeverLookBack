@@ -10,6 +10,7 @@
     <li><a href="/jsp/exam/create_exam.jsp"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
     <li><a href="/jsp/exam/take_exam.jsp"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
     <li><a href="/jsp/exam/my_exam.jsp"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
+    <li><a href="/jsp/exam/my_exam.jsp"><i class="fas fa-cogs"></i><span>내 시험보가</span></a></li>
     <li><a href="/mypage"><i class="fas fa-user"></i><span>마이페이지</span></a></li>
     <li><a href="/admin/main"><i class="fas fa-user"></i><span>운영자페이지</span></a></li>
 

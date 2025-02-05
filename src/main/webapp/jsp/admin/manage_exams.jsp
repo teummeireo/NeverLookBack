@@ -16,7 +16,7 @@
         <header class="header">
             <h1>시험/답안 관리</h1>
         </header>
-        <div class = "divider"></div>
+        <div class="divider"></div>
         <table id="examTable" border="1">
             <thead>
             <tr>
@@ -25,6 +25,7 @@
                 <th>시험 제목</th>
                 <th>카테고리</th>
                 <th>진행 상태</th>
+                <th>시험 삭제</th>
             </tr>
             </thead>
             <tbody>
@@ -45,28 +46,48 @@
         let category = "";
 
         $.ajax({
-            url: "/api/admin/exams",
+            url: "${pageContext.request.contextPath}/api/admin/exams",
             method: 'GET',
             data: { sortBy: sortBy, order: order, category: category },
             dataType: "json",
             success: function(response) {
-                console.log("응답:", response);
-
-                // `tbody` 요소 가져오기
                 let tbody = $("#examTable tbody");
-                tbody.empty(); // 기존 데이터 삭제
+                tbody.empty();
 
-                // `response.data`를 순회해야 함
                 $.each(response.data, function(index, exam) {
                     let row = "<tr>" +
                         "<td>" + exam.examId + "</td>" +
                         "<td>" + exam.examCode + "</td>" +
                         "<td>" + exam.title + "</td>" +
                         "<td>" + exam.category + "</td>" +
-                        "<td>" + exam.activationStatus + "</td>" +
+                        "<td>" +
+                        "<select class='status-select' data-exam-id='" + exam.examId + "'>" +
+                        "<option value='" + exam.activationStatus + "' selected>" + exam.activationStatus + "</option>" +
+                        (exam.activationStatus !== 'not_started' ? "<option value='not_started'>not_started</option>" : "") +
+                        (exam.activationStatus !== 'on_going' ? "<option value='on_going'>on_going</option>" : "") +
+                        (exam.activationStatus !== 'closed' ? "<option value='closed'>closed</option>" : "") +
+                        "</select>" +
+                        "</td>" +
+                        "<td>" +
+                        "<button class='delete-btn' data-exam-id='" + exam.examId + "'>삭제</button>" +
+                        "</td>" +
                         "</tr>";
+                    tbody.append(row);
+                });
 
-                    tbody.append(row); // tbody에 추가
+                $(document).off("change", ".status-select").on("change", '.status-select', function() {
+                    var examId = $(this).data("exam-id");
+                    var newStatus = $(this).val();
+                    updateExamStatus(examId, newStatus);
+
+                })
+
+
+                $(document).off("click", ".delete-btn").on("click", ".delete-btn", function() {
+                    var examId = $(this).data("exam-id");
+                    if (confirm("정말 삭제하시겠습니까?")) {
+                        deleteExam(examId);
+                    }
                 });
             },
             error: function(xhr, status, error) {
@@ -76,6 +97,39 @@
         });
     }
 
+    function updateExamStatus(examId, newStatus) {
+        $.ajax({
+            url: "/api/exams/" + examId + "/status?status=" + newStatus,
+            method: "PUT",
+            contentType: "application/x-www-form-urlencoded",
+            success: function(response) {
+                alert("시험 상태가 변경되었습니다.");
+                loadExamList(); // 변경 후 목록 갱신
+            },
+            error: function(xhr, status, error) {
+                console.error("에러:", status, error);
+                alert("상태 변경에 실패했습니다.");
+                loadExamList(); // 실패 시 원래 상태 복구
+            }
+        });
+    }
+
+    function deleteExam(examId) {
+        $.ajax({
+            url: "/api/exams/" + examId,
+            method: "DELETE",
+            contentType: "application/x-www-form-urlencoded",
+            success: function(response) {
+                alert("시험이 삭제되었습니다.");
+                loadExamList();
+            },
+            error: function(xhr, status, error) {
+                console.error("에러 : " + status, error);
+                alert("시험 삭제가 되지 않았습니다.");
+                loadExamList();
+            }
+        });
+    }
 </script>
 </body>
 </html>

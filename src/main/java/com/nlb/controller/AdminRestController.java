@@ -49,7 +49,6 @@ public class AdminRestController {
 
 
         int rows = nlbUserService.setUserRole(userId, role);
-        System.out.println("gdgdg");
         return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
     }
 
