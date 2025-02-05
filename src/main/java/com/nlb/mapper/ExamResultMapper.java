@@ -61,4 +61,9 @@ public interface ExamResultMapper {
   List<ExamResultVO> selectResultByExamIdAndNotSubmittedAt(@Param("examId") int examId);
 
   void insertExamResultsList(@Param("examResults") List<ExamResultVO> examResults);
+
+  List<Integer> findNotSubmittedResultIds(@Param("examId") int examId);
+
+  ExamResultVO selectExamResultById(@Param("resultId") int resultId);
+
 }
