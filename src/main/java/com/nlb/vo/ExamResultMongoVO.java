@@ -16,7 +16,7 @@ import lombok.Setter;
 public class ExamResultMongoVO {
 
 
-    // 응시자의 답변 주의 : 답안지가 아님!!!!!!! 그럼뭐야
+    // 응시자의 답변.   ※주의 : 답안지가 아님!!!!!!! 그럼뭐야
     @Getter
     @Setter
     @Data

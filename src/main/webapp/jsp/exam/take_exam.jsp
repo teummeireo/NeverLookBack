@@ -60,8 +60,7 @@
 </div>
 
 <script>
-  var urlParams = new URLSearchParams(window.location.search);
-  var examId = urlParams.get("examId") || "44";
+  var examId = ${sessionScope.examId};
 
   var questions = [];
   var answers = {};
@@ -69,7 +68,8 @@
   var timerInterval;
 
   function loadExamData() {
-    var url = "http://localhost:8082/api/exams/results/" + examId + "/exam-data";
+
+    var url = "http://localhost:8088/api/exams/results/" + examId + "/exam-data";
 
     console.log("시험 데이터 요청 URL:", url);
 
@@ -233,10 +233,53 @@
     loadExamData();
   };
 
-  function submitExam() { //todo 마저 완성해야함
-    console.log("시험 제출 버튼 클릭됨.");
-  }
+  function submitExam() {
+      console.log("시험 제출 버튼 클릭됨.");
 
+      if (Object.keys(answers).length === 0) {
+          alert("답안을 제출하기 전에 모든 문제를 확인하세요.");
+          return;
+      }
+
+      var url = "http://localhost:8088/api/exams/submit";
+      //////////////////////////////////////////////!!!!!!!!!!!!!! 하드코딩 주의 !!!!!!!!!!!!!!!!!!!!!!!!
+
+      var examResultReqDTO = {
+          examResultVO: { resultId: examData.resultId },  // 시험 결과 ID 설정
+          examResultMongoVO: { answers: answers } // 사용자가 입력한 답변 전달
+      };
+
+      console.log("시험 제출 데이터:", examResultReqDTO);
+
+      fetch(url, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(examResultReqDTO),
+          credentials: "include"  // 세션 정보를 포함하기 위해 필요
+      })
+          .then(function(response) {
+              console.log("시험 제출 응답 상태 코드:", response.status);
+              if (!response.ok) {
+                  throw new Error("시험 제출 실패: " + response.status);
+              }
+              return response.json();
+          })
+          .then(function(data) {
+              console.log("시험 제출 결과:", data);
+              if (data.code == 200) {
+                  alert("시험이 성공적으로 제출되었습니다.");
+                  window.location.href = "/exam-results";  // 시험 결과 페이지로 이동
+              } else {
+                  alert("시험 제출 중 오류 발생.");
+              }
+          })
+          .catch(function(error) {
+              console.error("시험 제출 실패:", error);
+              alert("시험 제출 중 오류가 발생했습니다.");
+          });
+  }
 
 
 </script>
