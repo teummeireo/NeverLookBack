@@ -8,6 +8,7 @@ import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/exams")
 public class ExamRestController {
@@ -135,6 +137,12 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
+  // 모든 시험 조회
+  @GetMapping("/all")
+  public List<ExamVO> getAllExams() {
+    return examService.getAllExams();
+  }
+
   // 시험명 검색
   @GetMapping("/search")
   public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
@@ -153,10 +161,10 @@ public class ExamRestController {
       @RequestParam(value = "activationStatus", required = false) String activationStatus,
       @RequestParam(value = "examTime", required = false) Integer examTime) {
 
-    // null 값을 그대로 유지하면서 전달
     List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
+
 
 
 }
