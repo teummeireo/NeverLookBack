@@ -116,13 +116,6 @@
             </select>
         </div>
 
-        <!-- ✅ 필터 드롭다운 -->
-        <div class="filter-dropdown">
-            <select id="filterSelect" name="filterSelect" onchange="loadExamResults()">
-                <option value="">카테고리</option>
-<%-- 카테고리 별로 선택할 수 있게 변경--%>
-            </select>
-        </div>
         <!-- 카드 목록 -->
         <div id="examResultsContainer" class="dashboard-grid"></div>
     </main>
@@ -130,12 +123,41 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    const userId = 1; // 현재 사용자의 ID (하드코딩됨)
+    <%--const userId = ${sessionScope.SESS_NICKNAME};--%>
+    const userId = 1;
+
+    $(document).ready(function () {
+        loadCategories(); // 카테고리 목록 로드
+        loadExamResults(); // 페이지 로드 시 시험 목록 로드
+    });
+
+    function loadCategories() {
+        $.ajax({
+            url: "${pageContext.request.contextPath}/api/categories",
+            method: "GET",
+            success: function (categories) {
+                console.log("📌 불러온 카테고리 목록:", categories); // 응답 데이터 확인
+                const filterSelect = $("#filterSelect");
+                filterSelect.empty(); // 기존 옵션 초기화
+                filterSelect.append('<option value="">카테고리</option>'); // 기본 옵션 추가
+
+                if (categories && categories.length > 0) {
+                    categories.forEach(function (category) {
+                        filterSelect.append(`<option value="${category}">${category}</option>`);
+                    });
+                } else {
+                    console.warn("⚠ 카테고리 목록이 비어 있습니다.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("❌ 카테고리 로드 오류:", error);
+            }
+        });
+    }
 
     function loadExamResults() {
-        const sortBy = $('#sortBy').val() || 'createdAt';
-        const category = $('#category').val() || '';
-        const activationStatus = $('#filterSelect').val() || '';
+        const sortBy = $('#sortOrder').val() || 'createdAt';
+        const category = $('#filterSelect').val() || '';
         const order = $('#sortOrder').val() === 'latest' ? 'desc' : 'asc';
 
         $.ajax({
@@ -144,8 +166,7 @@
             data: {
                 sortBy: sortBy,
                 order: order,
-                category: category,
-                activationStatus: activationStatus
+                category: category
             },
             success: function (response) {
                 const container = $('#examResultsContainer');
@@ -170,15 +191,12 @@
                 }
             },
             error: function (xhr, status, error) {
-                console.error('에러:', status, error);
+                console.error('❌ 에러:', status, error);
                 alert('시험 데이터를 불러오는 중 오류가 발생했습니다.');
             }
         });
     }
-
-    $(document).ready(function () {
-        loadExamResults(); // 페이지 로드 시 데이터 로드
-    });
 </script>
+
 </body>
 </html>
