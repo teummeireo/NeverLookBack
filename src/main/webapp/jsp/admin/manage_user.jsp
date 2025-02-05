@@ -17,6 +17,7 @@
             <div class="header">
                 <h1>User Admin</h1>
             </div>
+            <div class = "divider"></div>
             <table id="userTable" border="1">
                 <thead>
                 <tr>

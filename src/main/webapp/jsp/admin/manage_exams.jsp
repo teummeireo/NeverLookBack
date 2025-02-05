@@ -16,14 +16,15 @@
         <header class="header">
             <h1>시험/답안 관리</h1>
         </header>
+        <div class = "divider"></div>
         <table id="examTable" border="1">
             <thead>
             <tr>
-                <th>Exam ID</th>
-                <th>Exam Code</th>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Activation Status</th>
+                <th>시험 ID</th>
+                <th>시험 코드</th>
+                <th>시험 제목</th>
+                <th>카테고리</th>
+                <th>진행 상태</th>
             </tr>
             </thead>
             <tbody>
@@ -58,7 +59,7 @@
                 // `response.data`를 순회해야 함
                 $.each(response.data, function(index, exam) {
                     let row = "<tr>" +
-                        "<td>" + exam.examineeId + "</td>" +
+                        "<td>" + exam.examId + "</td>" +
                         "<td>" + exam.examCode + "</td>" +
                         "<td>" + exam.title + "</td>" +
                         "<td>" + exam.category + "</td>" +

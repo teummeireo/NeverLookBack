@@ -151,3 +151,11 @@ td.inactive {
     }
 }
 
+/* 구분선 스타일 */
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #444444;
+    margin: 10px 0 20px;
+    border: none;
+}
