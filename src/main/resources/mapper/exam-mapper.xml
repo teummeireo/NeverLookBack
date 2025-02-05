@@ -171,5 +171,16 @@
     WHERE exam_id =#{examId}
   </select>
 
+  <select id="getOngoingExams" resultType="Int">
+    SELECT exam_id
+    FROM exam
+    where activation_status = 'on_going'
+  </select>
+
+  <select id="getFinishTime" parameterType="int" resultType="LocalDateTime">
+    SELECT finished_at
+    FROM exam
+    WHERE exam_id = #{examID}
+  </select>
 
 </mapper>

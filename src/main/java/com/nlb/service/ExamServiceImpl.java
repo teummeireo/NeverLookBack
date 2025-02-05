@@ -214,4 +214,9 @@ public class ExamServiceImpl implements ExamService {
     return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
   }
 
+  // 시간 초과 여부 판정 함수
+  @Override
+  public boolean isTimeOver(int examId, LocalDateTime finishTime) {
+    if (LocalDateTime.now().isAfter(finishTime) || LocalDateTime.now().isEqual(finishTime)) {return true;}return false;}
+
 }
