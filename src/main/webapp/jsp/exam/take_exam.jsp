@@ -233,11 +233,152 @@
     loadExamData();
   };
 
-  function submitExam() { //todo 마저 완성해야함
+  function submitExam() {
     console.log("시험 제출 버튼 클릭됨.");
+
+    var examineeId = sessionStorage.getItem("examineeId");  // 세션에서 examineeId 가져오기
+    var resultId = sessionStorage.getItem("resultId"); //todo resultId도 세션에 보관되어야 함
+
+    if (!resultId) {
+      alert("resultId가 없습니다. 응시 중인지 확인해주세요.");
+      return;
+    }
+
+    if (!examineeId) {
+      alert("로그인 정보가 없습니다. 다시 로그인해주세요.");
+      return;
+    }
+
+    //초기값 설정
+    var formattedAnswers = Object.keys(answers).map(questionId => ({
+      questionId: parseInt(questionId),
+      answer: answers[questionId],
+      isCorrect: false,
+      pointsEarned: 0,
+      isObjection: false
+    }));
+
+    var requestBody = {
+      "examResultVO": {
+        "resultId": resultId,
+        "examId": examId,
+        "examineeId": examineeId,
+        "submittedAt": new Date().toISOString() // 현재 시간으로 제출 시간 기록
+      },
+      "examResultMongoVO": {
+        "resultId": resultId,
+        "examId": examId,
+        "examineeId": examineeId,
+        "answers": formattedAnswers
+      }
+    };
+
+    console.log("제출 데이터:", requestBody);
+
+    fetch("http://localhost:8082/api/exams/results/" + resultId + "/answers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert("시험이 제출되었습니다.");
+
+        // WebSocket을 이용해 서버에 제출 알림 전송
+        stompClient.send("/app/submitExam", {}, JSON.stringify({
+          examId: examId,
+          examineeId: examineeId
+        }));
+
+        // 시험 결과 페이지로 이동
+        window.location.href = "/exam/result?examId=" + examId;
+      } else {
+        alert("제출 실패: " + data.message);
+      }
+    })
+    .catch(error => console.error("시험 제출 중 오류 발생:", error));
   }
 
 
+</script>
+
+
+<!-- 웹소켓 관련 코드 -->
+<script>
+  var stompClient = null;
+
+  function connectSocket() {
+    var socket = new SockJS('/stomp-endpoint');
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+      console.log('Connected: ' + frame);
+
+      // 서버에서 브로드캐스트하는 시험 종료 메시지 수신위한 구독
+      stompClient.subscribe('/topic/examProgress', function (message) {
+        var msgBody = message.body;
+
+        console.log("시험 이벤트 수신:", msgBody);
+
+        // 강제 종료 메시지일 경우
+        if (msgBody.includes('시험이 종료되었습니다')) {
+          alert(msgBody);
+
+          //todo 강제 제출 후 시험 결과 페이지로 이동
+          setTimeout(function() {
+            window.location.href = "/exam/result?examId=" + examId;
+          }, 3000);
+        }
+      });
+    });
+  }
+
+  function disconnectSocket() {
+    if (stompClient !== null) {
+      stompClient.disconnect();
+    }
+    console.log("Disconnected");
+  }
+
+  // 시험 시작 시 WebSocket 연결
+  window.onload = function () {
+    connectSocket();
+  };
+
+  function checkExamTimeAndClose() {
+    if (remainingTime <= 0) {
+      fetch("http://localhost:8082/api/exams/" + examId + "/close", {
+        method: "POST"
+      })
+      .then(response => response.text())
+      .then(data => console.log(data));
+    }
+  }
+
+  function connectTimeSyncSocket() {
+    var socket = new SockJS('/stomp-endpoint');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+      console.log('서버 시간 동기화 시작');
+
+      // 서버에서 전송하는 시간 메시지 수신
+      stompClient.subscribe('/topic/serverTime', function (message) {
+        var serverTime = parseInt(message.body);
+        syncClientTime(serverTime);
+      });
+    });
+  }
+
+  function syncClientTime(serverTime) {
+    var clientTime = new Date().getTime();
+    var timeDiff = serverTime - clientTime;
+
+    console.log("시간 동기화 차이(ms):", timeDiff);
+
+    remainingTime -= timeDiff / 1000; // 시간 차이를 보정하여 남은 시간 조정
+  }
 
 </script>
 </body>
