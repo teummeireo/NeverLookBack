@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Main Dashboard</title>
     <link rel="stylesheet" href="/css/my_exam.css">
+    <link rel="stylesheet" href="/css/sideba.css">
+
 </head>
 <body>
 <div class="main-container">
@@ -31,7 +33,7 @@
                 <li>Project 3 - Pending</li>
             </ul>
         </div>
-        <div class="dashboard-card project-list">
+        <div class="dashboard-card project-list" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/my_exam_detail.jsp'" style="cursor: pointer;">
             <h3>내 시험 답안 상세보기</h3>
             <ul>
                 <li>Project 1 - In Progress</li>
@@ -39,7 +41,7 @@
                 <li>Project 3 - Pending</li>
             </ul>
         </div>
-        <div class="dashboard-card project-list">
+        <div class="dashboard-card project-list" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/take_exam.jsp'" style="cursor: pointer;">
             <h3>시험 응시 바로가기</h3>
             <ul>
                 <li>Project 1 - In Progress</li>

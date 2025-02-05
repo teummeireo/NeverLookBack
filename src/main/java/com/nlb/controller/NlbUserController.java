@@ -27,7 +27,7 @@ public class NlbUserController {
 //        session.setAttribute("SESS_USERID"   , 8);
 //        session.setAttribute("SESS_NICKNAME" , "UserOne");
 
-        return "/jsp/main";
+        return "/jsp/new_main";
 
     }
 
