@@ -211,4 +211,10 @@ public class ExamServiceImpl implements ExamService {
     return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
   }
 
+  // 모든 시험 조회
+  @Override
+  public List<ExamVO> getAllExams() {
+    return examMapper.searchAllExams();
+  }
+
 }
