@@ -5,8 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Dashboard</title>
+    <title>이전 응시 내역</title>
     <link rel="stylesheet" href="/css/exam_result.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+
 </head>
 <body>
 <div class="main-container">
@@ -71,17 +73,11 @@
                         type: "GET",
                         data: { sortBy: sortBy, order: order, isReviewed: isReviewed },
                         success: function (response) {
-                            console.log("📌 API 응답 데이터:", response);
-
                             if (!response.data || response.data.length === 0) {
-                                console.warn("❌ 데이터가 없습니다.");
                                 $("#examResultsContainer").html("<p>응시 내역이 없습니다.</p>");
                                 return;
                             }
-
                             globalExamResults = response.data; // ✅ 전역 변수에 데이터 저장
-
-                            console.log("📌 전역 변수 업데이트 완료:", globalExamResults);
                             renderExamResults(globalExamResults, ""); // ✅ 데이터 렌더링
                         },
                         error: function (xhr, status, error) {
@@ -94,20 +90,13 @@
                 let resultContainer = $("#examResultsContainer");
                 resultContainer.empty(); // 기존 내용 초기화
 
-                console.log("📌 최종 결과 데이터:", examResults);
-
                 if (!examResults || examResults.length === 0) {
-                    console.warn("❌ 데이터 없음. '응시 내역이 없습니다.' 추가");
                     resultContainer.append("<p>응시 내역이 없습니다.</p>");
                     return;
                 }
-
                 resultContainer.css("display", "block");
-
                 let htmlContent = ""; // 🔥 누적할 HTML 변수
-
                 examResults.forEach(function (result, index) {
-
                     let card = `
                         <div class="dashboard-card">
                             <h3>시험 ID: ` + result.examId + `</h3>
