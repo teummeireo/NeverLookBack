@@ -106,47 +106,21 @@
         </header>
         <div class="divider"></div>
 
-        <!-- 검색창 -->
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="검색해보세요" onkeyup="loadExamResults()">
-        </div>
-        <br>
-
-<%--        <!-- 정렬 드롭다운 -->--%>
-<%--        <div class="sort-dropdown">--%>
-<%--            <select id="sortBy" onchange="loadExamResults()">--%>
-<%--                <option value="createdAt">최신순</option>--%>
-<%--                <option value="title">제목</option>--%>
-<%--                <option value="examineeCount">응시자 수</option>--%>
-<%--                <option value="category">카테고리</option>--%>
-<%--            </select>--%>
-<%--        </div>--%>
-
-<%--        <!-- 필터 드롭다운 -->--%>
-<%--        <div class="filter-dropdown">--%>
-<%--            <select id="category" onchange="loadExamResults()">--%>
-<%--                <option value="">모든 카테고리</option>--%>
-<%--                <option value="math">수학</option>--%>
-<%--                <option value="science">과학</option>--%>
-<%--                <option value="history">역사</option>--%>
-<%--            </select>--%>
-<%--        </div>--%>
-        <!-- ✅ 정렬 드롭다운 -->
         <div class="sort-dropdown">
             <select id="sortOrder" name="sortOrder" onchange="loadExamResults()">
                 <option value="">정렬</option>
-                <option value="latest">최신순</option>
-                <option value="oldest">오래된 순</option>
+                <option value="title">제목 순</option>
+                <option value="createdDate">생성일 순</option>
+                <option value="participantCount">응시자 수 순</option>
+                <option value="category">카테고리 순</option>
             </select>
         </div>
 
         <!-- ✅ 필터 드롭다운 -->
         <div class="filter-dropdown">
             <select id="filterSelect" name="filterSelect" onchange="loadExamResults()">
-                <option value="">필터</option>
-                <option value="option1">진행전</option>
-                <option value="option2">진행후</option>
-                <option value="option3">검토완료</option>
+                <option value="">카테고리</option>
+<%-- 카테고리 별로 선택할 수 있게 변경--%>
             </select>
         </div>
         <!-- 카드 목록 -->
@@ -159,10 +133,10 @@
     const userId = 1; // 현재 사용자의 ID (하드코딩됨)
 
     function loadExamResults() {
-        const searchKeyword = $('#searchInput').val();
-        const sortBy = $('#sortBy').val();
-        const category = $('#category').val();
-        const order = "asc"; // 기본 정렬 방향
+        const sortBy = $('#sortBy').val() || 'createdAt';
+        const category = $('#category').val() || '';
+        const activationStatus = $('#filterSelect').val() || '';
+        const order = $('#sortOrder').val() === 'latest' ? 'desc' : 'asc';
 
         $.ajax({
             url: `${pageContext.request.contextPath}/api/exams/` + userId,
@@ -170,7 +144,8 @@
             data: {
                 sortBy: sortBy,
                 order: order,
-                category: category
+                category: category,
+                activationStatus: activationStatus
             },
             success: function (response) {
                 const container = $('#examResultsContainer');
