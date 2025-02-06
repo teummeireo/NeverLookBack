@@ -35,13 +35,15 @@
 
 <script>
   var urlParams = new URLSearchParams(window.location.search);
-  var examId = urlParams.get("examId") || "44";
-  var examineeId = "1"; // 세션에서 가져올 수도 있음
-  var resultId = "21"; // 불러올 시험 결과 ID
+  var examId = urlParams.get("examId") || "75";  // examId 가져오기
+  var examineeId = "30";  // 세션에서 가져올 수도 있음
+  var resultId = "27";   // 불러올 시험 결과 ID
   var questions = [];
-  var answers = []; // 이전 제출 답변 저장
-  var remainingTime = 0;
+  var isCorrect = [];
+  var answers = [0];
+  // 이전 제출 답변 저장 (키: questionId, 값: 사용자의 답변)
 
+  // 시험 데이터 불러오기
   function loadExamData() {
     var examUrl = "http://localhost:8088/api/exams/results/" + examId + "/exam-data";
     var answersUrl = "http://localhost:8088/api/exams/results/" + examId + "/" + resultId + "/details";
@@ -53,11 +55,15 @@
             .then(response => response.json())
             .then(examData => {
               if (examData.code == 200) {
+                console.log(examData);
                 questions = examData.data.questions;
                 renderExam(examData.data);
+                examData.data.submittedAnswers.forEach(answer => {
+                  answers.push(answer.answer);
+                });
 
-                // ✅ resultId = 21에 해당하는 응답 데이터를 가져옴
-                return fetch(answersUrl);
+
+                return fetch(answersUrl); // ✅ resultId = 21 응답 데이터 가져오기
               } else {
                 throw new Error("시험 데이터를 불러오는 중 오류 발생");
               }
@@ -65,8 +71,11 @@
             .then(response => response.json())
             .then(answerData => {
               if (answerData.code == 200) {
-                answers = answerData.data.answers;  // ✅ resultId = 21 의 데이터 저장
-                fillPreviousAnswers();
+                answerData.data.resultDetails.forEach(detail => {
+                  isCorrect[detail.questionId - 1] = detail.correct ? "정답" : "오답"; // 정답 여부를 저장
+                });
+
+                markAnswers(); // ✅ 기존 답변 자동 입력
               }
             })
             .catch(error => console.error("데이터 불러오기 실패:", error));
@@ -122,25 +131,33 @@
     document.getElementById("submit-exam").disabled = false;
   }
 
-  function fillPreviousAnswers() {
-    for (var questionId in answers) {
-      var answer = answers[questionId];
-      var question = questions.find(q => q.questionId == questionId);
+  function markAnswers() {
+    for (var questionId in isCorrect) {
+      var input = document.getElementById("answer-" + questionId);
+      if (input) {
+        input.value = answers[questionId]; // ✅ 주관식: 사용자가 제출한 답변 표시
+        input.disabled = true;
+      }
 
-      if (!question) continue;
+      var questionDiv = document.getElementById("question-" + questionId);
+      if (questionDiv) {
+        var statusIcon = document.createElement("span");
+        statusIcon.style.marginLeft = "10px";
+        statusIcon.style.fontWeight = "bold";
+        statusIcon.style.color = isCorrect[questionId] === "정답" ? "green" : "red";
+        statusIcon.textContent = isCorrect[questionId] === "정답" ? "✔" : "✘";
+        questionDiv.appendChild(statusIcon);
+      }
 
-      if (question.type === "multiple_choice") {
-        var radios = document.getElementsByName("answer-" + questionId);
-        radios.forEach(radio => {
-          if (radio.value == answer) {
-            radio.checked = true;
+      // ✅ 객관식 문제 자동 체크
+      var selectedOption = answers[questionId]; // 사용자가 제출한 값
+      var radioButtons = document.getElementsByName("answer-" + questionId);
+      if (radioButtons) {
+        radioButtons.forEach(radio => {
+          if (radio.value === selectedOption) {
+            radio.checked = true; // ✅ 사용자가 제출한 값과 일치하는 라디오 버튼 체크
           }
         });
-      } else {
-        var input = document.getElementById("answer-" + questionId);
-        if (input) {
-          input.value = answer;
-        }
       }
     }
   }
@@ -154,21 +171,14 @@
     };
   }
 
-  // 사용자의 응답을 저장하는 핸들러 함수 추가
-  function createSaveAnswerHandler(questionId, value) {
-    return function() {
-      answers[questionId] = value;
-    };
-  }
-
   function renderMultipleChoiceOptions(question, container) {
     question.options.forEach(option => {
       var label = document.createElement("label");
       var radio = document.createElement("input");
       radio.type = "radio";
-      radio.name = "answer-" + question.questionId;
+      radio.name = "answer-" + question.questionId; // ✅ 같은 문제의 라디오 버튼은 같은 name 속성
       radio.value = option;
-      radio.onchange = createSaveAnswerHandler(question.questionId, option); // 여기에 적용됨!
+      radio.disabled = true;  // 기존 답변이므로 수정 불가
 
       label.appendChild(radio);
       label.appendChild(document.createTextNode(option));
@@ -181,22 +191,16 @@
     input.type = "text";
     input.className = "answer-input";
     input.id = "answer-" + question.questionId;
-    input.oninput = function() {
-      answers[question.questionId] = input.value;
-    };
+    input.disabled = true; // 수정 불가
 
     container.appendChild(input);
   }
 
-  document.getElementById("submit-exam").addEventListener("click", () => console.log("시험 제출"));
-
-
-  // 시험 결과 확인 완료 버튼 변경 및 기능 추가
-  document.getElementById("submit-exam").textContent = "시험 결과 확인 완료";
   document.getElementById("submit-exam").addEventListener("click", function() {
     console.log("시험 결과 확인 완료");
-    this.disabled = true; // 버튼 클릭 후 비활성화
+    this.disabled = true;
   });
+
   loadExamData();
 </script>
 </body>

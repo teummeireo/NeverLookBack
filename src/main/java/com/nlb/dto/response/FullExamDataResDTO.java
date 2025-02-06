@@ -2,12 +2,12 @@ package com.nlb.dto.response;
 
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.QuestionVO;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -26,6 +26,6 @@ public class FullExamDataResDTO {
   private int resultId;
   private int examineeId;
   private List<QuestionVO> questions;
-  private List<AnswerVO> submittedAnswers;
+    private List<AnswerVO> submittedAnswers;
 
 }

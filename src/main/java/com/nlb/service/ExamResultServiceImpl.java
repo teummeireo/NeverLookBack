@@ -300,7 +300,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     Query queryResult = new Query(Criteria.where("examId").is(examId)
         .and("examineeId").is(examineeId));
     Map<String, Object> examResultData = mongoTemplate.findOne(queryResult, Map.class,
-        "exam_results");
+        "examResults");
 
     // exam컬렉션에서 메타데이터 가져오기
     Query queryExam = new Query(Criteria.where("examId").is(examId));
