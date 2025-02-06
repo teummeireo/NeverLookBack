@@ -12,6 +12,7 @@ import com.nlb.vo.QuestionVO;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/api/exams")
 public class ExamRestController {
@@ -150,6 +152,12 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
+  // 모든 시험 조회
+  @GetMapping("/all")
+  public List<ExamVO> getAllExams() {
+    return examService.getAllExams();
+  }
+
   // 시험명 검색
   @GetMapping("/search")
   public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
@@ -171,6 +179,7 @@ public class ExamRestController {
     // null 값을 그대로 유지하면서 전달
     List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt,
         activationStatus, examTime);
+
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
@@ -179,5 +188,6 @@ public class ExamRestController {
     webSocketExamService.closeExam(examId);
     return ResponseEntity.ok("시험이 강제 종료되었습니다.");
   }
+
 
 }

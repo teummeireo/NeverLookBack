@@ -219,4 +219,11 @@ public class ExamServiceImpl implements ExamService {
   public boolean isTimeOver(int examId, LocalDateTime finishTime) {
     if (LocalDateTime.now().isAfter(finishTime) || LocalDateTime.now().isEqual(finishTime)) {return true;}return false;}
 
+
+  // 모든 시험 조회
+  @Override
+  public List<ExamVO> getAllExams() {
+    return examMapper.searchAllExams();
+  }
+
 }

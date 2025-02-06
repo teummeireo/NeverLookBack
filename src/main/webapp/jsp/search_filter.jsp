@@ -29,11 +29,10 @@
   </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $(document).ready(function () {
     let debounceTimer; // 디바운스 타이머 변수
-    let currentSearchName = localStorage.getItem('searchName'); // 현재 검색어 저장 변수
+    let currentSearchName = ""; // 현재 검색어 저장 변수
 
     // 필터 적용 함수
     function applyFilters() {
@@ -44,7 +43,7 @@
       let examTime = $('#filter-examTime').val();
 
       let filterParams = {
-        name: currentSearchName || null, // 검색어 유지
+        name: localStorage.getItem('searchName') || null, // 검색어 유지
         category: category || null,
         creator: creator || null,
         createdAt: createdAt || null,
@@ -94,7 +93,7 @@
         let examCode = exam.examCode ?? "N/A";
         let createdAt = exam.createdAt ? formatDate(exam.createdAt) : "N/A";
         let status = getStatusText(exam.activationStatus);
-        let examTime = exam.examTime ?? `${exam.examTime}분`;
+        let examTime = exam.examTime != null ? exam.examTime + "분" : "N/A";
 
         tableBody +=
                 "<tr>" +
@@ -111,10 +110,11 @@
       $('#result-rows').html(tableBody);
     }
 
+    // 아래는 유틸함수
     // 날짜 포맷 함수
     function formatDate(dateString) {
       let date = new Date(dateString);
-      return date.toISOString().slice(0, 10); // yyyy-MM-dd 형식 반환
+      return date.toISOString().slice(0, 19).replace("T", " "); // yyyy-MM-dd 형식 반환
     }
 
     // 상태 텍스트 변환 함수

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <title>사용자 계정 관리</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/submission_check.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/manage_user.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
 </head>
 <body>
@@ -17,13 +17,15 @@
             <div class="header">
                 <h1>User Admin</h1>
             </div>
+            <div class = "divider"></div>
             <table id="userTable" border="1">
                 <thead>
                 <tr>
                     <th>로그인 ID</th>
                     <th>닉네임</th>
                     <th>이메일</th>
-                    <th>User_role</th>
+                    <th>User role</th>
+                    <th>활성화 여부</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -50,58 +52,85 @@
             success: function(response) {
                 let users = response.data;
                 let tableBody = "";
-                users.forEach(user => {
+
+                users.forEach(function(user) {
+                    let statusClass = user.active ? "status-active" : "status-inactive"; // 클래스 적용
+                    let statusText = user.active ? "활성화" : "비활성화"; // 텍스트 설정
+
                     tableBody += "<tr>" +
                         "<td>" + user.loginId + "</td>" +
                         "<td>" + user.nickname + "</td>" +
                         "<td>" + user.email + "</td>" +
-                        "<td>" + user.userRole + "</td>" +
+                        "<td>" +
+                        "<select class='user-role-select' data-user-id='" + user.userId + "'>" +
+                        "<option value='" + user.userRole + "' selected>" + user.userRole + "</option>" +
+                        (user.userRole !== "admin" ? "<option value='admin'>admin</option>" : "") +
+                        (user.userRole !== "user" ? "<option value='user'>user</option>" : "") +
+                        "</select>" +
+                        "</td>" +
+                        "<td class='toggle-status " + statusClass + "' data-user-id='" + user.userId + "' data-active='" + user.active + "'>" +
+                        statusText +
+                        "</td>" +
                         "</tr>";
                 });
-                $("#userTable tbody").html(tableBody);
+
+                document.querySelector("#userTable tbody").innerHTML = tableBody;
+
+                // 역할 변경 이벤트 바인딩
+                $(document).off("change", ".user-role-select").on("change", ".user-role-select", function() {
+                    var userId = $(this).data("user-id");
+                    var newRole = $(this).val();
+                    updateUserRole(userId, newRole);
+                });
+
+                // 활성화 여부 클릭 이벤트 바인딩
+                $(document).off("click", ".toggle-status").on("click", ".toggle-status", function() {
+                    var userId = $(this).data("user-id");
+                    var currentStatus = $(this).data("active");
+                    toggleUserStatus(userId, !currentStatus);
+                });
             },
             error: function(xhr, status, error) {
                 console.error("사용자 목록을 불러오는 중 오류 발생:", error);
             }
         });
     }
-</script>
-</body>
-</html>
-<%--<script>--%>
-<%--    $(document).ready(function () {--%>
-<%--        fetchResults(); // 페이지가 로드되자마자 데이터 가져오기--%>
-<%--        $.ajax({--%>
-<%--            url: "/api/admin/users",--%>
-<%--            method: 'GET',--%>
-<%--            dataType: "json",--%>
-<%--            success: function (obj) {--%>
-<%--                console.log("응답:" + obj);--%>
-<%--            },--%>
-<%--            error: function (xhr, status, error) {--%>
-<%--                console.log("에러:", status);--%>
-<%--                alert(xhr.responseJSON.error);--%>
-<%--            }--%>
-<%--        });--%>
 
-<%--        // 회원 비활성화(삭제)--%>
-<%--        $("#delete-user-btn").click( function() {--%>
-<%--            //userId = ~~~--%>
-<%--            $.ajax({--%>
-<%--                url: "/api/admin/users/" + userId,--%>
-<%--                method: 'PUT',--%>
-<%--                data: "isActive=false",--%>
-<%--                dataType: "json",--%>
-<%--                success: function(obj) {--%>
-<%--                    console.log("응답:" + obj);--%>
-<%--                },--%>
-<%--                error: function(xhr, status, error) {--%>
-<%--                    console.log("에러:", status);--%>
-<%--                    alert(xhr.responseJSON.error);--%>
-<%--                }--%>
-<%--            });--%>
-<%--        });--%>
-<%--    });--%>
-<%--</script>--%>
+    function toggleUserStatus(userId, newStatus) {
+        var confirmMsg = newStatus ? "이 사용자를 활성화하시겠습니까?" : "이 사용자를 비활성화하시겠습니까?";
+        if (confirm(confirmMsg)) {
+            $.ajax({
+                url: "/api/admin/users/" + userId + "?isActive=" + newStatus,
+                method: "PUT",
+                contentType: "application/x-www-form-urlencoded",
+                success: function(response) {
+                    alert(newStatus ? "사용자가 활성화되었습니다." : "사용자가 비활성화되었습니다.");
+                    loadUserList(); // UI 갱신
+                },
+                error: function(xhr, status, error) {
+                    console.error("사용자 상태 변경 중 오류 발생:", error);
+                    alert("사용자 상태 변경 중 오류가 발생했습니다.");
+                }
+            });
+        }
+    }
+
+    function updateUserRole(userId, newRole) {
+        $.ajax({
+            url: "/api/admin/users/role/" + userId + "?role=" + newRole,
+            method: "PUT",
+            contentType: "application/x-www-form-urlencoded",
+            success: function(response) {
+                alert("사용자 역할이 변경되었습니다.");
+                loadUserList(); // UI 갱신
+            },
+            error: function(xhr, status, error) {
+                console.error("역할 변경 중 오류 발생:", error);
+                alert("사용자 역할 변경 중 오류가 발생했습니다.");
+            }
+        });
+    }
+
+</script>
 </body>
 </html>

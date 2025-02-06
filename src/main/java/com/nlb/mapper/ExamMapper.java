@@ -55,4 +55,8 @@ public interface ExamMapper {
   List<Integer> getOngoingExams();
 
   LocalDateTime getFinishTime(@Param("examId") int examId);
+  
+  List<ExamVO> searchAllExams();
+
+
 }

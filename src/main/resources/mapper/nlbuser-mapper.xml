@@ -7,25 +7,20 @@
 <mapper namespace="com.nlb.mapper.NlbUserMapper">
 
 
-<!--    <select id = "selectUsers" resultType="NlbUserVO">-->
-<!--        select *-->
-<!--        from nlbuser-->
-<!--    </select>-->
-
-    <select id="selectUsers" resultType="NlbUserVO">
-        SELECT login_id AS loginId, nickname, email, user_role AS userRole
-        FROM nlbuser
+    <select id = "selectUsers" resultType="NlbUserVO">
+        select *
+        from nlbuser
     </select>
-    <!-- 전체 조회 -->
-<!--    <select id="selectAllExamResults" resultType="ExamResultVO">-->
-<!--        SELECT exam_id, examinee_id, score, submitted_at, is_reviewed-->
-<!--        FROM exam_result-->
-<!--        ORDER BY submitted_at DESC-->
-<!--    </select>-->
 
     <update id="updateUserIsActive">
         update nlbuser
         set is_active = #{isActive}
+        where user_id = #{userId}
+    </update>
+
+    <update id="updateUserRole">
+        update nlbuser
+        set user_role = #{userRole}
         where user_id = #{userId}
     </update>
 

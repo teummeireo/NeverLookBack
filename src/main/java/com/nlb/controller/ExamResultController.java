@@ -3,7 +3,6 @@ package com.nlb.controller;
 
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.service.ExamResultService;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -29,9 +30,9 @@ public class ExamResultController {
       @RequestParam("entreeCode") String entreeCode,
       HttpSession session) {
 
-    // todo세션에서 가져오도록 변경 (현재는 1로 하드코딩)
+
     int examineeId =
-        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
+        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 48;
 
     ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId,
         entreeCode);

@@ -27,12 +27,12 @@
         <p id="error-message" style="color: red; display: none;">로그인 실패. 아이디 또는 비밀번호를 확인하세요.</p>
 
         <div class="form-footer">
-            <a href="/jsp/login_info/find_id.jsp">아이디 찾기</a>
-            <a href="/jsp/login_info/find_pw.jsp">비밀번호 찾기</a>
+            <a href="/find-id">아이디 찾기</a>
+            <a href="/find-pw">비밀번호 찾기</a>
         </div>
 
         <div class="form-footer">
-            <a href="/jsp/register.jsp">회원가입</a>
+            <a href="/register">회원가입</a>
         </div>
     </form>
 </div>
@@ -58,7 +58,7 @@
           localStorage.setItem("nickname", response.nickname);
 
           // 메인 페이지로 이동
-          window.location.href = "/jsp/main.jsp";
+          window.location.href = "/";
         },
         error: function() {
           $('#error-message').show();

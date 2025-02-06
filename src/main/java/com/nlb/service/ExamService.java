@@ -36,4 +36,7 @@ public interface ExamService {
   List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime);
 
   boolean isTimeOver(int examId, LocalDateTime finishTime);
+
+  List<ExamVO> getAllExams();
+
 }

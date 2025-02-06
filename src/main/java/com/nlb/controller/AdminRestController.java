@@ -31,7 +31,7 @@ public class AdminRestController {
         return new ResponseEntity<>(CMResDTO.successDataRes(ulist), HttpStatus.OK);
     }
 
-
+    // 유저 비활성화
     @RequestMapping(value = "/users/{userId}", method = RequestMethod.PUT)
     public ResponseEntity<CMResDTO<String>> setUserStatus(@PathVariable("userId") int userId,
                                                           @RequestParam("isActive") Boolean isActive) {
@@ -39,6 +39,16 @@ public class AdminRestController {
 
         int rows = nlbUserService.setUserStatus(userId, isActive);
 
+        return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/users/role/{userId}", method = RequestMethod.PUT)
+    public ResponseEntity<CMResDTO<String>> setUserRole(@PathVariable("userId") int userId,
+                                                          @RequestParam("role") String role) {
+
+
+        int rows = nlbUserService.setUserRole(userId, role);
         return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
     }
 

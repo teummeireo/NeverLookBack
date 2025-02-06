@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Title</title>
+    <title>시험 통계</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 
 </head>

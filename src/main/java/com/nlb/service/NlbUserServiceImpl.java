@@ -6,12 +6,10 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.NlbUserMapper;
 import com.nlb.util.PasswordUtil;
 import com.nlb.vo.NlbUserVO;
-import java.util.UUID;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import static com.nlb.exception.ErrorCode.USER_MODIFY_PASSWORD_FAILURE;
@@ -118,6 +116,7 @@ public class NlbUserServiceImpl implements NlbUserService {
     @Transactional
     public int registerUser(NlbUserVO uvo) {
         // 비밀번호 해싱
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         String hashedPassword = PasswordUtil.hashPassword(uvo.getPassword());
         uvo.setPassword(hashedPassword);
 
@@ -149,6 +148,11 @@ public class NlbUserServiceImpl implements NlbUserService {
     @Transactional
     public int updateUserPassword(String loginId, String newPassword) {
         return userMapper.updateUserPassword(loginId, newPassword);
+    }
+
+    @Override
+    public int setUserRole(int userId, String userRole) {
+        return userMapper.updateUserRole(userId, userRole);
     }
 
 }
