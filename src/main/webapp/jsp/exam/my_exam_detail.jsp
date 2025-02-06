@@ -40,7 +40,7 @@
   var resultId = "27";   // 불러올 시험 결과 ID
   var questions = [];
   var isCorrect = [];
-  var answers = [0];
+  var answers = [];
   // 이전 제출 답변 저장 (키: questionId, 값: 사용자의 답변)
 
   // 시험 데이터 불러오기
@@ -55,7 +55,7 @@
             .then(response => response.json())
             .then(examData => {
               if (examData.code == 200) {
-                console.log(examData);
+                console.log(examData); // 각 문항별 정답 : examData.questions[i].correctAnswer
                 questions = examData.data.questions;
                 renderExam(examData.data);
                 examData.data.submittedAnswers.forEach(answer => {
@@ -74,6 +74,8 @@
                 answerData.data.resultDetails.forEach(detail => {
                   isCorrect[detail.questionId - 1] = detail.correct ? "정답" : "오답"; // 정답 여부를 저장
                 });
+                console.log(isCorrect);
+                console.log(answers);
 
                 markAnswers(); // ✅ 기존 답변 자동 입력
               }
@@ -132,11 +134,16 @@
   }
 
   function markAnswers() {
-    for (var questionId in isCorrect) {
+    // questions 배열의 길이를 가져옴
+    var numberOfQuestions = questions.length;
+
+    for (var i = 0; i < numberOfQuestions; i++) {
+      var questionId = i + 1; // questionId는 1부터 시작하므로 i + 1
+
       var input = document.getElementById("answer-" + questionId);
       if (input) {
-        input.value = answers[questionId]; // ✅ 주관식: 사용자가 제출한 답변 표시
-        input.disabled = true;
+        input.value = answers[i] || ""; // 주관식: 사용자가 제출한 답변 표시
+        input.disabled = true; // 수정 불가
       }
 
       var questionDiv = document.getElementById("question-" + questionId);
@@ -144,23 +151,37 @@
         var statusIcon = document.createElement("span");
         statusIcon.style.marginLeft = "10px";
         statusIcon.style.fontWeight = "bold";
-        statusIcon.style.color = isCorrect[questionId] === "정답" ? "green" : "red";
-        statusIcon.textContent = isCorrect[questionId] === "정답" ? "✔" : "✘";
+        statusIcon.style.color = isCorrect[i] === "정답" ? "green" : "red";
+        statusIcon.textContent = isCorrect[i] === "정답" ? "✔" : "✘";
         questionDiv.appendChild(statusIcon);
+
+        // 정답을 표시할 input 요소 추가
+        if (isCorrect[i] === "오답") {
+          var correctAnswerInput = document.createElement("input");
+          correctAnswerInput.type = "text";
+          correctAnswerInput.value = questions[i].correctAnswer; // 정답 가져오기
+          correctAnswerInput.disabled = true; // 수정 불가
+          correctAnswerInput.style.backgroundColor = "#f8d7da"; // 틀린 문제 강조
+          correctAnswerInput.style.color = "red"; // 색상 설정
+          correctAnswerInput.style.width = "600px"; // 너비 조정 (300px로 설정, 필요에 따라 조정 가능)// 여백 추가 (선택 사항)
+
+          questionDiv.appendChild(correctAnswerInput); // 정답 input 추가
+        }
       }
 
-      // ✅ 객관식 문제 자동 체크
-      var selectedOption = answers[questionId]; // 사용자가 제출한 값
+      // 객관식 문제 자동 체크
+      var selectedOption = answers[i]; // 사용자가 제출한 값
       var radioButtons = document.getElementsByName("answer-" + questionId);
       if (radioButtons) {
         radioButtons.forEach(radio => {
           if (radio.value === selectedOption) {
-            radio.checked = true; // ✅ 사용자가 제출한 값과 일치하는 라디오 버튼 체크
+            radio.checked = true; // 사용자가 제출한 값과 일치하는 라디오 버튼 체크
           }
         });
       }
     }
   }
+
 
   function createScrollHandler(questionId) {
     return function () {
