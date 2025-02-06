@@ -322,8 +322,8 @@
 
         // URL에서 examId 가져오기 //todo 지금은 테스트로 40
         const urlParams = new URLSearchParams(window.location.search);
-        let examId = urlParams.get("examId") || 40;
-
+        //let examId = urlParams.get("examId") || 40;
+        let examId = ${examId};
         if (!examId || isNaN(examId)) {
             alert("시험 ID가 올바르지 않습니다.");
             return;

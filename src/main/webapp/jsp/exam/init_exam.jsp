@@ -14,7 +14,7 @@
     <%@ include file="/jsp/sidebar.jsp" %>
     <main class="content">
         <header class="header">
-            <h1>시험생성하기</h1>
+            <h1>초기 데이터 설정</h1>
         </header>
         <div class="divider"></div>
 
@@ -58,7 +58,7 @@
                         <label for="finished-at">종료 시간</label>
                         <input type="datetime-local" id="finished-at" name="finishedAt">
                     </div>
-                    <button type="button" id="submit-exam" class="btn">시험 생성하기</button>
+                    <button type="button" id="submit-exam" class="btn">문제 생성하러 가기</button>
                 </form>
             </div>
         </div>
@@ -92,7 +92,7 @@
                     success: function(response) {
                         alert('시험이 생성되었습니다!');
                         console.log(response);
-                        location.href = '/create-exam?examId=' + response.data;
+                        location.href = '/exams/create-exam?examId=' + response.data;
                     },
                     error: function(response) {
                         console.error('에러:');

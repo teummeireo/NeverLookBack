@@ -21,7 +21,7 @@
             <h1>NeverLookBack</h1>
             <p>NeverLookBack은 누구나 온라인 시험을 손쉽게 제작, 배포, 인증, 수집,<br>자동 채점 및 결과 분석할 수 있는 개방형 시험 플랫폼입니다.<br>
             <br>NeverLookBack 서비스는 부정행위를 방지하기 위해 뒤돌아보지 말라는 의미와 함께,<br>실력을 발전시키기 위해 앞으로 나아가라는 중의적인 메시지를 담고 있습니다. </p>
-            <a href="/login" class="btn">Create your tests for free</a>
+            <a href="/exams/init-exam" class="btn">Create your tests for free</a>
         </div>
         <div class="hero-image">
             <img src="../images/main_img.png" alt="NLB demonstration"> <!-- 이미지 URL을 여기에 추가 -->
