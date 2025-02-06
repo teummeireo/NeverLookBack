@@ -82,13 +82,13 @@ public class ExamRestController {
 
   // 시험 초기 데이터 입력
   @PostMapping("/init")
-  public ResponseEntity<CMResDTO<String>> createExam(
+  public ResponseEntity<CMResDTO<Integer>> createExam(
       @RequestBody ExamReqDTO examReqDTO) {
 
     int createrId = 1;  //todo 로그인 완료되면 세션 아이디 등록
 
     int examId = examService.createExam(examReqDTO, createrId);
-    return new ResponseEntity<>(CMResDTO.successDataRes("시험 등록 성공, " + examId), HttpStatus.OK);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examId), HttpStatus.OK);
   }
 
   // 시험 초기 데이터 수정
