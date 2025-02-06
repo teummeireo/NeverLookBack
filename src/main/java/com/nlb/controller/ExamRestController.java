@@ -4,19 +4,27 @@ package com.nlb.controller;
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.exception.ErrorCode;
-import com.nlb.service.ExamResultService;
+import com.nlb.mapper.ExamMapper;
 import com.nlb.service.ExamService;
+import com.nlb.service.WebSocketExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -26,7 +34,9 @@ public class ExamRestController {
   @Autowired
   private ExamService examService;
   @Autowired
-  private ExamResultService examResultService;
+  private ExamMapper examMapper;
+  @Autowired
+  private WebSocketExamService webSocketExamService;
 
   // 정렬기능(제목, 생성일, 응시자수, 카테고리) & 필터기능(카테고리)
   @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
@@ -50,6 +60,11 @@ public class ExamRestController {
     if (!status.equals("not_stated") && !status.equals("on_going") && !status.equals("closed")) {
       throw new IllegalArgumentException("유효하지 않은 파라미터입니다: " + status);
     }
+    // on_going 상태에서 closed로 변경 -> 강제종료 : 현재 수험정보 전부 제출 처리
+    if (status.equals("closed") && examMapper.getExamStatusById(examId).equals("on_going")) {
+      webSocketExamService.closeExam(examId);
+    }
+
     int rows = examService.setExamStatus(examId, status);
 
     return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
@@ -67,13 +82,13 @@ public class ExamRestController {
 
   // 시험 초기 데이터 입력
   @PostMapping("/init")
-  public ResponseEntity<CMResDTO<String>> createExam(
+  public ResponseEntity<CMResDTO<Integer>> createExam(
       @RequestBody ExamReqDTO examReqDTO) {
 
     int createrId = 1;  //todo 로그인 완료되면 세션 아이디 등록
 
     int examId = examService.createExam(examReqDTO, createrId);
-    return new ResponseEntity<>(CMResDTO.successDataRes("시험 등록 성공, " + examId), HttpStatus.OK);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examId), HttpStatus.OK);
   }
 
   // 시험 초기 데이터 수정
@@ -161,10 +176,18 @@ public class ExamRestController {
       @RequestParam(value = "activationStatus", required = false) String activationStatus,
       @RequestParam(value = "examTime", required = false) Integer examTime) {
 
-    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
+    // null 값을 그대로 유지하면서 전달
+    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt,
+        activationStatus, examTime);
+
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
+  @PostMapping("/{examId}/close")
+  public ResponseEntity<String> forceCloseExam(@PathVariable int examId) {
+    webSocketExamService.closeExam(examId);
+    return ResponseEntity.ok("시험이 강제 종료되었습니다.");
+  }
 
 
 }

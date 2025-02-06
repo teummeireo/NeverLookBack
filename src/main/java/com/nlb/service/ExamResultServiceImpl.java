@@ -119,6 +119,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     if (examineeId != dtoExamineeId) {
       throw new CustomAccessDeniedException("잘못된 사용자 입니다");
     }
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
             examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
@@ -128,9 +129,12 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 몽고DB에서 기존 제출 데이터 조회
     Query query = Query.query(
         Criteria.where("resultId").is(resultId).and("examineeId").is(examineeId));
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> existingAnswers = existingExamResult.getAnswers();
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> newAnswers = examResultReqDTO.getExamResultMongoVO().getAnswers();
     // 기존 데이터 맵핑
     Map<Integer, AnswerVO> answerMap = existingAnswers.stream()
@@ -159,6 +163,7 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
         "examResults");
+    //todo examinee_count 추가 로직 추가필요
 
     return updatedAnswers;
   }

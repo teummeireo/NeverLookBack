@@ -9,8 +9,11 @@ import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.mapper.ResultDetailMapper;
 import com.nlb.vo.ExamMongoVO;
+import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.QuestionVO;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -210,6 +213,12 @@ public class ExamServiceImpl implements ExamService {
   public List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime) {
     return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
   }
+
+  // 시간 초과 여부 판정 함수
+  @Override
+  public boolean isTimeOver(int examId, LocalDateTime finishTime) {
+    if (LocalDateTime.now().isAfter(finishTime) || LocalDateTime.now().isEqual(finishTime)) {return true;}return false;}
+
 
   // 모든 시험 조회
   @Override

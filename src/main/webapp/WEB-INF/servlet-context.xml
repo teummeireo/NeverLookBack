@@ -6,14 +6,15 @@
 	   xmlns:tx="http://www.springframework.org/schema/tx"
 	   xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:websocket="http://www.springframework.org/schema/websocket"
 	   xsi:schemaLocation="
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd"
->
+           http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+           http://www.springframework.org/schema/websocket https://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
 
 
@@ -106,6 +107,17 @@
 			<aop:after-throwing method="handleMongoException" pointcut-ref="ID_cut" throwing="ex"  />
 		</aop:aspect>
 	</aop:config>
+
+	<!-- WebSocket 설정 추가 -->
+	<websocket:message-broker application-destination-prefix="/app">
+		<!-- STOMP endpoint 등록 -->
+		<websocket:stomp-endpoint path="/stomp-endpoint">
+			<websocket:sockjs />
+		</websocket:stomp-endpoint>
+
+		<!-- SimpleBroker 활성화 (topic, queue) -->
+		<websocket:simple-broker prefix="/topic,/queue"/>
+	</websocket:message-broker>
 
 
 

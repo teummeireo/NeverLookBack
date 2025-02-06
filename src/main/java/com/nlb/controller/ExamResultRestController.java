@@ -89,10 +89,10 @@ public class ExamResultRestController {
   // 시험 제출
   @PostMapping("/submit")
   public ResponseEntity<CMResDTO<List<AnswerVO>>> submitExam(
-      @RequestBody ExamResultReqDTO examResultReqDTO) {
+      @RequestBody ExamResultReqDTO examResultReqDTO
+        , HttpSession session) {
 
-    //todo 세션으로 아이디 가져오기
-    int examineeId = 1;
+    int examineeId = (int) session.getAttribute("examineeId");
     List<AnswerVO> savedAnswers = examResultService.submitExam(examineeId, examResultReqDTO);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(savedAnswers), HttpStatus.OK);
@@ -136,9 +136,7 @@ public class ExamResultRestController {
       @PathVariable("examId") int examId,
       HttpSession session) {
     // 로그인 기능 개발 시 사용
-    // Integer examineeId = (Integer) session.getAttribute("userId");
-
-    int examineeId = 30;
+    Integer examineeId = (Integer) session.getAttribute("examineeId");
 
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     System.out.println(examData);
