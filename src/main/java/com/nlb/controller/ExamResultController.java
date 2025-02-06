@@ -3,7 +3,6 @@ package com.nlb.controller;
 
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.service.ExamResultService;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,9 +31,9 @@ public class ExamResultController {
       HttpSession session,
       Model model) {
 
-    // 세션에서 가져오도록 변경 (현재는 1로 하드코딩)
+    // todo : 세션에 저장된 사용자 ID 가져오기
     int examineeId =
-        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 29;
+        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 48;
 
     ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId,
         entreeCode);

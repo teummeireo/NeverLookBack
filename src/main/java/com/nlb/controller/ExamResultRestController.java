@@ -92,7 +92,7 @@ public class ExamResultRestController {
       @RequestBody ExamResultReqDTO examResultReqDTO
         , HttpSession session) {
 
-    int examineeId = (int) session.getAttribute("userId");
+    int examineeId = (int) session.getAttribute("examineeId");
     List<AnswerVO> savedAnswers = examResultService.submitExam(examineeId, examResultReqDTO);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(savedAnswers), HttpStatus.OK);

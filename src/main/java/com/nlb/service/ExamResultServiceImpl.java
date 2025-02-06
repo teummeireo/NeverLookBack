@@ -13,23 +13,7 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.exception.NotFoundException;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
-import com.nlb.vo.AnswerVO;
-import com.nlb.vo.ExamMongoVO;
-import com.nlb.vo.ExamResultMongoVO;
-import com.nlb.vo.ExamResultVO;
-import com.nlb.vo.ExamVO;
-import com.nlb.vo.QuestionVO;
-import com.nlb.vo.ResultDetailVO;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.nlb.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,6 +21,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamResultServiceImpl implements ExamResultService {
@@ -129,6 +119,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     if (examineeId != dtoExamineeId) {
       throw new CustomAccessDeniedException("잘못된 사용자 입니다");
     }
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     // 시험 제출 여부를 제출시간 갱신 여부로 체크
     if (examResultMapper.selectExamResultByExamIdandUser(
             examResultReqDTO.getExamResultVO().getExamId(), examineeId).getSubmittedAt()
@@ -138,9 +129,12 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 몽고DB에서 기존 제출 데이터 조회
     Query query = Query.query(
         Criteria.where("resultId").is(resultId).and("examineeId").is(examineeId));
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> existingAnswers = existingExamResult.getAnswers();
+    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> newAnswers = examResultReqDTO.getExamResultMongoVO().getAnswers();
     // 기존 데이터 맵핑
     Map<Integer, AnswerVO> answerMap = existingAnswers.stream()
