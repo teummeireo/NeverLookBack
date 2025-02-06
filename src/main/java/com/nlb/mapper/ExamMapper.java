@@ -59,4 +59,7 @@ public interface ExamMapper {
   List<ExamVO> searchAllExams();
 
 
+  List<ExamVO> selectAllOnGoingExams();
+
+  void updateExamineeCount(@Param("examId") int examId);
 }

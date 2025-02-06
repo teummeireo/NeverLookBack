@@ -14,6 +14,7 @@ import com.nlb.exception.NotFoundException;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.vo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -28,6 +29,7 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ExamResultServiceImpl implements ExamResultService {
 
@@ -112,8 +114,11 @@ public class ExamResultServiceImpl implements ExamResultService {
   @Override
   @Transactional
   public List<AnswerVO> submitExam(int examineeId, ExamResultReqDTO examResultReqDTO) {
+    log.info("[submitExam] 실행됨. examineeId={}, DTO={}", examineeId, examResultReqDTO);
+
     int resultId = examResultReqDTO.getExamResultVO().getResultId();
     int dtoExamineeId = examResultReqDTO.getExamResultVO().getExamineeId();
+    log.info("[submitExam] resultId={}", resultId);
 
     // 세션 examineeId와 DTO examineeId가 일치하는지 확인
     if (examineeId != dtoExamineeId) {
@@ -132,10 +137,14 @@ public class ExamResultServiceImpl implements ExamResultService {
     System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     ExamResultMongoVO existingExamResult = mongoTemplate.findOne(query, ExamResultMongoVO.class,
         "examResults");
+    log.info("[submitExam] MongoDB에서 기존 examResultMongoVO 조회 완료: {}", existingExamResult);
+
     System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> existingAnswers = existingExamResult.getAnswers();
     System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     List<AnswerVO> newAnswers = examResultReqDTO.getExamResultMongoVO().getAnswers();
+    log.info("existing Answers 랑 -> ", existingAnswers);
+    log.info("NEWAnswers 랑 -> ", newAnswers);
     // 기존 데이터 맵핑
     Map<Integer, AnswerVO> answerMap = existingAnswers.stream()
         .collect(Collectors.toMap(AnswerVO::getQuestionId, a -> a));
@@ -144,26 +153,31 @@ public class ExamResultServiceImpl implements ExamResultService {
       answerMap.put(newAnswer.getQuestionId(), newAnswer);
     }
     List<AnswerVO> updatedAnswers = new ArrayList<>(answerMap.values());
+    log.info("업데이트 된 Answers = " , updatedAnswers);
 
     // RDB 업데이트 (시험 제출 상태)
     ExamResultVO examResultVO = examResultReqDTO.getExamResultVO();
     examResultVO.setResultId(resultId);
     examResultVO.setSubmittedAt(LocalDateTime.now());
     examResultVO.setReviewed(false);
+    log.info("시험 결과 ResultVO = " , examResultVO);
     examResultMapper.updateExamResult(examResultVO);
 
     // 📌 시험 채점 (내부에서 총점 + resultDetail RDB 업데이트 됨)
     updatedAnswers = gradingExam(updatedAnswers, examResultVO, resultId,
         examResultReqDTO.getExamResultVO().getExamId());
+    log.info("gradingExam 후 submit에서 updateAnswer =" , updatedAnswers);
 
     // MongoDB 업데이트  (실제 제출에는 제출 시간 표기)
     Update update = new Update()
         .set("answers", updatedAnswers)
         .set("submittedAt", LocalDateTime.now());
 
-    mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
+    UpdateResult updateResult = mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
         "examResults");
-    //todo examinee_count 추가 로직 추가필요
+    log.info("채점 후 몽고에 업데이트 된 내역들 = " , updateResult);
+    //응시인원 추가
+    examMapper.updateExamineeCount(examResultReqDTO.getExamResultVO().getExamId());
 
     return updatedAnswers;
   }

@@ -32,7 +32,7 @@ public class ExamResultController {
 
 
     int examineeId =
-        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 48;
+        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
 
     ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId,
         entreeCode);
