@@ -39,7 +39,7 @@
         window.location.href = "/";
     }
     function logout() {
-        window.location.href = "/"; // todo : 이부분 세션없이
+        window.location.href = "/logout";
     }
 </script>
 <script>
@@ -82,7 +82,7 @@
                 <label for="confirm-password">비밀번호 확인</label>
                 <input type="password" id="confirm-password" placeholder="비밀번호 확인">
             </div>
-                <button type="button" id="update-password-btn" class="btn"">변경하기</button>
+                <button type="button" id="update-password-btn" class="btn">변경하기</button>
         </form>
         <p style="font-size: 14px; color: #777; margin-top: 20px;">
             <span style="color: #b388ff; font-size: 18px; font-weight: bold;">ⓘ</span> 비밀번호는 6~16자 이내로 영문(대, 소문자), 숫자, 특수문자 3가지 조합 중<br>2가지 이상을 포함해야 합니다.
@@ -106,7 +106,7 @@
         // 닉네임 변경
         $("#content").on("click", "#update-nickname-btn", function() {
             var userVO = {
-                userId: ${sessionScope.SESS_USERID},
+                userId: "${sessionScope.userId}",
                 nickname: $("#new-nickname").val()
             };
 
@@ -130,7 +130,7 @@
         // 비밀번호 변경
         $("#content").on("click", "#update-password-btn", function() {
             var userVO = {
-                userId: ${sessionScope.SESS_USERID},
+                userId: "${sessionScope.userId}",
                 password: $("#new-password").val()
             };
 

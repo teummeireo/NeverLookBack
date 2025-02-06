@@ -23,9 +23,6 @@ public class NlbUserController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main(HttpSession session) {
 
-        //로그인 구현 안되서 하드코딩 합니다. todo: 하드코딩 지우기
-//        session.setAttribute("SESS_USERID"   , 8);
-//        session.setAttribute("SESS_NICKNAME" , "UserOne");
 
         return "/jsp/new_main";
 
@@ -71,12 +68,32 @@ public class NlbUserController {
 
         return modelAndView;
     }
+    @RequestMapping(value = "/find-id", method = RequestMethod.GET)
+    public String findId() {
 
+
+        return "/jsp/login_info/find_id";
+
+    }   @RequestMapping(value = "/find-pw", method = RequestMethod.GET)
+    public String findPw() {
+
+
+        return "/jsp/login_info/find_pw";
+
+    }
     @RequestMapping(value = "/edit-info", method = RequestMethod.GET)
     public String editInfo() {
 
 
         return "/jsp/page_edit";
+
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register() {
+
+
+        return "/jsp/register";
 
     }
 

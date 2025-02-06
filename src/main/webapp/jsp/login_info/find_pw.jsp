@@ -42,7 +42,7 @@
         </div>
 
         <div class="form-footer">
-            <a href="/jsp/login_info/login.jsp">로그인</a>
+            <a href="/login">로그인</a>
         </div>
     </form>
 </div>
