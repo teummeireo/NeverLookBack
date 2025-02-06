@@ -46,7 +46,7 @@
             if (result.isConfirmed) {
                 const loginId = $("#id").val(); // 사용자 ID 가져오기
                 const password = $("#password").val(); // 비밀번호 가져오기
-                const userId = ${sessionScope.SESS_USERID};
+                const userId = "${sessionScope.userId}";
 
                 // REST API 호출
                 $.ajax({
@@ -65,7 +65,7 @@
                             'success'
                         ).then(() => {
                             // main.jsp로 이동
-                            window.location.href = '/';
+                            window.location.href = '/logout';
                         });
                     },
                     error: function (xhr, status, error) {
