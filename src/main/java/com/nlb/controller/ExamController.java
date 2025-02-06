@@ -10,6 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/exams")
 public class ExamController {
 
+  @GetMapping("/init-exam")
+  public String initExamPage(Model model) {
+    return "jsp/exam/init_exam";
+
+  }
+
   @GetMapping("/create-exam")
   public String showCreateExamPage(@RequestParam("examId") int examId, Model model) {
     model.addAttribute("examId", examId);

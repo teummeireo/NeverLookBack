@@ -1,0 +1,18 @@
+@charset "UTF-8";
+
+/* General styling */
+body {
+    margin: 0;
+    padding: 0;
+    background: #121212;
+    color: #fff;
+    display: flex;
+    height: 100vh;
+}
+
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
