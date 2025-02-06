@@ -2,6 +2,7 @@ package com.nlb.mapper;
 
 
 import com.nlb.vo.ExamVO;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -47,6 +48,15 @@ public interface ExamMapper {
       @Param("activationStatus") String activationStatus,
       @Param("examTime") Integer examTime);
 
+  void updateSubmittedAtByExamId(@Param("examId") int examId);
+
+  String getExamStatusById(@Param("examId") int examId);
+
+  List<Integer> getOngoingExams();
+
+  LocalDateTime getFinishTime(@Param("examId") int examId);
+  
   List<ExamVO> searchAllExams();
+
 
 }

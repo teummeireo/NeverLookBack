@@ -28,10 +28,9 @@ public class ExamResultController {
       @PathVariable("examId") int examId,
       @RequestParam("examCode") String examCode,
       @RequestParam("entreeCode") String entreeCode,
-      HttpSession session,
-      Model model) {
+      HttpSession session) {
 
-    // todo : 세션에 저장된 사용자 ID 가져오기
+
     int examineeId =
         (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 48;
 

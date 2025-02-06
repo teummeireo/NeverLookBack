@@ -163,6 +163,7 @@ public class ExamResultServiceImpl implements ExamResultService {
 
     mongoTemplate.updateFirst(query, update, ExamResultMongoVO.class,
         "examResults");
+    //todo examinee_count 추가 로직 추가필요
 
     return updatedAnswers;
   }

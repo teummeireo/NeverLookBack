@@ -321,6 +321,7 @@
 
     loadExamData();
 
+
     window.onload = function () {
         console.log("페이지 로드 완료. 이벤트 등록 시작");
         document.getElementById("submit-exam").addEventListener("click", submitExam);
@@ -374,6 +375,39 @@
             });
     }
 
+  function checkExamTimeAndClose() {
+    if (remainingTime <= 0) {
+      fetch("http://localhost:8082/api/exams/" + examId + "/close", {
+        method: "POST"
+      })
+      .then(response => response.text())
+      .then(data => console.log(data));
+    }
+  }
+
+  function connectTimeSyncSocket() {
+    var socket = new SockJS('/stomp-endpoint');
+    var stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+      console.log('서버 시간 동기화 시작');
+
+      // 서버에서 전송하는 시간 메시지 수신
+      stompClient.subscribe('/topic/serverTime', function (message) {
+        var serverTime = parseInt(message.body);
+        syncClientTime(serverTime);
+      });
+    });
+  }
+
+  function syncClientTime(serverTime) {
+    var clientTime = new Date().getTime();
+    var timeDiff = serverTime - clientTime;
+
+    console.log("시간 동기화 차이(ms):", timeDiff);
+
+    remainingTime -= timeDiff / 1000; // 시간 차이를 보정하여 남은 시간 조정
+  }
 
 </script>
 </body>

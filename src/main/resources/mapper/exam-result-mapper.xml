@@ -178,5 +178,36 @@
     WHERE result_id = #{resultId};
   </update>
 
+  <select id="selectResultByExamIdAndNotSubmittedAt" parameterType="int" resultType="ExamResultVO">
+    SELECT * FROM exam_result
+    WHERE exam_id=#{examId} and submmited_at = CAST('1900-01-01 00:00:00' as timestamp)
+  </select>
+
+  <insert id="insertExamResultsList" parameterType="java.util.List">
+    INSERT INTO exam_result (result_id, exam_id, examinee_id, score, submitted_at, is_reviewed)
+    VALUES
+    <foreach collection="examResults" item="result" separator=",">
+      (#{result.resultId}, #{result.examId}, #{result.examineeId}, #{result.score}, #{result.submittedAt, jdbcType=TIMESTAMP}, #{result.isReviewed})
+    </foreach>
+  </insert>
+
+  <select id="findNotSubmittedResultIds" parameterType="int" resultType="int">
+    select result_id
+    from exam_result
+    where exam_id = #{examId}
+        and submitted_at = '1900-01-01 00:00:00'
+  </select>
+
+  <select id="selectExamResultById" parameterType="int" resultType="com.nlb.vo.ExamResultVO">
+    SELECT
+      result_id,
+      exam_id,
+      examinee_id,
+      score,
+      submitted_at,
+      is_reviewed
+    FROM exam_result
+    WHERE result_id = #{resultId}
+  </select>
 
 </mapper>
