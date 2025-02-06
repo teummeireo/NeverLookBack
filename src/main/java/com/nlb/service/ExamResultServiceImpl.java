@@ -13,23 +13,7 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.exception.NotFoundException;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
-import com.nlb.vo.AnswerVO;
-import com.nlb.vo.ExamMongoVO;
-import com.nlb.vo.ExamResultMongoVO;
-import com.nlb.vo.ExamResultVO;
-import com.nlb.vo.ExamVO;
-import com.nlb.vo.QuestionVO;
-import com.nlb.vo.ResultDetailVO;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.nlb.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -37,6 +21,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ExamResultServiceImpl implements ExamResultService {
@@ -305,7 +295,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     Query queryResult = new Query(Criteria.where("examId").is(examId)
         .and("examineeId").is(examineeId));
     Map<String, Object> examResultData = mongoTemplate.findOne(queryResult, Map.class,
-        "exam_results");
+        "examResults");
 
     // exam컬렉션에서 메타데이터 가져오기
     Query queryExam = new Query(Criteria.where("examId").is(examId));
