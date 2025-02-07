@@ -6,24 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>시험 문제 생성</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { display: flex; height: 100vh; }
-        .sidebar { width: 250px; background: #f4f4f4; padding: 20px; overflow-y: auto; }
-        .sidebar button { display: block; width: 85%; padding: 10px; margin: 5px 0; border: none; background: #ddd; cursor: pointer; text-align: left; }
-        .sidebar button:hover { background: #bbb; }
-        .content { flex: 1; padding: 20px; position: relative; }
-        label { display: block; margin: 10px 0 5px; }
-        input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
-        .options-container { margin-bottom: 10px; }
-        .option-input input { flex: 1; margin-right: 5px; }
-        .exam-actions {  position: absolute;  flex-direction: column; top: 10px; right: 10px;  display: flex; gap: 10px;   }
-        .exam-btn { padding: 8px 12px;  border: none;  cursor: pointer;   color: white;   font-weight: bold;  border-radius: 5px; width: 180px; }
-        .load-exam-btn { background: #4CAF50; }
-        .load-exam-btn:hover { background: #45a049;    }
-        .create-exam-btn {   background: #007BFF; }
-        .create-exam-btn:hover { background: #0056b3; }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/create_exam.css">
 </head>
 <body>
 <!--
