@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeverLookBack</title>
+    <title>NeverLookBack 검색 tool</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/exam_search.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -44,7 +44,7 @@
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
-            <h1>Never Look Back</h1>
+            <h1>시험을 검색해보세요.</h1>
         </header>
 
         <section id="default-dashboard" class="dashboard-grid">
