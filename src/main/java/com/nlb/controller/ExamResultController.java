@@ -30,6 +30,8 @@ public class ExamResultController {
       @RequestParam("entreeCode") String entreeCode,
       HttpSession session, Model model) {
 
+    int examineeId =
+        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
     Integer examineeId = (Integer) session.getAttribute("userId");
 
     // ExamJoinResDTO에서 응시 정보를 가져옴

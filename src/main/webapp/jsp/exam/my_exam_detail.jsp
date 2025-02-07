@@ -7,6 +7,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/my_exam_detail.css">
   <title>시험 응시</title>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 40%;
+      max-width: 500px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .modal-content {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 1.2em;
+    }
+
+    .close {
+      font-size: 24px;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .close:hover {
+      color: red;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-body textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      resize: none;
+    }
+
+    .modal-footer {
+      padding: 15px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #ddd;
+    }
+
+    .modal-footer button {
+      padding: 8px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.2s;
+    }
+
+    .modal-footer .cancel {
+      background-color: #ccc;
+    }
+
+    .modal-footer .cancel:hover {
+      background-color: #bbb;
+    }
+
+    .modal-footer .submit {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .modal-footer .submit:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
 </head>
 <body>
 
@@ -31,25 +126,43 @@
     <div id="exam-questions"></div>
     <button class="submit-btn" id="submit-exam">시험 결과 확인 완료</button>
   </div>
+
+  <div id="dispute-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeDisputeModal()">&times;</span>
+      <h3>이의 제기</h3>
+      <textarea id="dispute-text" placeholder="이의 제기 내용을 입력하세요..."></textarea>
+      <button onclick="submitDispute()">제출</button>
+    </div>
+  </div>
+  <div id="reply-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeReplyModal()">&times;</span>
+      <h3>답변 추가</h3>
+      <textarea id="reply-text" placeholder="답변을 입력하세요..."></textarea>
+      <button onclick="submitReply()">제출</button>
+    </div>
+  </div>
+
+
 </div>
 
 <script>
   var urlParams = new URLSearchParams(window.location.search);
-  var examId = urlParams.get("examId") || "75";  // examId 가져오기
-  var examineeId = "30";  // 세션에서 가져올 수도 있음
-  var resultId = "27";   // 불러올 시험 결과 ID
+  var examId = Number(urlParams.get("examId")) || "75";  // examId 가져오기
+  var examineeId = Number(urlParams.get("examineeId")) ||30;
+  var resultId;   // 불러올 시험 결과 ID
   var questions = [];
   var isCorrect = [];
   var answers = [];
   // 이전 제출 답변 저장 (키: questionId, 값: 사용자의 답변)
+  console.log("ExamineeID 체크@@  = " + examineeId);
 
   // 시험 데이터 불러오기
   function loadExamData() {
-    var examUrl = "http://localhost:8088/api/exams/results/" + examId + "/exam-data";
-    var answersUrl = "http://localhost:8088/api/exams/results/" + examId + "/" + resultId + "/details";
-
+    var baseUrl = window.location.origin;
+    var examUrl = baseUrl+ "/api/exams/results/" + examId + "/exam-data/" + examineeId;
     console.log("시험 데이터 요청 URL:", examUrl);
-    console.log("사용자 제출 답변 요청 URL:", answersUrl);
 
     fetch(examUrl)
             .then(response => response.json())
@@ -57,13 +170,18 @@
               if (examData.code == 200) {
                 console.log(examData); // 각 문항별 정답 : examData.questions[i].correctAnswer
                 questions = examData.data.questions;
+                resultId = examData.data.resultId;
+                examineeId = examData.data.examineeID !== undefined ? examData.data.examineeID : examineeId;
                 renderExam(examData.data);
+
                 examData.data.answers.forEach(answer => { // 오류 발생 가능 submittedAnswers -> answers
                   answers.push(answer.answer);
                 });
 
+                var answersUrl = baseUrl+ "/api/exams/results/" + examId + "/" + resultId + "/details";
+                console.log("사용자 제출 답변 요청 URL:", answersUrl);
 
-                return fetch(answersUrl); // ✅ resultId = 21 응답 데이터 가져오기
+                return fetch(answersUrl);
               } else {
                 throw new Error("시험 데이터를 불러오는 중 오류 발생");
               }
@@ -223,6 +341,194 @@
   });
 
   loadExamData();
+
+  // // // // // // // //
+
+  function markAnswers() {
+    var numberOfQuestions = questions.length;
+
+    for (var i = 0; i < numberOfQuestions; i++) {
+      var questionId = i + 1;
+
+      var input = document.getElementById("answer-" + questionId);
+      if (input) {
+        input.value = answers[i] || "";
+        input.disabled = true;
+      }
+
+      var questionDiv = document.getElementById("question-" + questionId);
+      if (questionDiv) {
+        var statusIcon = document.createElement("span");
+        statusIcon.style.marginLeft = "10px";
+        statusIcon.style.fontWeight = "bold";
+        statusIcon.style.color = isCorrect[i] === "정답" ? "green" : "red";
+        statusIcon.textContent = isCorrect[i] === "정답" ? "✔" : "✘";
+        questionDiv.appendChild(statusIcon);
+
+        if (isCorrect[i] === "오답") {
+          var correctAnswerInput = document.createElement("input");
+          correctAnswerInput.type = "text";
+          correctAnswerInput.value = questions[i].correctAnswer;
+          correctAnswerInput.disabled = true;
+          correctAnswerInput.style.backgroundColor = "#f8d7da";
+          correctAnswerInput.style.color = "red";
+          correctAnswerInput.style.width = "600px";
+          questionDiv.appendChild(correctAnswerInput);
+
+          // "이의 제기" 버튼 추가
+          var disputeButton = document.createElement("button");
+          disputeButton.textContent = "이의 제기";
+          disputeButton.className = "dispute-btn";
+          disputeButton.onclick = (function(qId) {  // 눌린 번호가 이의 제기 되도록 모달로 들고가야함!!!
+            return function() {
+              openDisputeModal(qId);
+            };
+          })(questionId);
+
+          questionDiv.appendChild(disputeButton);
+        }
+      }
+    }
+  }
+
+  var selectedQuestionId;
+
+  function openDisputeModal(questionId) {
+    // 모달 열기 전에 입력값 초기화
+    document.getElementById("dispute-text").value = "";
+    // questionId를 기반으로 배열에서 index 찾기
+    console.log("questionID 는 " + questionId);
+    var questionIndex = questions.findIndex(q => q.questionId === questionId);
+    console.log("quesetionIndex는"+questionIndex);
+    // questionIndex를 통해 MongoDB의 실제 questionId 가져오기
+    selectedQuestionId = questionId;
+    console.log("그냥 questionID" + selectedQuestionId);
+    selectedQuestionId = questions[questionIndex].questionId;
+    console.log("questions[questionIndex].,questionID" + selectedQuestionId);
+    document.getElementById("dispute-modal").style.display = "block";
+  }
+
+  function closeDisputeModal() {
+    document.getElementById("dispute-modal").style.display = "none";
+  }
+
+  function submitDispute() {
+    var questionIndex = selectedQuestionId - 1;  // 문제 순서는 1부터 시작, 배열 인덱스는 0부터 시작
+    var mongoQuestionId = questions[questionIndex].questionId; // MongoDB의 실제 questionId 가져오기
+
+    var disputeText = document.getElementById("dispute-text").value;
+    if (!disputeText) {
+      alert("이의 제기 내용을 입력하세요.");
+      return;
+    }
+
+    var baseUrl = window.location.origin;
+    var disputeUrl = baseUrl + "/api/exams/results/" + examId + "/dispute?questionId=" + mongoQuestionId;
+
+    console.log("ExamineeID 체크 in submitDisputre  = " + examineeId);
+
+    fetch(disputeUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        examineeId: examineeId,
+        questionId: mongoQuestionId,
+        objection: disputeText})
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data.code === 200) {
+                alert("이의 제기가 성공적으로 제출되었습니다.");
+                closeDisputeModal();
+              } else {
+                alert("이의 제기 실패: " + data.msg);
+              }
+            })
+            .catch(error => console.error("이의 제기 요청 실패:", error));
+  }
+
+
+
+  function renderDisputeSection(questionDiv, questionId, disputeText, replies) {
+    var disputeSection = document.createElement("div");
+    disputeSection.className = "dispute-section";
+
+    var disputeComment = document.createElement("p");
+    disputeComment.textContent = "이의 제기: " + disputeText;
+    disputeSection.appendChild(disputeComment);
+
+    replies.forEach(reply => {
+      var replyComment = document.createElement("p");
+      replyComment.textContent = "답변: " + reply;
+      replyComment.style.marginLeft = "20px";
+      replyComment.style.color = "blue";
+      disputeSection.appendChild(replyComment);
+    });
+
+    var replyButton = document.createElement("button");
+    replyButton.textContent = "답변 추가";
+    disputeButton.onclick = (function(qId) {  // 눌린 번호가 이의 제기 되도록 모달로 들고가야함!!!
+      return function() {
+        openDisputeModal(qId);
+      };
+    })(questionId);
+    disputeSection.appendChild(replyButton);
+
+    questionDiv.appendChild(disputeSection);
+  }
+
+  var selectedQuestionIdForReply;
+
+  function openReplyModal(questionId) {
+    selectedQuestionIdForReply = questionId;
+    document.getElementById("reply-modal").style.display = "block";
+  }
+
+  function closeReplyModal() {
+    document.getElementById("reply-modal").style.display = "none";
+  }
+
+  function submitReply() {
+    var questionIndex = selectedQuestionId - 1;  // 문제 순서는 1부터 시작, 배열 인덱스는 0부터 시작
+    var mongoQuestionId = questions[questionIndex].questionId; // MongoDB의 실제 questionId 가져오기
+
+    var replyText = document.getElementById("reply-text").value;
+    if (!replyText) {
+      alert("답변 내용을 입력하세요.");
+      return;
+    }
+
+    var baseUrl = window.location.origin;
+    var replyUrl = baseUrl + "/api/exams/results/" + examId + "/dispute-reply?questionId=" + mongoQuestionId;
+
+    fetch(replyUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        examineeId: examineeId,
+        questionId: mongoQuestionId,
+        objection: replyText })
+    })
+            .then(response => response.json())
+            .then(data => {
+              if (data.code === 200) {
+                alert("답변이 성공적으로 추가되었습니다.");
+                closeReplyModal();
+              } else {
+                alert("답변 추가 실패: " + data.msg);
+              }
+            })
+            .catch(error => console.error("답변 추가 요청 실패:", error));
+  }
+
+
+
 </script>
+
 </body>
 </html>

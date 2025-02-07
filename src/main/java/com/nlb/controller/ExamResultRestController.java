@@ -7,6 +7,10 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -157,6 +161,7 @@ public class ExamResultRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
+
   //
   @GetMapping("/{examId}/{resultId}/details")
   public ResponseEntity<CMResDTO<ExamResultVO>> getResultDetail(
@@ -201,7 +206,7 @@ public class ExamResultRestController {
       @RequestParam int questionId,
       @RequestBody Map<String, String> requestBody) {
 
-    int examineeId = 1; //todo 로그인 개발되면 세션으로 변경
+    int examineeId = Integer.parseInt(requestBody.get("examineeId"));
     boolean success = examResultService.submitObjection(examId, examineeId, questionId,
         requestBody.get("objection"));
 
@@ -220,7 +225,7 @@ public class ExamResultRestController {
       @RequestParam int questionId,
       @RequestBody Map<String, String> requestBody) {  // JSON에서 reply 추출
 
-    int examineeId = 1; // TODO: 로그인 개발되면 세션에서 가져오기
+    int examineeId = Integer.parseInt(requestBody.get("examineeId"));
     boolean success = examResultService.submitObjectionReply(examId, examineeId, questionId,
         requestBody.get("objectionReply"));
 
