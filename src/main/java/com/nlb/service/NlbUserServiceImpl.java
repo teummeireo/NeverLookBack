@@ -116,6 +116,7 @@ public class NlbUserServiceImpl implements NlbUserService {
     @Transactional
     public int registerUser(NlbUserVO uvo) {
         // 비밀번호 해싱
+        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         String hashedPassword = PasswordUtil.hashPassword(uvo.getPassword());
         uvo.setPassword(hashedPassword);
 

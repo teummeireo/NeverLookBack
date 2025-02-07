@@ -9,7 +9,12 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
 /* 필터 옵션 정렬 */
 .filter-options {
     display: flex;

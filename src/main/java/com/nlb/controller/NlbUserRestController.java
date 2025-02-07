@@ -36,9 +36,13 @@ public class NlbUserRestController {
     }
 
     @RequestMapping(value = "/update", method = RequestMethod.PUT)
-    public ResponseEntity<CMResDTO<String>> updateUser(@RequestBody NlbUserVO uvo) {
+    public ResponseEntity<CMResDTO<String>> updateUser(@RequestBody NlbUserVO uvo, HttpSession session) {
 
         int rows = nlbUserService.updateUser(uvo);
+
+        if (uvo.getNickname() != null && !uvo.getNickname().equals("")) {
+            session.setAttribute("nickname", uvo.getNickname());
+        }
 
 
         return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
@@ -150,7 +154,7 @@ public class NlbUserRestController {
             session.setAttribute("userId", user.getUserId());
             session.setAttribute("loginId", user.getLoginId());
             session.setAttribute("nickname", user.getNickname());
-            session.setAttribute("userRole", user.getUserRole().toString());
+            session.setAttribute("userRole", user.getUserRole());
 
             // 세션 ID를 클라이언트 쿠키로 저장
             Cookie sessionCookie = new Cookie("SESSIONID", session.getId());

@@ -24,7 +24,7 @@ body {
 
 /* Sidebar styling */
 .sidebar {
-    width: 60px;
+    width: 60px; /* 기본 너비 */
     height: 100vh;
     background-color: #2c3e50;
     transition: width 0.3s ease;
@@ -36,7 +36,7 @@ body {
 }
 
 .sidebar:hover {
-    width: 240px;
+    width: 240px; /* 커서 올렸을 때의 너비 */
 }
 
 .sidebar ul {
@@ -115,58 +115,17 @@ tr:hover td {
     background-color: #333;
 }
 
-/* 활성화 여부 스타일 */
-.status-active {
-    background-color: green;
-    color: white;
+/* Activation Status Styling */
+td.activation-status {
     font-weight: bold;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
 }
 
-.status-inactive {
-    background-color: red;
-    color: white;
-    font-weight: bold;
-    padding: 8px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.2s ease-in-out;
+td.active {
+    color: green;
 }
 
-/* 활성화 여부 Hover 효과 */
-.status-active:hover {
-    background-color: darkgreen;
-}
-
-.status-inactive:hover {
-    background-color: darkred;
-}
-
-/* 사용자 역할 드롭다운 스타일 */
-.user-role-select {
-    padding: 6px;
-    font-size: 14px;
-    background-color: #2c3e50;
-    color: #fff;
-    border: 1px solid #555;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.user-role-select:focus {
-    outline: none;
-    border-color: #1abc9c;
-}
-
-/* Toggle status button style */
-.toggle-status {
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background 0.2s ease-in-out;
+td.inactive {
+    color: red;
 }
 
 /* Responsive Design */
@@ -196,6 +155,7 @@ tr:hover td {
         width: 160px;
     }
 }
+
 /* 구분선 스타일 */
 .divider {
     width: 100%;
@@ -207,6 +167,7 @@ tr:hover td {
 
 /* 스타일링 추가 */
 .status-select {
+    color: #1A1A1A;
     padding: 8px;
     font-size: 14px;
     border: 2px solid #4CAF50;
@@ -223,4 +184,26 @@ tr:hover td {
 .status-select:focus {
     outline: none;
     border-color: #2e7d32;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #e74c3c;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+    transform: scale(1.05);
+}
+
+.delete-btn:active {
+    background-color: #a83221;
+    transform: scale(0.95);
 }

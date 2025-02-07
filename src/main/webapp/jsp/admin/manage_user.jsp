@@ -17,6 +17,7 @@
             <div class="header">
                 <h1>User Admin</h1>
             </div>
+            <div class = "divider"></div>
             <table id="userTable" border="1">
                 <thead>
                 <tr>
@@ -63,8 +64,8 @@
                         "<td>" +
                         "<select class='user-role-select' data-user-id='" + user.userId + "'>" +
                         "<option value='" + user.userRole + "' selected>" + user.userRole + "</option>" +
-                        (user.userRole !== "admin" ? "<option value='ADMIN'>admin</option>" : "") +
-                        (user.userRole !== "user" ? "<option value='USER'>user</option>" : "") +
+                        (user.userRole !== "admin" ? "<option value='admin'>admin</option>" : "") +
+                        (user.userRole !== "user" ? "<option value='user'>user</option>" : "") +
                         "</select>" +
                         "</td>" +
                         "<td class='toggle-status " + statusClass + "' data-user-id='" + user.userId + "' data-active='" + user.active + "'>" +

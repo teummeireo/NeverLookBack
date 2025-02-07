@@ -19,6 +19,7 @@
         <div class="header">
             <h1>Admin</h1>
         </div>
+        <div class="divider"></div>
         <section class="dashboard-grid">
             <a href="/admin/manage/exams" class="dashboard-card">시험/답안 관리</a>
             <a href="/admin/manage/users" class="dashboard-card">사용자 계정 관리</a>

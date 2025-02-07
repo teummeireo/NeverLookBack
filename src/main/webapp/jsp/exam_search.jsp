@@ -214,28 +214,13 @@
   }
 
   function getStatusText(status) {
-    if (status === "not_started") {
-      return "시험 전";
-    } else if (status === "on_going") {
-      return "시험 중";
-    } else if (status === "closed") {
-      return "시험 종료";
-    } else {
-      return "알 수 없음";
+    switch (status) {
+      case "not_started": return "시험 전";
+      case "on_going": return "시험 중";
+      case "closed": return "시험 종료";
+      default: return "알 수 없음";
     }
   }
-
-  function getEntryIcon(entreeCode) {
-    if (entreeCode === null || entreeCode === "" || entreeCode === "<null>") {
-      return '<i class="fas fa-unlock" title="공개방" data-entree-code="' + entreeCode + '"></i>'; // 공개방
-    } else {
-      return '<i class="fas fa-lock" title="비밀방" data-entree-code="' + entreeCode + '"></i>'; // 비밀방
-    }
-  }
-
-
-  // 전체 중 10개 시험 조회
-  loadExamList();
 </script>
 
 </body>

@@ -1,15 +1,15 @@
 @charset "UTF-8";
 
-/* General styling */
-body {
-    margin: 0;
-    padding: 0;
-    background: #121212;
-    colr: #fff;
-    display: flex;
-    height: 100vh;
-    font-family: 'Pretendard', sans-serif; /* Pretendard 사용 */
-}
+/*!* General styling *!*/
+/*body {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    background: #121212;*/
+/*    colr: #fff;*/
+/*    display: flex;*/
+/*    height: 100vh;*/
+/*    font-family: 'Pretendard', sans-serif; !* Pretendard 사용 *!*/
+/*}*/
 
 @font-face {
     font-family: 'Pretendard';
@@ -18,174 +18,267 @@ body {
     font-style: normal;
 }
 
-/* Main container styling */
+/*!* Main container styling *!*/
+/*.main-container {*/
+/*    display: flex;*/
+/*    width: 100%;*/
+/*}*/
+
+/*!* Content area styling *!*/
+/*.content {*/
+/*    flex: 1;*/
+/*    padding: 20px;*/
+/*    overflow: auto;*/
+/*}*/
+
+/*!* Header styling *!*/
+/*.header {*/
+/*    margin-bottom: 20px;*/
+/*    display: flex;*/
+/*    justify-content: space-between;*/
+/*    align-items: center;*/
+/*    gap: 20px;*/
+/*}*/
+
+/*.header h1 {*/
+/*    color: #fff;*/
+/*    margin-top: 10px;*/
+/*}*/
+
+/*!* Search bar styling *!*/
+/*.search-bar {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    background: rgba(255, 255, 255, 0.1);*/
+/*    padding: 15px;*/
+/*    border-radius: 5px;*/
+/*    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);*/
+/*    flex: 1;*/
+/*}*/
+
+/*.search-bar input[type="text"] {*/
+/*    background: transparent;*/
+/*    border: none;*/
+/*    color: #fff;*/
+/*    flex: 1;*/
+/*    font-size: 14px;*/
+/*    outline: none;*/
+/*    margin-right: 10px;*/
+/*}*/
+
+/*.search-bar .icon-search {*/
+/*    color: #aaa;*/
+/*    font-size: 18px;*/
+/*}*/
+
+/*!* Dashboard grid *!*/
+/*.dashboard-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(3, 1fr); !* 3개의 열 *!*/
+/*    grid-template-rows: repeat(2, 1fr); !* 2개의 행 *!*/
+/*    gap: 20px;*/
+/*    height: 100%; !* 그리드 영역 전체 사용 *!*/
+/*}*/
+
+/*.dashboard-card {*/
+/*    background: rgba(33, 32, 38, 0.55);*/
+/*    border-radius: 10px;*/
+/*    padding: 20px;*/
+/*    min-height: 200px; !* 카드 높이 *!*/
+/*    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: space-between; !* 콘텐츠 간격 조정 *!*/
+/*}*/
+
+
+/*.dashboard-card h3 {*/
+/*    color: #fff;*/
+/*    margin-bottom: 10px;*/
+/*}*/
+
+/*.dashboard-card p {*/
+/*    color: #ddd;*/
+/*}*/
+
+/*.project-list ul {*/
+/*    list-style: none;*/
+/*    padding: 0;*/
+/*}*/
+
+/*.project-list li {*/
+/*    padding: 10px;*/
+/*    border-bottom: 1px solid rgba(255, 255, 255, 0.1);*/
+/*    color: #ccc;*/
+/*}*/
+
+/*!* Media queries for responsive design *!*/
+/*@media (max-width: 1024px) {*/
+/*    .sidebar {*/
+/*        width: 50px;*/
+/*    }*/
+
+/*    .sidebar:hover {*/
+/*        width: 200px; !* 작은 화면에서 너비 줄임 *!*/
+/*    }*/
+
+/*    .dashboard-card {*/
+/*        min-height: 250px;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 768px) {*/
+/*    .header {*/
+/*        flex-direction: column;*/
+/*        gap: 10px;*/
+/*    }*/
+
+/*    .dashboard-grid {*/
+/*        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+/*    }*/
+
+/*    .search-bar {*/
+/*        padding: 10px;*/
+/*    }*/
+
+/*    .sidebar ul li {*/
+/*        padding: 10px;*/
+/*    }*/
+/*}*/
+
+/*@media (max-width: 480px) {*/
+/*    .sidebar {*/
+/*        width: 40px; !* 더 좁은 너비 *!*/
+/*    }*/
+
+/*    .sidebar:hover {*/
+/*        width: 160px;*/
+/*    }*/
+
+/*    .dashboard-grid {*/
+/*        grid-template-columns: 1fr;*/
+/*    }*/
+/*}*/
+/*.dashboard-grid {*/
+/*    display: grid;*/
+/*    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));*/
+/*    gap: 20px;*/
+/*    padding: 20px;*/
+/*}*/
+
+/*.dashboard-card {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    text-align: center;*/
+/*    background-color: #f5f5f5;*/
+/*    padding: 20px;*/
+/*    border-radius: 10px;*/
+/*    text-decoration: none;*/
+/*    color: #333;*/
+/*    font-size: 18px;*/
+/*    font-weight: bold;*/
+/*    transition: background-color 0.3s ease, transform 0.2s ease;*/
+/*}*/
+
+/*.dashboard-card:hover {*/
+/*    background-color: #ddd;*/
+/*    transform: scale(1.05);*/
+/*}*/
+
+/*.dashboard-card:active {*/
+/*    background-color: #ccc;*/
+/*}*/
+/*!* 구분선 스타일 *!*/
+/*.divider {*/
+/*    width: 100%;*/
+/*    height: 2px;*/
+/*    background-color: #444444;*/
+/*    margin: 10px 0 20px;*/
+/*    border: none;*/
+/*}*/
+/* General body styling */
+body {
+    background-color: #f7f8fa;
+    margin: 0;
+    padding: 0;
+}
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
+/* Main container */
 .main-container {
     display: flex;
-    width: 100%;
 }
 
-/* Content area styling */
+/* Content styling */
 .content {
     flex: 1;
     padding: 20px;
-    overflow: auto;
-}
-
-/* Header styling */
-.header {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 20px;
+    background-color: #f7f8fa;
 }
 
 .header h1 {
-    color: #fff;
-    margin-top: 10px;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
 }
 
-/* Search bar styling */
-.search-bar {
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    flex: 1;
-}
-
-.search-bar input[type="text"] {
-    background: transparent;
+/* 구분선 스타일 */
+.divider {
+    width: 100%;
+    height: 2px;
+    background-color: #444444;
+    margin: 10px 0 20px;
     border: none;
-    color: #fff;
-    flex: 1;
-    font-size: 14px;
-    outline: none;
-    margin-right: 10px;
-}
-
-.search-bar .icon-search {
-    color: #aaa;
-    font-size: 18px;
 }
 
 /* Dashboard grid */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3개의 열 */
-    grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    height: 100%; /* 그리드 영역 전체 사용 */
 }
 
+/* Dashboard card */
 .dashboard-card {
-    background: rgba(33, 32, 38, 0.55);
-    border-radius: 10px;
-    padding: 20px;
-    min-height: 200px; /* 카드 높이 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 콘텐츠 간격 조정 */
-}
-
-
-.dashboard-card h3 {
-    color: #fff;
-    margin-bottom: 10px;
-}
-
-.dashboard-card p {
-    color: #ddd;
-}
-
-.project-list ul {
-    list-style: none;
-    padding: 0;
-}
-
-.project-list li {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ccc;
-}
-
-/* Media queries for responsive design */
-@media (max-width: 1024px) {
-    .sidebar {
-        width: 50px;
-    }
-
-    .sidebar:hover {
-        width: 200px; /* 작은 화면에서 너비 줄임 */
-    }
-
-    .dashboard-card {
-        min-height: 250px;
-    }
-}
-
-@media (max-width: 768px) {
-    .header {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    .search-bar {
-        padding: 10px;
-    }
-
-    .sidebar ul li {
-        padding: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .sidebar {
-        width: 40px; /* 더 좁은 너비 */
-    }
-
-    .sidebar:hover {
-        width: 160px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-}
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    justify-content: space-between;
     padding: 20px;
-}
-
-.dashboard-card {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    background-color: #f5f5f5;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     text-decoration: none;
     color: #333;
     font-size: 18px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    font-weight: 600;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .dashboard-card:hover {
-    background-color: #ddd;
-    transform: scale(1.05);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    background-color: #f0f4f8;
 }
 
-.dashboard-card:active {
-    background-color: #ccc;
+/* Add subtle icon or visual header for the card */
+.dashboard-card::before {
+    content: "";
+    width: 40px;
+    height: 40px;
+    background-color: #e3f2fd;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+/* Responsive design for smaller screens */
+@media screen and (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
 }

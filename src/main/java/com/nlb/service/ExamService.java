@@ -5,8 +5,11 @@ import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 public interface ExamService {
 
@@ -30,9 +33,11 @@ public interface ExamService {
 
   Map<String, Object> getExamDataCreated(int examId, int creatorId);
 
-  List<ExamWithCreatorVO> searchExamsByName(String name);
+  List<ExamVO> searchExamsByName(String name);
 
-  List<ExamWithCreatorVO> filterExam(String name, String category, String nickname, String createdAt, String activationStatus, Integer examTime, String entreeCode, int examId);
+  List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime);
+
+  boolean isTimeOver(int examId, LocalDateTime finishTime);
 
   List<ExamVO> getAllExams();
 

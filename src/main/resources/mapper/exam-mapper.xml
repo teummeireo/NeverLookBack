@@ -64,6 +64,7 @@
       <if test="examTime != null">exam_time = #{examTime},</if>
       <if test="startedAt != null">started_at = #{startedAt},</if>
       <if test="finishedAt != null">finished_at = #{finishedAt},</if>
+      <if test="activationStatus != null">activation_status = #{activationStatus},</if>
     </set>
     WHERE exam_id = #{examId}
   </update>
@@ -112,6 +113,13 @@
     SELECT *
     FROM exam
     WHERE exam_id = #{examId}
+  </select>
+
+  <select id="selectExamByCodeAndUser" parameterType="map" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE exam_code = #{examCode}
+      and examinee_id = #{examineeId}
   </select>
 
   <select id="selectExamByResultId" parameterType="int">
@@ -166,6 +174,51 @@
     ORDER BY exam_time;
   </select>
 
+  <select id="updateSubmittedAtByExamId" parameterType="int">
+    SELECT * FROM exam
+    where exam_id =#{examId}
+  </select>
+
+  <select id="getExamStatusById" parameterType="int" resultType="String">
+    SELECT activation_status
+    FROM exam
+    WHERE exam_id =#{examId}
+  </select>
+
+  <select id="getOngoingExams" resultType="Int">
+    SELECT exam_id
+    FROM exam
+    where activation_status = 'on_going'
+  </select>
+
+  <select id="getFinishTime" parameterType="int" resultType="java.time.LocalDateTime">
+    SELECT finished_at
+    FROM exam
+    WHERE exam_id = #{examID}
+  </select>
+
+
+  <select id="selectCategories" resultType="String">
+    SELECT distinct category
+    FROM exam
+  </select>
+
+
+  <select id="selectAllOnGoingExams" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE activation_status = 'on_going'
+  </select>
+
+  <update id="updateExamineeCount" parameterType="int">
+    UPDATE exam
+    SET examinee_count = examinee_count + 1
+    WHERE exam_id = #{examId}
+  </update>
+
+  <select id="findNicknameByUserId" resultType="String">
+    SELECT nickname FROM nlbuser WHERE user_id = #{userId}
+  </select>
   <!-- 자동완성 기능: 입력된 문자열을 포함하는 시험명을 반환 -->
   <select id="searchExamAutocomplete" resultType="String">
     SELECT DISTINCT title

@@ -10,21 +10,14 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/exams/results")
@@ -142,10 +135,12 @@ public class ExamResultRestController {
   public ResponseEntity<CMResDTO<FullExamDataResDTO>> getExamDataForUser(
       @PathVariable("examId") int examId,
       HttpSession session) {
-    // 로그인 기능 개발 시 사용
-    // Integer examineeId = (Integer) session.getAttribute("userId");
 
-    int examineeId = 1;
+    // 로그인 기능 개발 시 사용
+
+    Integer examineeId = (Integer) session.getAttribute("examineeId");
+    System.out.println("examData 내부에서 세션으로 얻은 examineeID = " + examineeId );
+
 
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     System.out.println(examData);
@@ -159,8 +154,9 @@ public class ExamResultRestController {
       @PathVariable("examId") int examId,
       @PathVariable("resultId") int resultId) {
 
-    //todo 로그인 개발되면 세션으로 변경
-    int examineeId = 1;
+    // 로그인 기능 개발 시 사용
+    // Integer examineeId = (Integer) session.getAttribute("userId");
+    int examineeId = 30;
 
     // 시험 결과 조회
     ExamResultVO examResultVO = examResultService.getResultDetail(examineeId, examId, resultId);

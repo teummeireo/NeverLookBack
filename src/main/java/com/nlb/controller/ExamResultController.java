@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
+
 
 @Controller
 @RequestMapping("/api/exams/results")
@@ -27,8 +29,7 @@ public class ExamResultController {
       @PathVariable("examId") int examId,
       @RequestParam("examCode") String examCode,
       @RequestParam("entreeCode") String entreeCode,
-      HttpSession session,
-      Model model) {
+      HttpSession session) {
 
     Integer examineeId = (Integer) session.getAttribute("userId");
 
@@ -64,5 +65,11 @@ public class ExamResultController {
     model.addAttribute("examineeId", examineeId);
 
     return "/jsp/exam/take_exam"; // 실제 JSP 파일 경로
+  }
+
+  @GetMapping("/{examId}/lists")
+  public String resultList(@PathVariable("examId") int examId, Model model) {
+    model.addAttribute("examId", examId);
+    return "jsp/exam/exam_creater/submission_check";
   }
 }

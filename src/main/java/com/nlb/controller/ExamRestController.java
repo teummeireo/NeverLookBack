@@ -6,6 +6,7 @@ import com.nlb.dto.response.CMResDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
+import com.nlb.service.WebSocketExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
@@ -13,6 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +38,11 @@ public class ExamRestController {
   @Autowired
   private ExamService examService;
   @Autowired
-  private ExamResultService examResultService;
+  private ExamMapper examMapper;
+  @Autowired
+  private WebSocketExamService webSocketExamService;
+  @Autowired
+  private SimpMessageSendingOperations messageSendingOperations;
 
   // 정렬기능(제목, 생성일, 응시자수, 카테고리) & 필터기능(카테고리)
   @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
@@ -51,7 +66,17 @@ public class ExamRestController {
     if (!status.equals("not_stated") && !status.equals("on_going") && !status.equals("closed")) {
       throw new IllegalArgumentException("유효하지 않은 파라미터입니다: " + status);
     }
-    int rows = examService.setExamStatus(examId, status);
+    // on_going 상태에서 closed로 변경 -> 강제종료 : 현재 수험정보 전부 제출 처리
+    if (status.equals("closed") && examMapper.getExamStatusById(examId).equals("on_going")) {
+      // 먼저 WebSocket으로 "flush" 메시지 전송
+      messageSendingOperations.convertAndSend("/topic/exam/" + examId + "/notifications",
+              "시험이 곧 강제 종료됩니다! 브라우저에서 답안을 즉시 저장하세요. (3초 후 종료)");
+      // 3초 정도 대기
+      try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+      webSocketExamService.closeExam(examId);
+    }
+
+    examService.setExamStatus(examId, status);
 
     return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
   }
@@ -68,13 +93,12 @@ public class ExamRestController {
 
   // 시험 초기 데이터 입력
   @PostMapping("/init")
-  public ResponseEntity<CMResDTO<String>> createExam(
+  public ResponseEntity<CMResDTO<Integer>> createExam(
       @RequestBody ExamReqDTO examReqDTO) {
 
-    int createrId = 1;  //todo 로그인 완료되면 세션 아이디 등록
-
+    int createrId = examReqDTO.getExamVO().getCreaterId();
     int examId = examService.createExam(examReqDTO, createrId);
-    return new ResponseEntity<>(CMResDTO.successDataRes("시험 등록 성공, " + examId), HttpStatus.OK);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examId), HttpStatus.OK);
   }
 
   // 시험 초기 데이터 수정
@@ -83,6 +107,7 @@ public class ExamRestController {
       @PathVariable int examId,
       @RequestBody ExamVO examVO) {
 
+    System.out.println(examVO);
     boolean success = examService.updateExam(examId, examVO);
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("시험 수정 성공, " + examId), HttpStatus.OK);
@@ -164,15 +189,21 @@ public class ExamRestController {
       @RequestParam(value = "entreeCode", required = false) String entreeCode,
       @RequestParam(value = "examId", required = false) int examId){
 
-    List<ExamWithCreatorVO> examList = examService.filterExam(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
+    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
-  // 검색 자동완성 기능
-  @GetMapping("/auto-complete")
-  public ResponseEntity<List<ExamVO>> autoComplete(@RequestParam String name) {
-    List<ExamVO> exams = examService.searchExams(name);
-    return ResponseEntity.ok(exams);
+  @PostMapping("/{examId}/close")
+  public ResponseEntity<String> forceCloseExam(@PathVariable int examId) {
+    webSocketExamService.closeExam(examId);
+    return ResponseEntity.ok("시험이 강제 종료되었습니다.");
+  }
+  @GetMapping("/categories")
+  public ResponseEntity<CMResDTO<List<String>>> searchCatgories() {
+
+    List<String> categories = examService.searchCategories();
+
+    return new ResponseEntity<>(CMResDTO.successDataRes(categories), HttpStatus.OK);
   }
 
 
