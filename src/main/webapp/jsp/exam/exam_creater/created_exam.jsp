@@ -76,34 +76,34 @@
     const userId = ${sessionScope.userId};
 
     $(document).ready(function () {
-        loadCategories(); // 카테고리 목록 로드
+        // loadCategories(); // 카테고리 목록 로드
         loadExamResults(); // 페이지 로드 시 시험 목록 로드
     });
 
-    function loadCategories() {
-        $.ajax({
-            url: "${pageContext.request.contextPath}/api/exams/categories",
-            method: "GET",
-            success: function (response) {
-                categories = response.data;
-                console.log("📌 불러온 카테고리 목록:", categories); // 응답 데이터 확인
-                const filterSelect = $("#filterSelect");
-                filterSelect.empty(); // 기존 옵션 초기화
-                filterSelect.append('<option value="">카테고리</option>'); // 기본 옵션 추가
+    <%--function loadCategories() {--%>
+    <%--    $.ajax({--%>
+    <%--        url: "${pageContext.request.contextPath}/api/exams/categories",--%>
+    <%--        method: "GET",--%>
+    <%--        success: function (response) {--%>
+    <%--            categories = response.data;--%>
+    <%--            console.log("📌 불러온 카테고리 목록:", categories); // 응답 데이터 확인--%>
+    <%--            const filterSelect = $("#filterSelect");--%>
+    <%--            filterSelect.empty(); // 기존 옵션 초기화--%>
+    <%--            filterSelect.append('<option value="">카테고리</option>'); // 기본 옵션 추가--%>
 
-                if (categories && categories.length > 0) {
-                    categories.forEach(function (category) {
-                        filterSelect.append(`<option value="${category}">${category}</option>`);
-                    });
-                } else {
-                    console.warn("⚠ 카테고리 목록이 비어 있습니다.");
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error("❌ 카테고리 로드 오류:", error);
-            }
-        });
-    }
+    <%--            if (categories && categories.length > 0) {--%>
+    <%--                categories.forEach(function (category) {--%>
+    <%--                    filterSelect.append(`<option value="${category}">${category}</option>`);--%>
+    <%--                });--%>
+    <%--            } else {--%>
+    <%--                console.warn("⚠ 카테고리 목록이 비어 있습니다.");--%>
+    <%--            }--%>
+    <%--        },--%>
+    <%--        error: function (xhr, status, error) {--%>
+    <%--            console.error("❌ 카테고리 로드 오류:", error);--%>
+    <%--        }--%>
+    <%--    });--%>
+    <%--}--%>
 
     function loadExamResults() {
         const sortBy = $('#sortOrder').val() || 'createdAt';
