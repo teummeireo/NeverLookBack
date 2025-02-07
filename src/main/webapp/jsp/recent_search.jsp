@@ -39,6 +39,7 @@
         }
       });
     });
+    console.log
 
     // 최근 검색어 목록 로드 함수
     function loadRecentSearches() {
@@ -119,64 +120,6 @@
       $("#search-input").val(searchTerm); // 검색어 입력창에 설정
       $("#search-btn").trigger("click"); // 검색 버튼 강제 클릭
     });
-
-    $(document).ready(function () {
-      // 자동완성 목록 표시 함수
-      function showAutocompleteResults(results) {
-        const autocompleteList = $('#autocomplete-results');
-        autocompleteList.empty(); // 기존 목록 초기화
-
-        if (results.length > 0) {
-          results.forEach(result => {
-            autocompleteList.append(`<li class="autocomplete-item">' + ${result} + '</li>`);
-          });
-          autocompleteList.removeClass('hidden'); // 숨김 해제
-        } else {
-          autocompleteList.addClass('hidden'); // 숨김 처리
-        }
-      }
-
-      // 자동완성 기능
-      $('#search-input').on('input', function () {
-        const query = $('#search-input').val().trim();
-
-        if (query.length > 0) {
-          // AJAX 요청으로 서버에서 데이터 가져오기
-          $.ajax({
-            url: '/api/exams/auto-complete', // 서버의 자동완성 API 엔드포인트
-            type: 'GET',
-            data: { name: query },
-            success: function (response) {
-              if (response && response.data) {
-                showAutocompleteResults(response.data); // 자동완성 결과 표시
-              } else {
-                showAutocompleteResults([]); // 결과가 없으면 목록 숨김
-              }
-            },
-            error: function (xhr, status, error) {
-              console.error('자동완성 요청 실패:', error);
-            }
-          });
-        } else {
-          $('#autocomplete-results').addClass('hidden'); // 입력값이 없으면 목록 숨김
-        }
-      });
-
-      // 자동완성 항목 클릭 시 동작
-      $(document).on('click', '.autocomplete-item', function () {
-        const selectedValue = $(this).text();
-        $('#search-input').val(selectedValue); // 입력란에 값 설정
-        $('#autocomplete-results').addClass('hidden'); // 목록 숨김
-      });
-
-      // 입력란 외부 클릭 시 자동완성 목록 숨김
-      $(document).on('click', function (event) {
-        if (!$(event.target).closest('.search-bar').length) {
-          $('#autocomplete-results').addClass('hidden');
-        }
-      });
-    });
-
 
 
   });

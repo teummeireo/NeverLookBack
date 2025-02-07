@@ -221,6 +221,17 @@
       default: return "알 수 없음";
     }
   }
+
+  // 공개/비공개 아이콘을 반환하는 함수
+  function getEntryIcon(entreeCode) {
+    if (entreeCode === null || entreeCode === "" || entreeCode === undefined) {
+      return "<i class='fas fa-unlock' title='공개방'></i>"; // 공개방
+    } else {
+      return "<i class='fas fa-lock' title='비공개방'></i>"; // 비공개방
+    }
+  }
+
+
 </script>
 
 </body>
