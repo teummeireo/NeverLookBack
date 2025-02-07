@@ -223,7 +223,7 @@
                 console.log(isCorrect);
                 console.log(answers);
 
-                markAnswers(); // ✅ 기존 답변 자동 입력
+                markAnswers(); // 기존 답변 자동 입력
               }
             })
             .catch(error => console.error("데이터 불러오기 실패:", error));
@@ -459,13 +459,13 @@
             .then(data => {
               if (data.code === 200) {
                 alert("이의 제기가 성공적으로 제출되었습니다.");
-                // ✅ 화면 업데이트 - answers 배열 업데이트
+                // 화면 업데이트 - answers 배열 업데이트
                 let answer = answers.find(a => a.questionId === mongoQuestionId);
                 if (answer) {
                   answer.isObjection = true;
                   answer.objectionComments = disputeText;
                 }
-                // ✅ 즉시 화면 갱신
+                // 즉시 화면 갱신
                 renderDisputeSection(document.getElementById("question-" + mongoQuestionId), mongoQuestionId, disputeText, []);
                 updateDisputeSection(mongoQuestionId, disputeText);
                 loadExamData();  // 데이터 다시 불러와서 즉시 반영
