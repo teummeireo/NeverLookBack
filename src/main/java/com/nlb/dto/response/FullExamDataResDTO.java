@@ -7,6 +7,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -27,5 +29,6 @@ public class FullExamDataResDTO {
   private int examineeId;
   private List<QuestionVO> questions;
   private List<AnswerVO> answers;
+  private List<AnswerVO> submittedAnswers;
 
 }

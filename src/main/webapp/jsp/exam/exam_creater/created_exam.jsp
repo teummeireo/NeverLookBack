@@ -124,7 +124,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     <%--const userId = ${sessionScope.SESS_NICKNAME};--%>
-    const userId = 1;
+    const userId = ${sessionScope.userId};
 
     $(document).ready(function () {
         loadCategories(); // 카테고리 목록 로드
