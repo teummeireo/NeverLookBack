@@ -4,6 +4,7 @@ package com.nlb.controller;
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.exception.ErrorCode;
+import com.nlb.mapper.ExamMapper;
 import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.service.WebSocketExamService;
@@ -189,7 +190,7 @@ public class ExamRestController {
       @RequestParam(value = "entreeCode", required = false) String entreeCode,
       @RequestParam(value = "examId", required = false) int examId){
 
-    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
+    List<ExamWithCreatorVO> examList = examService.filterExam(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 

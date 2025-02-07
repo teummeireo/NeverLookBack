@@ -2,6 +2,7 @@ package com.nlb.mapper;
 
 
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

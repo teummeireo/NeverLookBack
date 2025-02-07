@@ -29,7 +29,7 @@ public class ExamResultController {
       @PathVariable("examId") int examId,
       @RequestParam("examCode") String examCode,
       @RequestParam("entreeCode") String entreeCode,
-      HttpSession session) {
+      HttpSession session, Model model) {
 
     Integer examineeId = (Integer) session.getAttribute("userId");
 
