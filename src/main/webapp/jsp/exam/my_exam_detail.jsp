@@ -100,6 +100,28 @@
     .modal-footer .submit:hover {
       background-color: #0056b3;
     }
+
+    .dispute-section {
+      background-color: #f8d7da;
+      border-left: 5px solid red;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .dispute-comment {
+      font-size: 1em;
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .admin-reply {
+      font-size: 0.9em;
+      color: blue;
+      margin-top: 5px;
+      margin-left: 15px;
+    }
+
   </style>
 
 </head>
@@ -151,6 +173,10 @@
   var urlParams = new URLSearchParams(window.location.search);
   var examId = Number(urlParams.get("examId")) || "75";  // examId 가져오기
   var examineeId = Number(urlParams.get("examineeId")) ||30;
+  if(examId ==0 || examineeId==0 ){
+    var examId = "${examId}";
+    var examineeId = "${examineeId}";
+  }
   var resultId;   // 불러올 시험 결과 ID
   var questions = [];
   var isCorrect = [];
@@ -173,10 +199,12 @@
                 resultId = examData.data.resultId;
                 examineeId = examData.data.examineeID !== undefined ? examData.data.examineeID : examineeId;
                 renderExam(examData.data);
-
-                examData.data.answers.forEach(answer => { // 오류 발생 가능 submittedAnswers -> answers
+                examData.data.answers.forEach(answer => {
                   answers.push(answer.answer);
                 });
+
+                answers = examData.data.answers;  // 객체 배열 그대로 저장 !!
+                console.log("변환 후 answers:", answers);
 
                 var answersUrl = baseUrl+ "/api/exams/results/" + examId + "/" + resultId + "/details";
                 console.log("사용자 제출 답변 요청 URL:", answersUrl);
@@ -195,7 +223,7 @@
                 console.log(isCorrect);
                 console.log(answers);
 
-                markAnswers(); // ✅ 기존 답변 자동 입력
+                markAnswers(); // 기존 답변 자동 입력
               }
             })
             .catch(error => console.error("데이터 불러오기 실패:", error));
@@ -251,54 +279,9 @@
     document.getElementById("submit-exam").disabled = false;
   }
 
-  function markAnswers() {
-    // questions 배열의 길이를 가져옴
-    var numberOfQuestions = questions.length;
 
-    for (var i = 0; i < numberOfQuestions; i++) {
-      var questionId = i + 1; // questionId는 1부터 시작하므로 i + 1
 
-      var input = document.getElementById("answer-" + questionId);
-      if (input) {
-        input.value = answers[i] || ""; // 주관식: 사용자가 제출한 답변 표시
-        input.disabled = true; // 수정 불가
-      }
 
-      var questionDiv = document.getElementById("question-" + questionId);
-      if (questionDiv) {
-        var statusIcon = document.createElement("span");
-        statusIcon.style.marginLeft = "10px";
-        statusIcon.style.fontWeight = "bold";
-        statusIcon.style.color = isCorrect[i] === "정답" ? "green" : "red";
-        statusIcon.textContent = isCorrect[i] === "정답" ? "✔" : "✘";
-        questionDiv.appendChild(statusIcon);
-
-        // 정답을 표시할 input 요소 추가
-        if (isCorrect[i] === "오답") {
-          var correctAnswerInput = document.createElement("input");
-          correctAnswerInput.type = "text";
-          correctAnswerInput.value = questions[i].correctAnswer; // 정답 가져오기
-          correctAnswerInput.disabled = true; // 수정 불가
-          correctAnswerInput.style.backgroundColor = "#f8d7da"; // 틀린 문제 강조
-          correctAnswerInput.style.color = "red"; // 색상 설정
-          correctAnswerInput.style.width = "600px"; // 너비 조정 (300px로 설정, 필요에 따라 조정 가능)// 여백 추가 (선택 사항)
-
-          questionDiv.appendChild(correctAnswerInput); // 정답 input 추가
-        }
-      }
-
-      // 객관식 문제 자동 체크
-      var selectedOption = answers[i]; // 사용자가 제출한 값
-      var radioButtons = document.getElementsByName("answer-" + questionId);
-      if (radioButtons) {
-        radioButtons.forEach(radio => {
-          if (radio.value === selectedOption) {
-            radio.checked = true; // 사용자가 제출한 값과 일치하는 라디오 버튼 체크
-          }
-        });
-      }
-    }
-  }
 
 
   function createScrollHandler(questionId) {
@@ -315,7 +298,7 @@
       var label = document.createElement("label");
       var radio = document.createElement("input");
       radio.type = "radio";
-      radio.name = "answer-" + question.questionId; // ✅ 같은 문제의 라디오 버튼은 같은 name 속성
+      radio.name = "answer-" + question.questionId; // 같은 문제의 라디오 버튼은 같은 name 속성
       radio.value = option;
       radio.disabled = true;  // 기존 답변이므로 수정 불가
 
@@ -352,7 +335,7 @@
 
       var input = document.getElementById("answer-" + questionId);
       if (input) {
-        input.value = answers[i] || "";
+        input.value = answers[i].answer || "";
         input.disabled = true;
       }
 
@@ -384,9 +367,43 @@
               openDisputeModal(qId);
             };
           })(questionId);
-
           questionDiv.appendChild(disputeButton);
         }
+
+        // 이의제기 및 답변 표시 로직 추가
+        if (answers[i] && answers[i].isObjection) {
+          var disputeSection = document.createElement("div");
+          disputeSection.className = "dispute-section";
+
+          // 이의제기 내용 표시
+          var disputeComment = document.createElement("p");
+          disputeComment.className = "dispute-comment";
+          disputeComment.textContent = "이의제기: " + answers[i].objectionComments;
+          disputeSection.appendChild(disputeComment);
+
+          // 관리자 답변이 있는 경우 표시
+          if (answers[i].objectionReply) {
+            var adminReply = document.createElement("p");
+            adminReply.className = "admin-reply";
+            adminReply.textContent = "관리자 답변: " + answers[i].objectionReply;
+            disputeSection.appendChild(adminReply);
+          }
+
+          questionDiv.appendChild(disputeSection);
+        }
+      }
+
+      // 객관식 문제 자동 체크
+      var selectedOption = answers[i].answer;
+      var radioButtons = document.getElementsByName("answer-" + questionId);
+      if (radioButtons) {
+        radioButtons.forEach(radio => {
+          if (radio.value === selectedOption) {
+            radio.checked = true;
+            radio.disabled = true;
+          }
+        });
+
       }
     }
   }
@@ -442,6 +459,16 @@
             .then(data => {
               if (data.code === 200) {
                 alert("이의 제기가 성공적으로 제출되었습니다.");
+                // 화면 업데이트 - answers 배열 업데이트
+                let answer = answers.find(a => a.questionId === mongoQuestionId);
+                if (answer) {
+                  answer.isObjection = true;
+                  answer.objectionComments = disputeText;
+                }
+                // 즉시 화면 갱신
+                renderDisputeSection(document.getElementById("question-" + mongoQuestionId), mongoQuestionId, disputeText, []);
+                updateDisputeSection(mongoQuestionId, disputeText);
+                loadExamData();  // 데이터 다시 불러와서 즉시 반영
                 closeDisputeModal();
               } else {
                 alert("이의 제기 실패: " + data.msg);
@@ -459,6 +486,16 @@
     var disputeComment = document.createElement("p");
     disputeComment.textContent = "이의 제기: " + disputeText;
     disputeSection.appendChild(disputeComment);
+
+    // 기존 이의제기 버튼을 생성해야 참조할 수 있음
+    var disputeButton = document.createElement("button");
+    disputeButton.textContent = "답변 추가";
+    disputeButton.onclick = function() {
+      openReplyModal(questionId);
+    };
+
+    disputeSection.appendChild(disputeButton);
+
 
     replies.forEach(reply => {
       var replyComment = document.createElement("p");
@@ -479,6 +516,29 @@
 
     questionDiv.appendChild(disputeSection);
   }
+
+  function updateDisputeSection(questionId, disputeText) {
+    var questionDiv = document.getElementById("question-" + questionId);
+    if (!questionDiv) return;
+
+    // 기존 이의제기 섹션이 있다면 삭제
+    var existingDisputeSection = questionDiv.querySelector(".dispute-section");
+    if (existingDisputeSection) {
+      existingDisputeSection.remove();
+    }
+
+    // 새 이의제기 섹션 추가
+    var disputeSection = document.createElement("div");
+    disputeSection.className = "dispute-section";
+
+    var disputeComment = document.createElement("p");
+    disputeComment.className = "dispute-comment";
+    disputeComment.textContent = "이의제기: " + disputeText;
+    disputeSection.appendChild(disputeComment);
+
+    questionDiv.appendChild(disputeSection);
+  }
+
 
   var selectedQuestionIdForReply;
 

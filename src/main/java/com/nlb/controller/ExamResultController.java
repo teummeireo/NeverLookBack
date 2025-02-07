@@ -32,7 +32,7 @@ public class ExamResultController {
 
     int examineeId =
         (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
-    Integer examineeId = (Integer) session.getAttribute("userId");
+    //Integer examineeId = (Integer) session.getAttribute("userId");
 
     // ExamJoinResDTO에서 응시 정보를 가져옴
     ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId, entreeCode);
@@ -89,5 +89,16 @@ public class ExamResultController {
   @GetMapping("/my")
   public String myResult(Model model) {
     return "jsp/exam/exam_result";
+  }
+
+  @GetMapping("/creator/detail")
+  public String CreatedExamDetail(
+      @RequestParam("examId") int examId,
+      @RequestParam("examineeId") int examineeId,
+      Model model){
+
+    model.addAttribute("examId", examId);
+    model.addAttribute("examineeId", examineeId);
+    return "jsp/exam/exam_creater/created_exam_detail";
   }
 }
