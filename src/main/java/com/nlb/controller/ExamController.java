@@ -20,6 +20,11 @@ public class ExamController {
   public String showCreateExamPage(@RequestParam("examId") int examId, Model model) {
     model.addAttribute("examId", examId);
     return "jsp/exam/create_exam";
+  }
+
+  @GetMapping("/created")
+  public String createdExam(Model model) {
+    return "jsp/exam/exam_creater/created_exam";
 
   }
 

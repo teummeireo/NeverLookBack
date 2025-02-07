@@ -357,6 +357,7 @@
             .then(data => {
                 if (data.code === 200) {
                     alert(`시험지가 성공적으로 저장되었습니다! (업데이트된 개수: ${data.data})`);
+                    location.href = '/exams/created';
                 } else {
                     throw new Error("서버 응답 오류: " + JSON.stringify(data));
                 }
