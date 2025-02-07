@@ -2,33 +2,6 @@
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-<style>
-    .options-menu {
-        display: none;
-        position: absolute;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-        color: #000000;
-    }
-
-    .options-menu ul {
-        list-style: none;
-        margin: 0;
-        padding: 10px;
-    }
-
-    .options-menu ul li {
-        padding: 8px 12px;
-        cursor: pointer;
-    }
-
-    .options-menu ul li:hover {
-        background: #f0f0f0;
-    }
-</style>
 
 <head>
     <meta charset="UTF-8">
