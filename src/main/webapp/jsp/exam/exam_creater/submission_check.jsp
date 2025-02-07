@@ -27,7 +27,6 @@
                         <option value="" disabled selected hidden>정렬</option>
                         <option value="score">점수순</option>
                         <option value="submittedAt">응시 일시순</option>
-                        <option value="examineeId">응시자 이름순</option>
                     </select>
                     <span class="arrow">▼</span>
                 </div>
@@ -35,7 +34,6 @@
             <table border="1">
                 <thead>
                 <tr>
-                    <th>시험 ID</th>
                     <th>응시자 이름</th>
                     <th>점수</th>
                     <th>응시 날짜</th>
@@ -92,10 +90,7 @@
                     results.sort((a, b) => b.score - a.score); // 점수 내림차순
                 } else if (sortBy === "submittedAt") {
                     results.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt)); // 날짜 내림차순
-                } else if (sortBy === "examineeId") {
-                    results.sort((a, b) => a.examineeId.localeCompare(b.examineeId, "ko")); // 이름 오름차순
                 }
-
                 console.log("Sorted Results:", results);
 
                 // 테이블에 데이터 추가
@@ -104,10 +99,9 @@
                     let reviewClass = result.reviewed ? "reviewed" : "appealed";
 
                     let row = "<tr>" +
-                        "<td>" + result.examId + "</td>" +
-                        "<td>" + result.examineeId + "</td>" +
+                        "<td>" + result.nickname + "</td>" +
                         "<td>" + result.score + "</td>" +
-                        "<td>" + result.submittedAt + "</td>" +
+                        "<td>" + result.submittedAt.split('T')[0] + "<br>" + result.submittedAt.split('T')[1] + "</td>" +
                         "<td class='" + reviewClass + "'>" + reviewStatus + "</td>" +
                         "</tr>";
 
