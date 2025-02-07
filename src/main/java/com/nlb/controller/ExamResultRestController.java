@@ -144,6 +144,7 @@ public class ExamResultRestController {
       HttpSession session) {
     // 로그인 기능 개발 시 사용
     Integer examineeId = (Integer) session.getAttribute("examineeId");
+    System.out.println("examData 내부에서 세션으로 얻은 examineeID = " + examineeId );
 
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     System.out.println(examData);

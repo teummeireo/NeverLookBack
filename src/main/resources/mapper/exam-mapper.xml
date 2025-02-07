@@ -180,10 +180,25 @@
     where activation_status = 'on_going'
   </select>
 
-  <select id="getFinishTime" parameterType="int" resultType="LocalDateTime">
+  <select id="getFinishTime" parameterType="int" resultType="java.time.LocalDateTime">
     SELECT finished_at
     FROM exam
     WHERE exam_id = #{examID}
   </select>
 
+  <select id="selectAllOnGoingExams" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    WHERE activation_status = 'on_going'
+  </select>
+
+  <update id="updateExamineeCount" parameterType="int">
+    UPDATE exam
+    SET examinee_count = examinee_count + 1
+    WHERE exam_id = #{examId}
+  </update>
+
+  <select id="findNicknameByUserId" resultType="String">
+    SELECT nickname FROM nlbuser WHERE user_id = #{userId}
+  </select>
 </mapper>
