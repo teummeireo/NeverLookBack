@@ -173,6 +173,10 @@
   var urlParams = new URLSearchParams(window.location.search);
   var examId = Number(urlParams.get("examId")) || "75";  // examId 가져오기
   var examineeId = Number(urlParams.get("examineeId")) ||30;
+  if(examId ==0 || examineeId==0 ){
+    var examId = "${examId}";
+    var examineeId = "${examineeId}";
+  }
   var resultId;   // 불러올 시험 결과 ID
   var questions = [];
   var isCorrect = [];

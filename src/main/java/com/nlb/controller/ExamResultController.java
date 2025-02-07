@@ -90,4 +90,15 @@ public class ExamResultController {
   public String myResult(Model model) {
     return "jsp/exam/exam_result";
   }
+
+  @GetMapping("/creator/detail")
+  public String CreatedExamDetail(
+      @RequestParam("examId") int examId,
+      @RequestParam("examineeId") int examineeId,
+      Model model){
+
+    model.addAttribute("examId", examId);
+    model.addAttribute("examineeId", examineeId);
+    return "jsp/exam/exam_creater/created_exam_detail";
+  }
 }
