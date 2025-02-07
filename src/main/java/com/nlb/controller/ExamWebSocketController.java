@@ -60,4 +60,10 @@ public class ExamWebSocketController {
     long serverTime = System.currentTimeMillis(); // 서버 현재 시간
     messagingTemplate.convertAndSend("/topic/serverTime", serverTime);
   }
+
+  @MessageMapping("/flushCompleted")
+  public void logFlushCompletion(String message) {
+    System.out.println("📡 [SOCKET] 클라이언트에서 flush 완료 메시지 수신: {"+ message+ "}");
+  }
+
 }

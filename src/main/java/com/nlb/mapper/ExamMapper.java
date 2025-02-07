@@ -61,4 +61,12 @@ public interface ExamMapper {
 
 
   List<String> selectCategories();
+
+  List<ExamVO> selectAllOnGoingExams();
+
+  void updateExamineeCount(@Param("examId") int examId);
+
+  String findNicknameByUserId(int userId);  // 닉네임 조회 추가
+
+
 }
