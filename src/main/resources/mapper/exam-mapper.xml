@@ -197,4 +197,8 @@
     SET examinee_count = examinee_count + 1
     WHERE exam_id = #{examId}
   </update>
+
+  <select id="findNicknameByUserId" resultType="String">
+    SELECT nickname FROM nlbuser WHERE user_id = #{userId}
+  </select>
 </mapper>

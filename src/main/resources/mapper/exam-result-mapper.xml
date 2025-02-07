@@ -180,7 +180,7 @@
 
   <select id="selectResultByExamIdAndNotSubmittedAt" parameterType="int" resultType="ExamResultVO">
     SELECT * FROM exam_result
-    WHERE exam_id=#{examId} and submmited_at = CAST('1900-01-01 00:00:00' as timestamp)
+    WHERE exam_id=#{examId} and submitted_at = CAST('1900-01-01 00:00:00' as timestamp)
   </select>
 
   <insert id="insertExamResultsList" parameterType="java.util.List">

@@ -3,7 +3,6 @@ package com.nlb.dto.response;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.QuestionVO;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +17,7 @@ public class FullExamDataResDTO {
   private String title;
   private String category;
   private int createrId;
+  private String creatorNickname;
   private String entreeCode;
   private int examTime;
   private LocalDateTime startedAt;

@@ -44,6 +44,8 @@ public class ExamServiceImpl implements ExamService {
   private HttpSession session;
   @Autowired
   private MongoTemplate mongoTemplate;
+  @Autowired
+  private WebSocketExamService webSocketExamService;
 
 
   @Override
@@ -53,6 +55,10 @@ public class ExamServiceImpl implements ExamService {
 
   @Override
   public int setExamStatus(int examId, String status) {
+ /*   String curState = examMapper.getExamStatusById(examId);
+    if(curState.equals("on_going")&&status.equals("closed")){
+      webSocketExamService.closeExam(examId);
+    }*/
     return examMapper.updateExamActivationStatus(examId, status);
   }
 

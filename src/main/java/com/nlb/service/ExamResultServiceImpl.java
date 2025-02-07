@@ -285,6 +285,8 @@ public class ExamResultServiceImpl implements ExamResultService {
     // 시험 결과 ID 가져오기
     int resultId = examResultMapper.selectExamResultByExamIdandUser(examId, examineeId)
         .getResultId();
+    // 응시자 닉네임 가져오기
+    String creatorNickname = examMapper.findNicknameByUserId(examineeId);
 
     // 응시자가 제출한 답안 (없으면 빈 리스트)
     List<AnswerVO> answers = (List<AnswerVO>) examResultData.getOrDefault("answers",
@@ -296,6 +298,7 @@ public class ExamResultServiceImpl implements ExamResultService {
         (String) examResultData.getOrDefault("title", "제목 없음"),
         (String) examResultData.getOrDefault("category", "카테고리 없음"),
         ((Number) examResultData.getOrDefault("createrId", 0)).intValue(), //몽고DB타입과 호환성때문에 Number해봄
+        creatorNickname,
         (String) examResultData.getOrDefault("entreeCode", ""),
         ((Number) examResultData.getOrDefault("examTime", 0)).intValue(),
         convertDateToLocalDateTime(examResultData.get("startedAt")),
@@ -314,7 +317,7 @@ public class ExamResultServiceImpl implements ExamResultService {
     Query queryResult = new Query(Criteria.where("examId").is(examId)
         .and("examineeId").is(examineeId));
     Map<String, Object> examResultData = mongoTemplate.findOne(queryResult, Map.class,
-        "exam_results");
+        "examResults");
 
     // exam컬렉션에서 메타데이터 가져오기
     Query queryExam = new Query(Criteria.where("examId").is(examId));

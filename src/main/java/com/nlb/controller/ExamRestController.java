@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,6 +38,8 @@ public class ExamRestController {
   private ExamMapper examMapper;
   @Autowired
   private WebSocketExamService webSocketExamService;
+  @Autowired
+  private SimpMessageSendingOperations messageSendingOperations;
 
   // 정렬기능(제목, 생성일, 응시자수, 카테고리) & 필터기능(카테고리)
   @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
@@ -62,10 +65,15 @@ public class ExamRestController {
     }
     // on_going 상태에서 closed로 변경 -> 강제종료 : 현재 수험정보 전부 제출 처리
     if (status.equals("closed") && examMapper.getExamStatusById(examId).equals("on_going")) {
+      // 먼저 WebSocket으로 "flush" 메시지 전송
+      messageSendingOperations.convertAndSend("/topic/exam/" + examId + "/notifications",
+              "시험이 곧 강제 종료됩니다! 브라우저에서 답안을 즉시 저장하세요. (3초 후 종료)");
+      // 3초 정도 대기
+      try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
       webSocketExamService.closeExam(examId);
     }
 
-    int rows = examService.setExamStatus(examId, status);
+    examService.setExamStatus(examId, status);
 
     return new ResponseEntity<>(CMResDTO.successNoRes(), HttpStatus.OK);
   }

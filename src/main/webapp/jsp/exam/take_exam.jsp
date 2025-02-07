@@ -121,7 +121,7 @@
         <span>출제자: <strong id="exam-creator"></strong></span>
         <span>총점: <strong id="total-score"></strong></span>
         <span>카테고리: <strong id="exam-category"></strong></span>
-        <span>시간: <strong id="exam-time"></strong></span>
+        <span>시험시간: <strong id="exam-time"></strong></span>
     </div>
     <!-- 타이머 표시 -->
     <div class="timer">
@@ -180,7 +180,7 @@
 
       // (B) 시험 알림 구독: /topic/exam/{examId}/notifications
       stompClient.subscribe("/topic/exam/" + examId + "/notifications", function (msg) {
-        alert("[시험공지] " + msg.body);
+        showToast("[시험공지] " + msg.body);
       });
     });
   }
@@ -230,10 +230,10 @@
 
     // 헤더 정보 표시
     document.getElementById("exam-title").textContent = examData.title;
-    document.getElementById("exam-creator").textContent = "출제자: " + examData.createrId;
+    document.getElementById("exam-creator").textContent = examData.creatorNickname;
     document.getElementById("total-score").textContent = getTotalScore(examData.questions);
-    document.getElementById("exam-category").textContent = "카테고리: " + examData.category;
-    document.getElementById("exam-time").textContent = "시간: " + examData.examTime + "분";
+    document.getElementById("exam-category").textContent = examData.category;
+    document.getElementById("exam-time").textContent = examData.examTime + "분";
 
     // 사이드바와 문제영역
     var questionList = document.getElementById("question-list");
@@ -310,6 +310,16 @@
       label.appendChild(document.createTextNode(option));
       container.appendChild(label);
     }
+      // 기존에 선택된 답이 있으면 그 답에 해당하는 radio.checked = true
+      var existingAnswerObj = examData.answers.find(a => a.questionId === question.questionId);
+      if (existingAnswerObj && existingAnswerObj.answer) {
+          let selectedValue = existingAnswerObj.answer;
+          // 해당 value를 가진 라디오버튼 찾아서 체크
+          let matchedRadio = container.querySelector(`input[type="radio"][value="${selectedValue}"]`);
+          if (matchedRadio) {
+              matchedRadio.checked = true;
+          }
+      }
   }
 
   function renderShortAnswerInput(question, container) {
@@ -318,6 +328,12 @@
     input.className = "answer-input";
     input.id = "answer-" + question.questionId;
     input.oninput = createSaveAnswerHandler(question.questionId, input);
+      // 몽고DB에 저장된 기존 답안이 있으면 input.value로 세팅
+      var existingAnswerObj = examData.answers.find(a => a.questionId === question.questionId);
+      if (existingAnswerObj && existingAnswerObj.answer) {
+          input.value = existingAnswerObj.answer;
+      }
+
     container.appendChild(input);
   }
 
@@ -343,6 +359,36 @@
       return total + (q.pointsAllocation || 0);
     }, 0);
   }
+
+  function flushCurrentAnswers() {
+      console.log("🔥 flushCurrentAnswers() 실행됨.");
+      // 모든 객관식 라디오 중 checked된 것만 찾아 반영
+      const checkedRadios = document.querySelectorAll('input[type="radio"]:checked');
+      checkedRadios.forEach(radio => {
+          let qId = parseInt(radio.name.replace('answer-', ''), 10);
+          updateAnswer(qId, radio.value);
+      });
+
+      // 모든 서술형 input
+      const textInputs = document.querySelectorAll('.answer-input');
+      textInputs.forEach(input => {
+          let qId = parseInt(input.id.replace('answer-', ''), 10);
+          updateAnswer(qId, input.value);
+      });
+
+      console.log("🔥 [FLUSH] 최종 answers 상태:", JSON.stringify(answers, null, 2));
+
+  }
+
+  function updateAnswer(questionId, answerValue) {
+      var idx = answers.findIndex(a => a.questionId === questionId);
+      if (idx !== -1) {
+          answers[idx].answer = answerValue;
+      } else {
+          answers.push({ questionId: questionId, answer: answerValue });
+      }
+  }
+
 
   // ========================
   // 3) 시험 타이머(remainingTime) + 서버 시간 보정 가능
@@ -435,7 +481,9 @@
   }
 
   function saveAnswers() {
-    if (isExamSubmitted) {
+      console.log("🔥 saveAnswers() 실행됨. 서버로 저장 요청 시작...");
+
+      if (isExamSubmitted) {
       console.log("시험이 이미 제출됨. 자동 저장 중단.");
       return;
     }
@@ -476,6 +524,19 @@
     });
   }
 
+  // flush 로그 서버로 보내는 함수
+  function notifyServerFlushComplete() {
+      if (stompClient) {
+          stompClient.send("/app/flushCompleted", {}, JSON.stringify({
+              examId: examId,
+              examineeId: examineeId,
+              answers: answers
+          }));
+          console.log("📡 [SOCKET] flush & save 완료 알림을 서버에 전송.");
+      }
+  }
+
+
   //3분마다 자동 저장
   function startAutoSave() {
     autoSaveInterval = setInterval(function () {
@@ -500,18 +561,55 @@
     var message = msg.body;
     var baseUrl = window.location.origin;
 
-    alert("[시험공지] " + message);
+      if(message.includes("곧 종료됩니다. 최신 답안을 저장하세요")) {
+          showToast("시험이 곧 종료됩니다! 작성 중이던 답안을 임시저장합니다.");
+          // DOM에 있는 것들 => answers 배열로 flush
+          flushCurrentAnswers();
+          // flush 한 후, /api/exams/results/answers 로 저장
+          saveAnswers();
+          setTimeout(() => {
+              notifyServerFlushComplete(); // 🔥 서버에 flush 완료 알림
+          }, 500);
+      }
+      showToast("[시험공지] " + message);
 
     // 시험 종료 감지
     if (message.includes("시험이 종료되었습니다")) {
-      alert("시험이 종료되었습니다. 자동 제출 후 메인 페이지로 이동합니다.");
+        // 우선 DOM -> answers 전부 동기화
+        flushCurrentAnswers();
+        alert("시험이 종료되었습니다. 자동 제출 후 메인 페이지로 이동합니다.");
       submitExam();
       setTimeout(() => {
         window.location.href = "/";
-      }, 3000);
+      }, 500);
     }
   });
 
+
+  function showToast(message, duration = 3000) {
+      var toast = document.createElement("div");
+      toast.className = "toast-message";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+
+      // 스타일 적용
+      toast.style.position = "fixed";
+      toast.style.bottom = "20px";
+      toast.style.left = "50%";
+      toast.style.transform = "translateX(-50%)";
+      toast.style.background = "rgba(0, 0, 0, 0.8)";
+      toast.style.color = "#fff";
+      toast.style.padding = "10px 20px";
+      toast.style.borderRadius = "5px";
+      toast.style.fontSize = "14px";
+      toast.style.zIndex = "9999";
+      toast.style.transition = "opacity 0.5s";
+
+      setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => document.body.removeChild(toast), 500);
+      }, duration);
+  }
 </script>
 </body>
 </html>
