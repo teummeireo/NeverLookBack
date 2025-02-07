@@ -73,8 +73,8 @@
                     title: $('#exam-title').val(),
                     category: $('#category').val(),
                     entreeCode: $('#entree-code').val(),
-                    startedAt: $('#started-at').val() + ':00', // 초 추가
-                    finishedAt: $('#finished-at').val() + ':00', // 초 추가
+                    startedAt: $('#started-at').val() ? $('#started-at').val() + ':00' : null, // 값이 있을 경우 초 추가, 없으면 null
+                    finishedAt: $('#finished-at').val() ? $('#finished-at').val() + ':00' : null, // 값이 있을 경우 초 추가, 없으면 null
                     examTime: $('#exam-time').val()
                 };
 
@@ -101,6 +101,7 @@
                 });
             });
         });
+
     </script>
 </body>
 </html>

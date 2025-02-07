@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
 </head>
 <body>
-
+<script>
+    console.log("id : " + ${sessionScope.userId} )
+</script>
 <!-- 사이드바 포함 -->
 <%@ include file="sidebar.jsp" %>
 

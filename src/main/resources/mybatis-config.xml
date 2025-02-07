@@ -13,6 +13,7 @@
 
 
 	<typeAliases>
+		<typeAlias alias="LocalDateTime" type="java.time.LocalDateTime"/>
 		<package name="com.nlb.vo" /> <!-- VO 객체 패키지 -->
 		<package name="com.nlb.dto" /> <!-- VO 객체 패키지 -->
 	</typeAliases>
