@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>사용자 통계 조회</title>
+    <title>사용자 통계</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
 
 </head>

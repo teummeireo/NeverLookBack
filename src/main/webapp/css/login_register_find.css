@@ -13,11 +13,10 @@ body {
     color: #fff;
 }
 @font-face {
-    font-family: 'Pretendard'; /* 원하는 이름 설정 */
-    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
-    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
-    font-weight: normal; /* 옵션: normal, bold 등 */
-    font-style: normal; /* 옵션: italic, oblique 등 */
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
 }
 /* 투명도 레이어 */
 body::before {
@@ -157,4 +156,13 @@ input[type="text"] {
 
 .close-btn:hover {
     color: #ff6666;
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset; /* 배경 색 제거 */
+    -webkit-text-fill-color: #fff; /* 글자 색상 유지 */
+}
+
+#emailSuccess {
+    display: none; /* 처음에 버튼 숨김 */
 }

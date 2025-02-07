@@ -27,7 +27,7 @@
     // 전체 검색어 삭제
     $('#clear-all-btn').on('click', function () {
       $.ajax({
-        url: '/api/search-history/clear', // API URL
+        url: 'api/search-history/clear', // API URL
         type: 'POST',
         data: { userId: CURRENT_USER_ID }, // 현재 사용자 ID 전달
         success: function () {
@@ -39,6 +39,7 @@
         }
       });
     });
+    console.log
 
     // 최근 검색어 목록 로드 함수
     function loadRecentSearches() {
@@ -80,13 +81,16 @@
       // placeholder 변경
       $(this).attr('placeholder', '검색어를 입력하세요.');
 
-      // CSS 클래스 추가 (search-bar의 테두리 제거)
+      // CSS 클래스 추가 (search-bar의 테두리 추가)
       $('.search-bar').addClass('search-bar-focus');
     });
 
-    // 검색창에서 Enter 키 입력 시 최근 검색어 닫기
+    // 검색창에서 Enter, esc 키 입력 시 최근 검색어 닫기
     $('#search-input').on('keypress', function (event) {
       if (event.which === 13) { // Enter 키 코드
+        $('#recent-searches-container').addClass('hidden').hide(); // 최근 검색어 닫기
+      }
+      if (event.key === "Escape") {
         $('#recent-searches-container').addClass('hidden').hide(); // 최근 검색어 닫기
       }
     });
@@ -108,6 +112,13 @@
         // CSS 클래스 추가 (search-bar의 테두리 제거)
         $('.search-bar').removeClass('search-bar-focus');
       }
+    });
+
+    // 최근 검색어 클릭 시 검색
+    $(document).on("click", ".search-term", function () {
+      let searchTerm = $(this).text(); // 클릭된 검색어 가져오기
+      $("#search-input").val(searchTerm); // 검색어 입력창에 설정
+      $("#search-btn").trigger("click"); // 검색 버튼 강제 클릭
     });
 
 

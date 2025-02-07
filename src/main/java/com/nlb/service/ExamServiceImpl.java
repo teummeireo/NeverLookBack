@@ -9,11 +9,9 @@ import com.nlb.mapper.ExamMapper;
 import com.nlb.mapper.ExamResultMapper;
 import com.nlb.mapper.ResultDetailMapper;
 import com.nlb.vo.ExamMongoVO;
-import com.nlb.vo.ExamResultVO;
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
-
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +28,10 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpSession;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class ExamServiceImpl implements ExamService {
@@ -73,28 +75,35 @@ public class ExamServiceImpl implements ExamService {
 
   @Override
   public int createExam(ExamReqDTO examReqDTO, int createrId) {
-    //RDB 에 먼저 저장
+    // RDB에 먼저 저장
     ExamVO examVO = examReqDTO.getExamVO();
     examVO.setCreaterId(createrId);
 
-    //RDB에 저장하고 생성된 ID 값과 같은 examId 값으로 몽고db에 저장 (몽고의 _id랑 별개)
+    // RDB에 저장하고 생성된 ID 값과 같은 examId 값으로 몽고DB에 저장 (몽고의 _id랑 별개)
     examMapper.insertExam(examVO);
     int generatedId = examVO.getExamId();
 
-    //몽고에 저장
+    // ActivationStatus 설정
+    LocalDateTime now = LocalDateTime.now(); // 현재 시각 가져오기
+    if (examVO.getStartedAt() == null || examVO.getStartedAt().isBefore(now)) {
+      examVO.setActivationStatus("on_going");
+    } else {
+      examVO.setActivationStatus("not_started"); // 기본값 설정
+    }
+
+    // 몽고DB에 저장
     Query query = Query.query(Criteria.where("examId").is(generatedId));
     Update update = new Update()
-        .set("examId", generatedId)
-        .set("title", examVO.getTitle())
-        .set("category", examVO.getCategory())
-        .set("entreeCode", examVO.getEntreeCode())
-        .set("examTime", examVO.getExamTime())
-        .set("startedAt", examVO.getStartedAt())
-        .set("finishedAt", examVO.getFinishedAt())
-        .set("createrId", createrId);
-//        .set("questionCount",
-//            examMongoVO.getQuestions() != null ? examMongoVO.getQuestions().size() : 0)
-//        .set("questions", examMongoVO.getQuestions());
+            .set("examId", generatedId)
+            .set("title", examVO.getTitle())
+            .set("category", examVO.getCategory())
+            .set("entreeCode", examVO.getEntreeCode())
+            .set("examTime", examVO.getExamTime())
+            .set("startedAt", examVO.getStartedAt())
+            .set("finishedAt", examVO.getFinishedAt())
+            .set("createrId", createrId)
+            .set("activationStatus", examVO.getActivationStatus()); // activationStatus 추가
+
     mongoTemplate.upsert(query, update, ExamMongoVO.class, "exams");
 
     return generatedId;
@@ -210,14 +219,14 @@ public class ExamServiceImpl implements ExamService {
 
   // 시험명 검색
   @Override
-  public List<ExamVO> searchExamsByName(String name) {
+  public List<ExamWithCreatorVO> searchExamsByName(String name) {
     return examMapper.findExamsByName(name);
   }
 
   // 시험 상세 검색 필터링
   @Override
-  public List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime) {
-    return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
+  public List<ExamWithCreatorVO> filterExam(String name, String category, String nickname, String createdAt, String activationStatus, Integer examTime, String entreeCode, int examId) {
+    return examMapper.searchExams(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
   }
 
   // 시간 초과 여부 판정 함수
@@ -230,6 +239,11 @@ public class ExamServiceImpl implements ExamService {
   @Override
   public List<ExamVO> getAllExams() {
     return examMapper.searchAllExams();
+  }
+
+  @Override
+  public List<String> searchCategories() {
+    return examMapper.selectCategories();
   }
 
 }

@@ -5,6 +5,8 @@ import com.nlb.service.NlbUserService;
 import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,16 +25,17 @@ public class NlbUserController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main(HttpSession session) {
 
-
         return "/jsp/new_main";
 
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
-
-        return "/jsp/login_info/login";
-
+    public String login(HttpSession session) {
+        // 로그인 성공 후 세션에 userId가 있다면 메인 페이지로 리다이렉트
+        if (session.getAttribute("userId") != null) {
+            return "redirect:/jsp/new_main";
+        }
+        return "/jsp/login_info/login"; // 로그인 페이지로 이동
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -54,6 +57,27 @@ public class NlbUserController {
         return "redirect:/";
     }
 
+    @RequestMapping(value = "/find_id", method = RequestMethod.GET)
+    public String findId(HttpSession session) {
+
+        return "/jsp/login_info/find_id";
+
+    }
+
+    @RequestMapping(value = "/find_pw", method = RequestMethod.GET)
+    public String findPw(HttpSession session) {
+
+        return "/jsp/login_info/find_pw";
+
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register(HttpSession session) {
+
+        return "/jsp/register";
+
+    }
+
 
     @RequestMapping(value = "/mypage", method = RequestMethod.GET)
     public ModelAndView mypage(ModelAndView modelAndView) {
@@ -68,32 +92,12 @@ public class NlbUserController {
 
         return modelAndView;
     }
-    @RequestMapping(value = "/find-id", method = RequestMethod.GET)
-    public String findId() {
 
-
-        return "/jsp/login_info/find_id";
-
-    }   @RequestMapping(value = "/find-pw", method = RequestMethod.GET)
-    public String findPw() {
-
-
-        return "/jsp/login_info/find_pw";
-
-    }
     @RequestMapping(value = "/edit-info", method = RequestMethod.GET)
     public String editInfo() {
 
 
         return "/jsp/page_edit";
-
-    }
-
-    @RequestMapping(value = "/register", method = RequestMethod.GET)
-    public String register() {
-
-
-        return "/jsp/register";
 
     }
 
@@ -103,6 +107,19 @@ public class NlbUserController {
 
         return "/jsp/unregister_user";
 
+    }
+
+
+    @GetMapping("/my-result")
+    public String myResult(Model model) {
+        return "/jsp/exam/my_exam";
+    } 
+     
+
+    @RequestMapping(value = "/exam_search", method = RequestMethod.GET)
+    public String examSearch() {
+
+        return "/jsp/exam_search";
     }
 
 

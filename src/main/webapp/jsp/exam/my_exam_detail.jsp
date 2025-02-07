@@ -173,7 +173,8 @@
                 resultId = examData.data.resultId;
                 examineeId = examData.data.examineeID !== undefined ? examData.data.examineeID : examineeId;
                 renderExam(examData.data);
-                examData.data.answers.forEach(answer => {
+
+                examData.data.answers.forEach(answer => { // 오류 발생 가능 submittedAnswers -> answers
                   answers.push(answer.answer);
                 });
 

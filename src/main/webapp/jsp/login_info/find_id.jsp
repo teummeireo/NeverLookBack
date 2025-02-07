@@ -23,7 +23,7 @@
 
         <div class="form-footer">
             <a href="/login">로그인</a>
-            <a href="/find-pw">비밀번호 찾기</a>
+            <a href="/find_pw">비밀번호 찾기</a>
         </div>
     </form>
 </div>

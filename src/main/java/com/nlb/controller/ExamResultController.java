@@ -28,13 +28,20 @@ public class ExamResultController {
       @PathVariable("examId") int examId,
       @RequestParam("examCode") String examCode,
       @RequestParam("entreeCode") String entreeCode,
-      HttpSession session) {
+      HttpSession session, Model model) {
 
     int examineeId =
         (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
+    Integer examineeId = (Integer) session.getAttribute("userId");
 
-    ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId,
-        entreeCode);
+    // ExamJoinResDTO에서 응시 정보를 가져옴
+    ExamJoinResDTO joinResponse = examResultService.joinExam(examId, examCode, examineeId, entreeCode);
+
+    if (joinResponse == null) {
+      model.addAttribute("errorMessage", "시험에 응시할 수 없습니다. 요청 정보를 확인하세요.");
+      return "error/error-page"; // 에러 페이지로 이동
+    }
+
     // 세션에 데이터 저장 (이후 API 요청에서 사용)
     session.setAttribute("examId", joinResponse.getExamId());
     session.setAttribute("examineeId", joinResponse.getExamineeId());
@@ -48,13 +55,39 @@ public class ExamResultController {
   @GetMapping("/exam/take")
   public String takeExam(HttpSession session, Model model) {
     Integer examId = (Integer) session.getAttribute("examId");
-    //todo 들어온 세션과 지금 세션의 동일 체크 필요?
-    System.out.println("examID 테스트  = " + examId);
-    if (examId == null) {
-      return "redirect:/exam-list"; // 시험 목록으로 리디렉트
+    Integer examineeId = (Integer) session.getAttribute("userId");
+
+    if (examId == null || examineeId == null) {
+      model.addAttribute("errorMessage", "시험 정보가 없습니다. 다시 시도하세요.");
+      return "redirect:/exam/list";
     }
 
     model.addAttribute("examId", examId);
-    return "jsp/exam/take_exam";
+    model.addAttribute("examineeId", examineeId);
+
+    return "/jsp/exam/take_exam"; // 실제 JSP 파일 경로
+  }
+
+  @GetMapping("/{examId}/lists")
+  public String resultList(@PathVariable("examId") int examId, Model model) {
+    model.addAttribute("examId", examId);
+    return "jsp/exam/exam_creater/submission_check";
+  }
+
+  @GetMapping("/{examId}/detail")
+  public String resultDetail(@PathVariable("examId") int examId,
+                             @RequestParam("resultId") int resultId,
+                             @RequestParam("examineeId") int examineeId,
+                                Model model) {
+
+    model.addAttribute("examId", examId);
+    model.addAttribute("resultId", resultId);
+    model.addAttribute("examineeId", examineeId);
+    return "jsp/exam/exam_creater/submission_detail";
+  }
+
+  @GetMapping("/my")
+  public String myResult(Model model) {
+    return "jsp/exam/exam_result";
   }
 }
