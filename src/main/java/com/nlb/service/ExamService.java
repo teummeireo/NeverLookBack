@@ -33,14 +33,14 @@ public interface ExamService {
 
   Map<String, Object> getExamDataCreated(int examId, int creatorId);
 
-  List<ExamVO> searchExamsByName(String name);
+  List<ExamWithCreatorVO> searchExamsByName(String name);
 
-  List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime);
+  List<ExamWithCreatorVO> filterExam(String name, String category, String nickname, String createdAt, String activationStatus, Integer examTime, String entreeCode, int examId);
 
   boolean isTimeOver(int examId, LocalDateTime finishTime);
 
   List<ExamVO> getAllExams();
 
-  List<ExamVO> searchExams(String name);
+  List<String> searchCategories();
 
 }
