@@ -64,6 +64,7 @@
       <if test="examTime != null">exam_time = #{examTime},</if>
       <if test="startedAt != null">started_at = #{startedAt},</if>
       <if test="finishedAt != null">finished_at = #{finishedAt},</if>
+      <if test="activationStatus != null">activation_status = #{activationStatus},</if>
     </set>
     WHERE exam_id = #{examId}
   </update>
@@ -184,6 +185,11 @@
     SELECT finished_at
     FROM exam
     WHERE exam_id = #{examID}
+  </select>
+
+  <select id="selectCategories" resultType="String">
+    SELECT distinct category
+    FROM exam
   </select>
 
 </mapper>
