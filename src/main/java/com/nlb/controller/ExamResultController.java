@@ -64,4 +64,9 @@ public class ExamResultController {
     model.addAttribute("examId", examId);
     return "jsp/exam/exam_creater/submission_check";
   }
+
+  @GetMapping("/my")
+  public String myResult(Model model) {
+    return "jsp/exam/exam_result";
+  }
 }

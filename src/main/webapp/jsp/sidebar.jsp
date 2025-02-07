@@ -10,7 +10,7 @@
     <li><a href="/exams/init-exam"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
     <li><a href="/jsp/exam/init_exam.jsp"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
     <li><a href="/exams/created"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
-    <li><a href="/jsp/exam/my_exam.jsp"><i class="fas fa-cogs"></i><span>응시한 시험</span></a></li>
+    <li><a href="/my-result"><i class="fas fa-cogs"></i><span>응시한 시험</span></a></li>
 
     <c:choose>
       <c:when test="${sessionScope.userRole == 'admin'}">
