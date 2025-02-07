@@ -184,9 +184,8 @@
     });
 
     function viewResults() {
-        const examCode = $('#optionsMenu').data('examCode');
-        console.log("📌 viewResults - 선택된 시험 코드:", examCode);
-        alert(`채점 결과 리스트 보기: ${examCode}`);
+        const examVO = $('#optionsMenu').data('examVO');
+        location.href = "${pageContext.request.contextPath}/api/exams/results/" + examVO.examId + "/lists";
     }
 
     function changeStatus() {

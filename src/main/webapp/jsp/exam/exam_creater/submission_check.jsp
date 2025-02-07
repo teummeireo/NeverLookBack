@@ -51,14 +51,14 @@
 </div>
 
 <script>
+    var examId = ${examId};
     function fetchResults() {
-        let examId = document.getElementById("examId").value;
+        //let examId = document.getElementById("examId").value;
         if (examId) {
             console.log("선택된 시험 ID:", examId);
         }
     }
-</script>
-<script>
+
     $(document).ready(function () {
         console.log("페이지에 데이터 갖고오기");
         fetchResults(); // 페이지가 로드되자마자 데이터 가져오기
@@ -68,7 +68,7 @@
         let sortBy = $("#sortBy").val();
 
         $.ajax({
-            url: "/api/exams/results/" + 1,
+            url: "/api/exams/results/" + examId,
             method: "GET",
             dataType: "json",
             beforeSend: function () {

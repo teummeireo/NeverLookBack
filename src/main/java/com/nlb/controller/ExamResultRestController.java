@@ -135,10 +135,11 @@ public class ExamResultRestController {
   public ResponseEntity<CMResDTO<FullExamDataResDTO>> getExamDataForUser(
       @PathVariable("examId") int examId,
       HttpSession session) {
+
     // 로그인 기능 개발 시 사용
     // Integer examineeId = (Integer) session.getAttribute("userId");
 
-    int examineeId = 1;
+    int examineeId = 30;
 
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     System.out.println(examData);
@@ -152,8 +153,9 @@ public class ExamResultRestController {
       @PathVariable("examId") int examId,
       @PathVariable("resultId") int resultId) {
 
-    //todo 로그인 개발되면 세션으로 변경
-    int examineeId = 1;
+    // 로그인 기능 개발 시 사용
+    // Integer examineeId = (Integer) session.getAttribute("userId");
+    int examineeId = 30;
 
     // 시험 결과 조회
     ExamResultVO examResultVO = examResultService.getResultDetail(examineeId, examId, resultId);
