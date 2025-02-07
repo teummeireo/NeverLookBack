@@ -2,10 +2,7 @@ package com.nlb.controller;
 
 
 import com.nlb.dto.request.ExamResultReqDTO;
-import com.nlb.dto.response.CMResDTO;
-import com.nlb.dto.response.ExamResultCardDTO;
-import com.nlb.dto.response.ExamineeInfoResDTO;
-import com.nlb.dto.response.FullExamDataResDTO;
+import com.nlb.dto.response.*;
 import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
@@ -30,17 +27,17 @@ public class ExamResultRestController {
   // 내가 만든 시험의 응시 내역 조회
   // 정렬기능(점수, 응시일) & 필터기능(검토상태)
   @RequestMapping(value = "/{examId}", method = RequestMethod.GET)
-  public ResponseEntity<CMResDTO<List<ExamResultVO>>> examResults(
+  public ResponseEntity<CMResDTO<List<ExamResultDTO>>> examResults(
       @PathVariable("examId") int examId,
       @RequestParam(value = "sortBy", defaultValue = "submittedAt") String sortBy,
       //score, submittedAt
       @RequestParam(value = "order", defaultValue = "asc") String order,
       @RequestParam(value = "isReviewed", required = false) Boolean isReviewed) {
 
-    List<ExamResultVO> examResultVOList = examResultService.getExamResultList(examId, sortBy, order,
+    List<ExamResultDTO> ExamResultDTOList = examResultService.getExamResultList(examId, sortBy, order,
         isReviewed);
 
-    return new ResponseEntity<>(CMResDTO.successDataRes(examResultVOList), HttpStatus.OK);
+    return new ResponseEntity<>(CMResDTO.successDataRes(ExamResultDTOList), HttpStatus.OK);
   }
 
   // 시험 결과 검토 상태 변경

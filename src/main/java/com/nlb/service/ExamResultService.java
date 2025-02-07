@@ -2,18 +2,16 @@ package com.nlb.service;
 
 
 import com.nlb.dto.request.ExamResultReqDTO;
-import com.nlb.dto.response.ExamJoinResDTO;
-import com.nlb.dto.response.ExamResultCardDTO;
-import com.nlb.dto.response.ExamineeInfoResDTO;
-import com.nlb.dto.response.FullExamDataResDTO;
+import com.nlb.dto.response.*;
 import com.nlb.vo.AnswerVO;
 import com.nlb.vo.ExamResultVO;
+
 import java.util.List;
 import java.util.Map;
 
 public interface ExamResultService {
 
-  List<ExamResultVO> getExamResultList(int examId, String sortBy, String order, Boolean isReviewed);
+  List<ExamResultDTO> getExamResultList(int examId, String sortBy, String order, Boolean isReviewed);
 
   int setExamResultStatus(int resultId, Boolean isReviewed);
 
