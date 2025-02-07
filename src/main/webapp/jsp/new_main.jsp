@@ -74,37 +74,7 @@
         <iframe src=http://professortoofast.store:3000/d-solo/bebjlq5axmigwc/admin?orgId=1&refresh=5m&timezone=browser&panelId=7&__feature.dashboardSceneSolo"
                 width="350" height="300" frameborder="0"></iframe>
     </section>
-
-<%--    <section class="poll-example">--%>
-<%--        <div class="example-image">--%>
-<%--            <img src="" alt="Poll result example"> <!-- 이미지 URL 추가 -->--%>
-<%--        </div>--%>
-<%--        <div class="example-description">--%>
-<%--            <div class="accordion">--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Multiple choice</div>--%>
-<%--                    <div class="accordion-content">--%>
-<%--                        <p>Discover your audience’s opinions, preferences and knowledge. With multiple choice polls, people vote on predefined options and you can quickly see the prevailing answer.</p>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Word cloud</div>--%>
-<%--                </div>--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Quiz</div>--%>
-<%--                </div>--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Rating poll</div>--%>
-<%--                </div>--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Open text</div>--%>
-<%--                </div>--%>
-<%--                <div class="accordion-item">--%>
-<%--                    <div class="accordion-title">Ranking poll</div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--    </section>--%>
+    <br>
 </main>
 
 </body>

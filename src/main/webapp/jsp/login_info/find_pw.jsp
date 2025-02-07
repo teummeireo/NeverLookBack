@@ -22,12 +22,14 @@
 
             <div class="form-group">
                 <input type="email" id="email" name="email" placeholder="이메일 입력" required>
+                <br>
                 <button type="button" id="checkUserBtn">유효성 검사</button>
                 <span id="emailCheckResult"></span>
             </div>
 
             <div class="form-group">
                 <input type="text" id="emailCode" name="emailCode" placeholder="Enter verification code" required>
+                <br>
                 <button type="button" id="sendEmailCodeBtn" disabled>이메일 인증</button>
                 <button type="button" id="verifyEmailBtn" disabled>인증확인</button>
                 <span id="emailCodeCheckResult"></span>

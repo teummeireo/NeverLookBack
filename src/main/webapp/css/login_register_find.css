@@ -166,3 +166,10 @@ input:-webkit-autofill {
 #emailSuccess {
     display: none; /* 처음에 버튼 숨김 */
 }
+
+/* 버튼들 일괄 수정 */
+#checkUserBtn, #sendEmailCodeBtn,#verifyEmailBtn, #checkNicknameBtn
+, #checkIdBtn, #checkEmailBtn, #verifyEmailBtn{
+    box-shadow: 0 0 40px 40px #457b9d inset;
+    color: #fff;
+}

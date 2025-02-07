@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeverLookBack</title>
+    <title>NeverLookBack 검색 tool</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/exam_search.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -44,30 +44,30 @@
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
-            <h1>Never Look Back</h1>
+            <h1>시험을 검색해보세요.</h1>
         </header>
 
         <section id="default-dashboard" class="dashboard-grid">
             <div class="dashboard-card">
                 <h3>Statistics</h3>
-                <p>Some detailed statistics...</p>
+                <p>내 시험 결과 상세보기</p>
             </div>
             <div class="dashboard-card">
                 <h3>NLB 방문자 그래프</h3>
-                <p>일일 방문자 수 그래프</p>
+                <p>일일 방문자 수 그래프 바로가기</p>
             </div>
             <div class="dashboard-card">
                 <h3>실시간 시험 목록</h3>
                 <ul>
-                    <li>시험 응시자 내림차순 1</li>
-                    <li>시험 응시자 내림차순 2</li>
-                    <li>시험 응시자 내림차순 3</li>
+                    <li>1. Java Programming</li>
+                    <li>2. Python Programming</li>
+                    <li>3. 넌센스</li>
                 </ul>
             </div>
             <div class="dashboard-card">
                 <h3>생성된 카테고리 목록</h3>
                 <ul>
-                    <li>JAVA 126건 생성</li>
+                    <li>JAVA 12건 생성</li>
                     <li>C 98건 생성</li>
                     <li>C++ 67건 생성</li>
                 </ul>
