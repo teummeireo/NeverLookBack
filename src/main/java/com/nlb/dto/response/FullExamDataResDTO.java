@@ -29,6 +29,5 @@ public class FullExamDataResDTO {
   private int examineeId;
   private List<QuestionVO> questions;
   private List<AnswerVO> answers;
-  private List<AnswerVO> submittedAnswers;
 
 }

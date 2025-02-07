@@ -30,7 +30,6 @@ public class ExamResultController {
       @RequestParam("entreeCode") String entreeCode,
       HttpSession session) {
 
-
     int examineeId =
         (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
 
