@@ -372,8 +372,19 @@ body {
     background-color: green;
 }
 
+/* 검색어 스타일 */
+.search-term {
+    font-size: 16px;
+    color: #fff; /* 텍스트 색상 */
+    cursor: pointer; /* 마우스 포인터 변경 */
+    transition: color 0.3s ease; /* 텍스트 색상 전환 효과 */
+}
 
-/* 검색창 css */
+.search-term:hover {
+    color: #ffcc00; /* 마우스 올렸을 때 텍스트 강조 */
+    text-decoration: underline; /* 텍스트 밑줄 */
+}
+
 /* 검색창 스타일 */
 .search-bar-container {
     position: relative;
@@ -448,21 +459,34 @@ body {
     background-color: #444;
 }
 
-/* 최근 검색어 리스트 스타일 */
-#recent-searches li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 7px;
-    margin-left: 5px;
-    margin-right: 3px;
-    font-size: 13px; /* 글씨 크기 조정 */
-    color: #ccc;
+/* 최근 검색 목록 스타일 */
+#recent-searches {
+    list-style: none; /* 기본 리스트 스타일 제거 */
+    margin: 0;
+    padding: 0;
+    max-width: 100%; /* 너비 제한 */
+    background-color: #222; /* 전체 배경색 */
+    overflow: hidden; /* 콘텐츠 잘림 방지 */
 }
 
-/* 최근 검색어 Hover 효과 */
+/* 리스트 아이템 스타일 */
+#recent-searches li {
+    display: flex; /* 가로 배치 */
+    justify-content: space-between; /* 검색어와 버튼 간 거리 유지 */
+    align-items: center; /* 세로 가운데 정렬 */
+    padding: 10px 15px; /* 내부 여백 */
+    border-bottom: 1px solid #444; /* 구분선 */
+    transition: background-color 0.3s ease; /* 배경색 부드러운 전환 */
+}
+
+/* 마지막 아이템 구분선 제거 */
+#recent-searches li:last-child {
+    border-bottom: none;
+}
+
+/* 리스트 아이템 호버 효과 */
 #recent-searches li:hover {
-    background-color: #333;
+    background-color: #333; /* 마우스 올렸을 때 배경색 */
 }
 
 /* 검색어 앞 아이콘 */
@@ -515,4 +539,102 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
+}
+
+/* 기본 스타일 */
+#result-rows tr {
+    cursor: pointer; /* 클릭 가능한 포인터 표시 */
+    transition: background-color 0.3s ease, color 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+/* 마우스 올렸을 때 스타일 */
+#result-rows tr:hover {
+    background-color: #fff8dc; /* 연한 노란색 배경 */
+    color: #333; /* 텍스트 강조 */
+    text-decoration: underline; /* 밑줄 추가 */
+}
+
+th .fas {
+    font-size: 16px; /* 아이콘 크기 */
+    color: #aaa; /* 아이콘 색상 */
+    text-align: center; /* 중앙 정렬 */
+}
+
+th {
+    vertical-align: middle; /* 세로 가운데 정렬 */
+    text-align: center; /* 가로 중앙 정렬 */
+}
+
+/* 필터 초기화 버튼 아이콘 스타일 */
+.reset-icon {
+    font-size: 18px;
+    color: #ff4444; /* 빨간색 */
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out, color 0.3s;
+    margin-left: 10px;
+}
+
+.reset-icon:hover {
+    color: #ff0000; /* 마우스 오버 시 더 진한 빨강 */
+    transform: rotate(180deg); /* 180도 회전 효과 */
+}
+
+/* 공통 필터 선택창 및 입력창 스타일 */
+.filter-select, .filter-input, .form-control {
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #2b2b2b;
+    color: white;
+    outline: none; /* 포커스 시 기본 테두리 제거 */
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* 필터 선택창 Hover 효과 */
+.filter-select:hover, .filter-input:hover, .form-control:hover {
+    border-color: #ff8800; /* Hover 시 주황색 테두리 */
+}
+
+/* 필터 선택창 포커스 효과 */
+.filter-select:focus, .filter-input:focus, .form-control:focus {
+    border-color: #ff4444; /* 포커스 시 빨간 테두리 */
+}
+
+/* 기본 옵션 (비활성화) 스타일 */
+.filter-select option[disabled] {
+    color: #999; /* 회색 텍스트 */
+    font-weight: bold; /* 굵게 표시 */
+}
+
+/* 기본 옵션 텍스트 스타일 */
+.filter-select option:not([disabled]) {
+    color: white; /* 선택 가능 항목은 흰색 */
+    font-weight: normal;
+}
+
+.autocomplete-list {
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    width: 100%;
+    max-height: 150px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.autocomplete-list li {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.autocomplete-list li:hover {
+    background-color: #f0f0f0;
+}
+
+.hidden {
+    display: none;
 }

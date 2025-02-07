@@ -157,3 +157,12 @@ input[type="text"] {
 .close-btn:hover {
     color: #ff6666;
 }
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset; /* 배경 색 제거 */
+    -webkit-text-fill-color: #fff; /* 글자 색상 유지 */
+}
+
+#emailSuccess {
+    display: none; /* 처음에 버튼 숨김 */
+}

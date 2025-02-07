@@ -2,6 +2,7 @@ package com.nlb.mapper;
 
 
 import com.nlb.vo.ExamVO;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -35,19 +36,18 @@ public interface ExamMapper {
 
   ExamVO selectExamById(@Param("examId") int examId);
 
-  ExamVO selectExamByCodeAndUser(@Param("examCode") String examCode,
-      @Param("examineeId") int examineeId);
-
   ExamVO selectExamByResultId(@Param("resultId") int resultId);
 
-  List<ExamVO> findExamsByName(@Param("name") String name);
+  List<ExamWithCreatorVO> findExamsByName(@Param("name") String name);
 
-  List<ExamVO> searchExams(@Param("name") String name,
+  List<ExamWithCreatorVO> searchExams(@Param("name") String name,
       @Param("category") String category,
-      @Param("creator") String creator,
+      @Param("nickname") String nickname,
       @Param("createdAt") String createdAt,
       @Param("activationStatus") String activationStatus,
-      @Param("examTime") Integer examTime);
+      @Param("examTime") Integer examTime,
+      @Param("roomType") String roomType,
+      @Param("examId") int examId);
 
   void updateSubmittedAtByExamId(@Param("examId") int examId);
 
@@ -56,7 +56,7 @@ public interface ExamMapper {
   List<Integer> getOngoingExams();
 
   LocalDateTime getFinishTime(@Param("examId") int examId);
-  
+
   List<ExamVO> searchAllExams();
 
 

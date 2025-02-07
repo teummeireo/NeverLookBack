@@ -129,24 +129,34 @@
   </select>
 
   <select id="searchAllExams" resultType="ExamVO">
-    SELECT * FROM exam
+    SELECT exam_id, title, exam_code, creater_id, activation_status, exam_time
+    FROM exam
+    ORDER BY created_at DESC
+    LIMIT 10
   </select>
 
-  <select id="findExamsByName" resultType="ExamVO">
-    SELECT * FROM exam
-    WHERE title ILIKE CONCAT('%', #{name}, '%')
+  <select id="findExamsByName" resultType="com.nlb.vo.ExamWithCreatorVO">
+    SELECT e.*, n.nickname
+    FROM exam e
+           JOIN
+         nlbuser n
+         ON
+           e.creater_id = n.user_id
+    WHERE e.title ILIKE CONCAT('%', #{name}, '%');
   </select>
 
-  <select id="searchExams" resultType="ExamVO">
-    SELECT * FROM exam
+  <select id="searchExams" resultType="com.nlb.vo.ExamWithCreatorVO">
+    SELECT e.*, n.nickname
+    FROM exam e
+    JOIN nlbuser n ON e.creater_id = n.user_id
     WHERE title ILIKE '%' || #{name} || '%'  <!-- 시험명 검색 -->
 
     <if test="category != null and category != ''">
       AND category ILIKE #{category}  <!-- 카테고리 필터 -->
     </if>
 
-    <if test="creator != null and creator != ''">
-      AND creater_id = CAST(#{creator} AS INTEGER)  <!-- 생성자 필터 -->
+    <if test="nickname != null and nickname != ''">
+      AND n.nickname = #{nickname}  <!-- 생성자 필터 -->
     </if>
 
     <if test="createdAt != null and createdAt != ''">
@@ -209,5 +219,14 @@
   <select id="findNicknameByUserId" resultType="String">
     SELECT nickname FROM nlbuser WHERE user_id = #{userId}
   </select>
+  <!-- 자동완성 기능: 입력된 문자열을 포함하는 시험명을 반환 -->
+  <select id="searchExamAutocomplete" resultType="String">
+    SELECT DISTINCT title
+    FROM exam
+    WHERE title ILIKE '%' || #{name} || '%'
+    ORDER BY title
+    LIMIT 10;  <!-- 상위 10개 결과 제한 -->
+  </select>
+
 
 </mapper>
