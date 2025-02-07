@@ -58,7 +58,7 @@
                 console.log(examData); // 각 문항별 정답 : examData.questions[i].correctAnswer
                 questions = examData.data.questions;
                 renderExam(examData.data);
-                examData.data.submittedAnswers.forEach(answer => {
+                examData.data.answers.forEach(answer => { // 오류 발생 가능 submittedAnswers -> answers
                   answers.push(answer.answer);
                 });
 

@@ -5,6 +5,8 @@ import com.nlb.service.NlbUserService;
 import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -106,6 +108,13 @@ public class NlbUserController {
         return "/jsp/unregister_user";
 
     }
+
+
+    @GetMapping("/my-result")
+    public String myResult(Model model) {
+        return "/jsp/exam/my_exam";
+    } 
+     
 
     @RequestMapping(value = "/exam_search", method = RequestMethod.GET)
     public String examSearch() {

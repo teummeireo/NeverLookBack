@@ -10,9 +10,17 @@
      <li><a href="/exams/init-exam"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
     <li><a href="/exam_search"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
     <li><a href="/exams/created"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
-    <li><a href="/exam_search"><i class="fas fa-file-alt"></i><span>응시한 시험</span></a></li>
-    <li><a href="/mypage"><i class="fas fa-user"></i><span>마이페이지</span></a></li>
-    <li><a href="/admin/main"><i class="fas fa-user"></i><span>운영자페이지</span></a></li>
+    <li><a href="/my-result"><i class="fas fa-cogs"></i><span>응시한 시험</span></a></li>
+
+    <c:choose>
+      <c:when test="${sessionScope.userRole == 'admin'}">
+        <li><a href="/admin/main"><i class="fas fa-user"></i><span>운영자페이지</span></a></li>
+      </c:when>
+      <c:otherwise>
+        <li><a href="/mypage"><i class="fas fa-user"></i><span>마이페이지</span></a></li>
+      </c:otherwise>
+    </c:choose>
+
 
     <c:choose>
       <c:when test="${not empty sessionScope.userId}">

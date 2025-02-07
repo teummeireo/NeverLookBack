@@ -3,10 +3,7 @@ package com.nlb.service;
 
 import com.mongodb.client.result.UpdateResult;
 import com.nlb.dto.request.ExamResultReqDTO;
-import com.nlb.dto.response.ExamJoinResDTO;
-import com.nlb.dto.response.ExamResultCardDTO;
-import com.nlb.dto.response.ExamineeInfoResDTO;
-import com.nlb.dto.response.FullExamDataResDTO;
+import com.nlb.dto.response.*;
 import com.nlb.exception.BadRequestException;
 import com.nlb.exception.CustomAccessDeniedException;
 import com.nlb.exception.ErrorCode;
@@ -44,8 +41,8 @@ public class ExamResultServiceImpl implements ExamResultService {
 
 
   @Override
-  public List<ExamResultVO> getExamResultList(int examId, String sortBy, String order,
-      Boolean isReviewed) {
+  public List<ExamResultDTO> getExamResultList(int examId, String sortBy, String order,
+                                              Boolean isReviewed) {
     return examResultMapper.selectExamResultList(examId, sortBy, order, isReviewed);
   }
 
