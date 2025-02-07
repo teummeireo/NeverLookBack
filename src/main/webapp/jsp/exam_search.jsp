@@ -50,24 +50,24 @@
         <section id="default-dashboard" class="dashboard-grid">
             <div class="dashboard-card">
                 <h3>Statistics</h3>
-                <p>Some detailed statistics...</p>
+                <p>내 시험 결과 상세보기</p>
             </div>
             <div class="dashboard-card">
                 <h3>NLB 방문자 그래프</h3>
-                <p>일일 방문자 수 그래프</p>
+                <p>일일 방문자 수 그래프 바로가기</p>
             </div>
             <div class="dashboard-card">
                 <h3>실시간 시험 목록</h3>
                 <ul>
-                    <li>시험 응시자 내림차순 1</li>
-                    <li>시험 응시자 내림차순 2</li>
-                    <li>시험 응시자 내림차순 3</li>
+                    <li>1. Java Programming</li>
+                    <li>2. Python Programming</li>
+                    <li>3. 넌센스</li>
                 </ul>
             </div>
             <div class="dashboard-card">
                 <h3>생성된 카테고리 목록</h3>
                 <ul>
-                    <li>JAVA 126건 생성</li>
+                    <li>JAVA 12건 생성</li>
                     <li>C 98건 생성</li>
                     <li>C++ 67건 생성</li>
                 </ul>
