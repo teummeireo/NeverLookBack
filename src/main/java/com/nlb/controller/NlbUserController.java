@@ -23,19 +23,17 @@ public class NlbUserController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String main(HttpSession session) {
 
-        //로그인 구현 안되서 하드코딩 합니다. todo: 하드코딩 지우기
-//        session.setAttribute("SESS_USERID"   , 8);
-//        session.setAttribute("SESS_NICKNAME" , "UserOne");
-
-        return "/jsp/main";
+        return "/jsp/new_main";
 
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login() {
-
-        return "/jsp/login_info/login";
-
+    public String login(HttpSession session) {
+        // 로그인 성공 후 세션에 userId가 있다면 메인 페이지로 리다이렉트
+        if (session.getAttribute("userId") != null) {
+            return "redirect:/jsp/new_main";
+        }
+        return "/jsp/login_info/login"; // 로그인 페이지로 이동
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -55,6 +53,27 @@ public class NlbUserController {
         response.setHeader("Cache-Control", "private, no-cache, no-store, must-revalidate"); //정적 리소스는 캐싱 가능, 민감한 데이터는 캐싱 비활성화.
 
         return "redirect:/";
+    }
+
+    @RequestMapping(value = "/find_id", method = RequestMethod.GET)
+    public String findId(HttpSession session) {
+
+        return "/jsp/login_info/find_id";
+
+    }
+
+    @RequestMapping(value = "/find_pw", method = RequestMethod.GET)
+    public String findPw(HttpSession session) {
+
+        return "/jsp/login_info/find_pw";
+
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.GET)
+    public String register(HttpSession session) {
+
+        return "/jsp/register";
+
     }
 
 
@@ -86,6 +105,12 @@ public class NlbUserController {
 
         return "/jsp/unregister_user";
 
+    }
+
+    @RequestMapping(value = "/exam_search", method = RequestMethod.GET)
+    public String examSearch() {
+
+        return "/jsp/exam_search";
     }
 
 

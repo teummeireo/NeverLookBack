@@ -215,7 +215,7 @@
           $("#sendEmailCodeBtn").prop("disabled", false); // 이메일 인증 버튼 활성화 추가
           validateForm();
         },
-        error: function (response) {
+        error: function () {
           $("#emailCheckResult").text("이미 존재하는 이메일입니다.").css("color", "red");
           isEmailAvailable = false;
           $("#sendEmailCodeBtn").prop("disabled", true); // 이미 존재하면 비활성화 유지
@@ -246,6 +246,9 @@
     // 이메일 인증 코드 전송
     $("#sendEmailCodeBtn").click(function () {
       let email = $("#email").val();
+
+      // 버튼 비활성화 (한 번만 클릭 가능)
+      $(this).prop("disabled", true);
       $.ajax({
         type: "POST",
         url: "/api/users/send-email",
@@ -267,6 +270,8 @@
     $("#verifyEmailBtn").click(function () {
       let email = $("#email").val();
       let code = $("#emailCode").val();
+
+      console.log(code);
 
       // 인증 코드 확인 요청
       $.ajax({

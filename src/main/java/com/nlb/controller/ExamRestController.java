@@ -7,6 +7,7 @@ import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class ExamRestController {
   // 시험명 검색
   @GetMapping("/search")
   public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
-    List<ExamVO> examList = examService.searchExamsByName(name);
+    List<ExamWithCreatorVO> examList = examService.searchExamsByName(name);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
@@ -156,15 +157,23 @@ public class ExamRestController {
   public ResponseEntity<?> searchExams(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "category", required = false) String category,
-      @RequestParam(value = "creator", required = false) String creator,
+      @RequestParam(value = "nickname", required = false) String nickname,
       @RequestParam(value = "createdAt", required = false) String createdAt,
       @RequestParam(value = "activationStatus", required = false) String activationStatus,
-      @RequestParam(value = "examTime", required = false) Integer examTime) {
+      @RequestParam(value = "examTime", required = false) Integer examTime,
+      @RequestParam(value = "entreeCode", required = false) String entreeCode,
+      @RequestParam(value = "examId", required = false) int examId){
 
-    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
+    List<ExamWithCreatorVO> examList = examService.filterExam(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
+  // 검색 자동완성 기능
+  @GetMapping("/auto-complete")
+  public ResponseEntity<List<ExamVO>> autoComplete(@RequestParam String name) {
+    List<ExamVO> exams = examService.searchExams(name);
+    return ResponseEntity.ok(exams);
+  }
 
 
 }

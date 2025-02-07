@@ -22,8 +22,8 @@
         <button type="submit" class="btn-submit">Next</button>
 
         <div class="form-footer">
-            <a href="/jsp/login_info/login.jsp">로그인</a>
-            <a href="/jsp/login_info/find_pw.jsp">비밀번호 찾기</a>
+            <a href="/login">로그인</a>
+            <a href="/find_pw">비밀번호 찾기</a>
         </div>
     </form>
 </div>

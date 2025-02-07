@@ -10,6 +10,7 @@ import com.nlb.mapper.ExamResultMapper;
 import com.nlb.mapper.ResultDetailMapper;
 import com.nlb.vo.ExamMongoVO;
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -201,20 +202,26 @@ public class ExamServiceImpl implements ExamService {
 
   // 시험명 검색
   @Override
-  public List<ExamVO> searchExamsByName(String name) {
+  public List<ExamWithCreatorVO> searchExamsByName(String name) {
     return examMapper.findExamsByName(name);
   }
 
   // 시험 상세 검색 필터링
   @Override
-  public List<ExamVO> filterExam(String name, String category, String creator, String createdAt, String activationStatus, Integer examTime) {
-    return examMapper.searchExams(name, category, creator, createdAt, activationStatus, examTime);
+  public List<ExamWithCreatorVO> filterExam(String name, String category, String nickname, String createdAt, String activationStatus, Integer examTime, String entreeCode, int examId) {
+    return examMapper.searchExams(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
   }
 
   // 모든 시험 조회
   @Override
   public List<ExamVO> getAllExams() {
     return examMapper.searchAllExams();
+  }
+
+  // 검색 자동완성 기능
+  @Override
+  public List<ExamVO> searchExams(String name) {
+    return examMapper.searchExams(name);
   }
 
 }

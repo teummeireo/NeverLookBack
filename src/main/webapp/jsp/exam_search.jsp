@@ -6,9 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Dashboard</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <title>NeverLookBack</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/exam_search.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <%-- 현재 로그인한 사용자 ID를 세션에서 가져옴 --%>
@@ -26,8 +27,9 @@
             <div class="search-bar-container">
                 <div class="search-bar">
                     <img src="${pageContext.request.contextPath}/images/nlblogo.png" alt="Logo" class="search-logo">
-                    <input type="text" id="search-input">
+                    <input type="text" id="search-input" autocomplete="off">
                     <button id="search-btn">🔍</button>
+                    <ul id="autocomplete-results" class="autocomplete-list hidden"></ul>
                 </div>
 
                 <!-- 최근 검색어 영역 -->
@@ -42,7 +44,7 @@
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
-            <h1>Dashboard Analytics</h1>
+            <h1>Never Look Back</h1>
         </header>
 
         <section id="default-dashboard" class="dashboard-grid">
@@ -72,8 +74,8 @@
             </div>
             <div class="dashboard-card">
                 <h3>시험 목록</h3>
-                <ul>
-                    <li>시험 목록 누르면 전체 다 나오는 SQL</li>
+                <ul id="exam-list">
+                    <li>불러오는 중...</li>
                 </ul>
             </div>
         </section>
@@ -91,6 +93,7 @@
                     <th>생성일자</th>
                     <th>상태</th>
                     <th>시험시간</th>
+                    <th><i class="fas fa-lock"></i></th>
                 </tr>
                 </thead>
                 <tbody id="result-rows"></tbody>
@@ -118,26 +121,29 @@
         dataType: 'json',
         success: function (response) {
           if (!response || !response.data || response.data.length === 0) {
-            tableBody = "<tr><td colspan='7' style='text-align: center; font-weight: bold; padding: 20px;'>검색된 데이터가 없습니다.</td></tr>";
+            tableBody = "<tr><td colspan='8' style='text-align: center; font-weight: bold; padding: 20px;'>검색된 데이터가 없습니다.</td></tr>";
           } else {
             tableBody = "";
             response.data.forEach(function (exam) {
               let title = exam.title ?? "N/A";
               let category = exam.category ?? "N/A";
-              let creator = exam.createrId ?? "N/A";
+              let nickname = exam.nickname ?? "N/A";
               let examCode = exam.examCode ?? "N/A";
               let createdAt = exam.createdAt ? formatDate(exam.createdAt) : "N/A";
               let status = getStatusText(exam.activationStatus);
               let examTime = exam.examTime != null ? exam.examTime + "분" : "N/A";
+              let entryIcon = getEntryIcon(exam.entreeCode);
+              let examId = exam.examId ?? "N/A";
 
-              tableBody += "<tr>" +
+              tableBody += "<tr data-exam-id='" + examId + "'>" +
                   "<td>" + title + "</td>" +
                   "<td>" + examCode + "</td>" +
                   "<td>" + category + "</td>" +
-                  "<td>" + creator + "</td>" +
+                  "<td>" + nickname + "</td>" +
                   "<td>" + createdAt + "</td>" +
                   "<td>" + status + "</td>" +
                   "<td>" + examTime + "</td>" +
+                  "<td>" + entryIcon + "</td>" +
                   "</tr>";
             });
           }
@@ -157,7 +163,10 @@
       });
     }
 
+    // 검색창 돋보기 아이콘 클릭 시 검색
     $('#search-btn').on('click', executeSearch);
+
+    // enter키 입력 시 검색
     $('#search-input').on('keypress', function (event) {
       if (event.which === 13) {
         event.preventDefault();
@@ -166,18 +175,67 @@
     });
   });
 
+  // 전체 중 10개 시험 조회
+  function loadExamList() {
+    $.ajax({
+      url: "/api/exams/all",
+      type: "GET",
+      dataType: "json",
+      success: function (response) {
+        let listItems = "";
+        if (response.length === 0) {
+          listItems = "<li class='no-data'>시험 목록이 없습니다.</li>";
+        } else {
+          let count = 0;  // 출력 개수 제한을 위한 변수
+          response.forEach(function (exam) {
+            if (count >= 10) return;  // 10개까지만 출력
+
+            listItems += "<li>" +
+                "<b>" + (exam.title ?? "N/A") + "</b> (" +
+                (exam.examCode ?? "N/A") + ") - " +
+                getStatusText(exam.activationStatus) + " / " +
+                (exam.examTime ? exam.examTime + "분" : "N/A") +
+                "</li>";
+
+            count++; // 개수 증가
+          });
+        }
+        $("#exam-list").html(listItems);
+      },
+      error: function () {
+        $("#exam-list").html("<li class='no-data'>시험 목록을 불러오지 못했습니다.</li>");
+      }
+    });
+  }
+
+
   function formatDate(dateString) {
     return new Date(dateString).toISOString().slice(0, 19).replace("T", " ");
   }
 
   function getStatusText(status) {
-    switch (status) {
-      case "not_started": return "시험 전";
-      case "on_going": return "시험 중";
-      case "closed": return "시험 종료";
-      default: return "알 수 없음";
+    if (status === "not_started") {
+      return "시험 전";
+    } else if (status === "on_going") {
+      return "시험 중";
+    } else if (status === "closed") {
+      return "시험 종료";
+    } else {
+      return "알 수 없음";
     }
   }
+
+  function getEntryIcon(entreeCode) {
+    if (entreeCode === null || entreeCode === "" || entreeCode === "<null>") {
+      return '<i class="fas fa-unlock" title="공개방" data-entree-code="' + entreeCode + '"></i>'; // 공개방
+    } else {
+      return '<i class="fas fa-lock" title="비밀방" data-entree-code="' + entreeCode + '"></i>'; // 비밀방
+    }
+  }
+
+
+  // 전체 중 10개 시험 조회
+  loadExamList();
 </script>
 
 </body>

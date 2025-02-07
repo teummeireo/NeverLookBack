@@ -9,14 +9,11 @@ import com.nlb.vo.NlbUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -195,7 +192,7 @@ public class NlbUserRestController {
             .body(CMResDTO.errorWithMsgRes(null, "아이디 또는 이메일이 일치하지 않습니다."));
     }
 
-    @PostMapping("/find-password/send-email")
+    @PostMapping("/change-password")
     public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
         String email = request.get("email");
         String newPassword = request.get("newPassword");
@@ -239,6 +236,22 @@ public class NlbUserRestController {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(Map.of("code", 500, "errorMessage", "비밀번호 변경에 실패하였습니다."));
+    }
+
+    @PostMapping("/find-password/email-send")
+    public ResponseEntity<?> pwSendEmail(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+
+        try {
+            emailService.sendEmailVerificationCode(email);
+            return ResponseEntity.ok(Map.of(
+                "code", 200,
+                "message", "이메일 인증 코드가 전송되었습니다."
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of("code", 500, "errorMessage", "이메일 인증 요청 실패."));
+        }
     }
 
 

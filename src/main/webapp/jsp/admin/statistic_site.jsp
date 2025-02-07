@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>사용자 통계 조회</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/exam_search.css">
 
 </head>
 <body>

@@ -69,7 +69,7 @@
   var timerInterval;
 
   function loadExamData() {
-    var url = "http://localhost:8082/api/exams/results/" + examId + "/exam-data";
+    var url = "${pageContext.request.contextPath}/api/exams/results/" + examId + "/exam-data";
 
     console.log("시험 데이터 요청 URL:", url);
 
