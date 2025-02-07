@@ -1,16 +1,12 @@
 package com.nlb.controller;
 
 
-import net.bytebuddy.implementation.bytecode.constant.DefaultValue;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping(value = "/admin")
@@ -25,12 +21,12 @@ public class AdminController {
 
     @RequestMapping(value = "/statistic/exams/{examId}", method = RequestMethod.GET)
     public ModelAndView adminStatisticExams(@PathVariable(value = "examId") int examId,
-                                      @RequestParam(value = "creatAt", required = false) String createAt) {
+                                      @RequestParam(value = "createAt", required = false) String createAt) {
                                         // 2025-01-22T00:00:00 폼으로 받아야함
        ModelAndView modelAndView = new ModelAndView();
        modelAndView.addObject("examId", examId);
        modelAndView.addObject("createAt", createAt);
-       modelAndView.setViewName("jsp/admin/statistic/exams");
+       modelAndView.setViewName("jsp/admin/statistic_exams");
 
         return modelAndView;
     }

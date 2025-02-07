@@ -9,11 +9,10 @@ body {
     height: 100vh;
 }
 @font-face {
-    font-family: 'Pretendard'; /* 원하는 이름 설정 */
-    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
-    /*url('../assets/fonts/Pretendard-Light.woff2') format('woff2');*/
-    font-weight: normal; /* 옵션: normal, bold 등 */
-    font-style: normal; /* 옵션: italic, oblique 등 */
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
 }
 .container {
     display: flex;

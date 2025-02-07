@@ -105,6 +105,7 @@ public class ExamRestController {
       @PathVariable int examId,
       @RequestBody ExamVO examVO) {
 
+    System.out.println(examVO);
     boolean success = examService.updateExam(examId, examVO);
     if (success) {
       return new ResponseEntity<>(CMResDTO.successDataRes("시험 수정 성공, " + examId), HttpStatus.OK);
@@ -195,6 +196,13 @@ public class ExamRestController {
   public ResponseEntity<String> forceCloseExam(@PathVariable int examId) {
     webSocketExamService.closeExam(examId);
     return ResponseEntity.ok("시험이 강제 종료되었습니다.");
+  }
+  @GetMapping("/categories")
+  public ResponseEntity<CMResDTO<List<String>>> searchCatgories() {
+
+    List<String> categories = examService.searchCategories();
+
+    return new ResponseEntity<>(CMResDTO.successDataRes(categories), HttpStatus.OK);
   }
 
 

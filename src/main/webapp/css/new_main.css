@@ -12,11 +12,10 @@ body {
 
 @font-face {
     font-family: 'Pretendard';
-    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
     font-weight: normal;
     font-style: normal;
 }
-
 /* 전체 컨테이너 */
 .main-container {
     display: flex;

@@ -58,4 +58,10 @@ public class ExamResultController {
     model.addAttribute("examId", examId);
     return "jsp/exam/take_exam";
   }
+
+  @GetMapping("/{examId}/lists")
+  public String resultList(@PathVariable("examId") int examId, Model model) {
+    model.addAttribute("examId", examId);
+    return "jsp/exam/exam_creater/submission_check";
+  }
 }

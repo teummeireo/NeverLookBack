@@ -323,7 +323,7 @@
                 success: function (response, status, xhr) {
                     if (xhr.status === 201) { // 서버에서 201 Created 응답 확인
                         alert("회원가입이 완료되었습니다!");
-                        window.location.href = "/login; // 로그인 페이지로 이동
+                        window.location.href = "/login"; // 로그인 페이지로 이동
                     } else {
                         alert("회원가입에 실패했습니다. 다시 시도해주세요.");
                     }

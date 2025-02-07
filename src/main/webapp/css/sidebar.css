@@ -10,7 +10,12 @@
     flex-direction: column;
     align-items: center;
 }
-
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
 .sidebar:hover {
     width: 240px; /* hover 시 너비 증가 */
 }

@@ -10,7 +10,12 @@ body {
     height: 100vh;
     font-family: 'Pretendard', sans-serif;
 }
-
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
 /* Main container styling */
 .main-container {
     display: flex;

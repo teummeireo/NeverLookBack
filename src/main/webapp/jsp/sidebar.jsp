@@ -4,12 +4,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
 <aside class="sidebar">
-  <h2>NeverLookBack</h2>
+  <h2>NLB</h2>
   <ul>
     <li><a href="/"><i class="fas fa-home"></i><span>메인페이지</span></a></li>
     <li><a href="/exams/init-exam"><i class="fas fa-edit"></i><span>시험생성</span></a></li>
     <li><a href="/jsp/exam/init_exam.jsp"><i class="fas fa-pen"></i><span>시험응시</span></a></li>
-    <li><a href="/jsp/exam/exam_creater/created_exam.jsp"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
+    <li><a href="/exams/created"><i class="fas fa-cogs"></i><span>시험관리</span></a></li>
     <li><a href="/jsp/exam/my_exam.jsp"><i class="fas fa-cogs"></i><span>응시한 시험</span></a></li>
 
     <c:choose>
