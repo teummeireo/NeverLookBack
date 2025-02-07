@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/created_exam.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/init_exam.css">
     <title>시험생성하기</title>
 </head>
 <body>
@@ -14,7 +14,7 @@
     <%@ include file="/jsp/sidebar.jsp" %>
     <main class="content">
         <header class="header">
-            <h1>초기 데이터 설정</h1>
+            <h1>시험 생성 페이지</h1>
         </header>
         <div class="divider"></div>
 
