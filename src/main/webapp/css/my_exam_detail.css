@@ -8,12 +8,12 @@ body {
     /*font-family: 'Pretendard', sans-serif;*/
 }
 
-/*@font-face {*/
-/*    font-family: 'Pretendard';*/
-/*    src: url('../assets/fonts/Pretendard-Bold.woff2') format('woff2');*/
-/*    font-weight: bold;*/
-/*    font-style: normal;*/
-/*}*/
+@font-face {
+    font-family: 'Pretendard';
+    src: url('../assets/fonts/Pretendard-Bold.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
 
 
 .exam-header { display: flex; justify-content: space-between; padding: 15px; background: #007BFF; color: white; }
