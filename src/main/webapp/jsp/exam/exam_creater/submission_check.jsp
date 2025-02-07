@@ -54,6 +54,7 @@
     });
 
     var examId = ${examId};
+
     function fetchResults() {
         //let examId = document.getElementById("examId").value;
         if (examId) {
@@ -94,7 +95,7 @@
                     let reviewStatus = result.reviewed ? "검토 완료" : "검토 전";
                     let reviewClass = result.reviewed ? "reviewed" : "appealed";
 
-                    let row = "<tr>" +
+                    let row = "<tr data-result-id='" + result.resultId + "' data-examinee-id='" + result.examineeId + "'>" + // data 속성 추가
                         "<td>" + result.nickname + "</td>" +
                         "<td>" + result.score + "</td>" +
                         "<td>" + result.submittedAt.split('T')[0] + "<br>" + result.submittedAt.split('T')[1] + "</td>" +
@@ -103,6 +104,13 @@
 
                     console.log("리스트 확인", row);
                     tableBody.append(row);
+                });
+
+                // 각 행에 클릭 이벤트 추가
+                $("#resultTableBody tr").on("click", function() {
+                    let resultId = $(this).data("result-id"); // resultId 가져오기
+                    let examineeId = $(this).data("examinee-id"); // examineeId 가져오기
+                    window.location.href = "/api/exams/results/" + examId + "/detail?resultId=" + resultId + "&examineeId=" + examineeId; // 상세 페이지로 이동
                 });
             },
             error: function (error) {

@@ -3,7 +3,6 @@ package com.nlb.controller;
 
 import com.nlb.dto.response.ExamJoinResDTO;
 import com.nlb.service.ExamResultService;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,6 +70,18 @@ public class ExamResultController {
   public String resultList(@PathVariable("examId") int examId, Model model) {
     model.addAttribute("examId", examId);
     return "jsp/exam/exam_creater/submission_check";
+  }
+
+  @GetMapping("/{examId}/detail")
+  public String resultDetail(@PathVariable("examId") int examId,
+                             @RequestParam("resultId") int resultId,
+                             @RequestParam("examineeId") int examineeId,
+                                Model model) {
+
+    model.addAttribute("examId", examId);
+    model.addAttribute("resultId", resultId);
+    model.addAttribute("examineeId", examineeId);
+    return "jsp/exam/exam_creater/submission_detail";
   }
 
   @GetMapping("/my")

@@ -144,6 +144,18 @@ public class ExamResultRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
   }
 
+  //시험 입장 후 데이터 조회 ( 문제 + 내가 입력한 답안 )
+  @GetMapping("/{examId}/exam-data/{examineeId}")
+  public ResponseEntity<CMResDTO<FullExamDataResDTO>> getExamDataForUser2(
+          @PathVariable("examId") int examId,
+          @PathVariable("examineeId") int examineeId,
+          HttpSession session) {
+    // 로그인 기능 개발 시 사용
+    FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
+    examData.setExamineeId(examineeId);
+    System.out.println("my_Exam_detail에 입력인자들 체크 " + examData);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examData), HttpStatus.OK);
+  }
 
   //
   @GetMapping("/{examId}/{resultId}/details")
