@@ -57,9 +57,11 @@
     let currentSearchName = ""; // 현재 검색어 저장 변수
 
     // 필터 적용 함수
+    // 필터 적용 함수
     function applyFilters() {
       let examId = localStorage.getItem("selectedExamId"); // 저장된 examId 가져오기
-      if (!examId) {
+
+      if (!examId || examId === "undefined" || examId === "null") {
         console.warn("선택된 examId가 없습니다. 필터링 요청이 중단됩니다.");
         return;
       }
@@ -106,6 +108,7 @@
         }
       });
     }
+
 
     // 결과 테이블 렌더링 함수
     function renderTable(data) {

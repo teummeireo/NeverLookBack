@@ -224,10 +224,10 @@
 
   // 공개/비공개 아이콘을 반환하는 함수
   function getEntryIcon(entreeCode) {
-    if (entreeCode === null || entreeCode === "" || entreeCode === undefined) {
-      return "<i class='fas fa-unlock' title='공개방'></i>"; // 공개방
+    if (entreeCode === null || entreeCode === "" || entreeCode === "<null>") {
+      return '<i class="fas fa-unlock" title="공개방" data-entree-code="' + entreeCode + '"></i>'; // 공개방
     } else {
-      return "<i class='fas fa-lock' title='비공개방'></i>"; // 비공개방
+      return '<i class="fas fa-lock" title="비밀방" data-entree-code="' + entreeCode + '"></i>'; // 비밀방
     }
   }
 
