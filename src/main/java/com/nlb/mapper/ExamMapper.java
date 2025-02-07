@@ -2,11 +2,12 @@ package com.nlb.mapper;
 
 
 import com.nlb.vo.ExamVO;
-import java.time.LocalDateTime;
-import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 @Repository
@@ -59,4 +60,5 @@ public interface ExamMapper {
   List<ExamVO> searchAllExams();
 
 
+  List<String> selectCategories();
 }
