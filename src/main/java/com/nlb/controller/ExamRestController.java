@@ -4,10 +4,11 @@ package com.nlb.controller;
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.exception.ErrorCode;
-import com.nlb.mapper.ExamMapper;
+import com.nlb.service.ExamResultService;
 import com.nlb.service.ExamService;
 import com.nlb.service.WebSocketExamService;
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
@@ -170,7 +172,7 @@ public class ExamRestController {
   // 시험명 검색
   @GetMapping("/search")
   public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
-    List<ExamVO> examList = examService.searchExamsByName(name);
+    List<ExamWithCreatorVO> examList = examService.searchExamsByName(name);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
@@ -180,15 +182,14 @@ public class ExamRestController {
   public ResponseEntity<?> searchExams(
       @RequestParam(value = "name", required = false) String name,
       @RequestParam(value = "category", required = false) String category,
-      @RequestParam(value = "creator", required = false) String creator,
+      @RequestParam(value = "nickname", required = false) String nickname,
       @RequestParam(value = "createdAt", required = false) String createdAt,
       @RequestParam(value = "activationStatus", required = false) String activationStatus,
-      @RequestParam(value = "examTime", required = false) Integer examTime) {
+      @RequestParam(value = "examTime", required = false) Integer examTime,
+      @RequestParam(value = "entreeCode", required = false) String entreeCode,
+      @RequestParam(value = "examId", required = false) int examId){
 
-    // null 값을 그대로 유지하면서 전달
-    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt,
-        activationStatus, examTime);
-
+    List<ExamVO> examList = examService.filterExam(name, category, creator, createdAt, activationStatus, examTime);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 

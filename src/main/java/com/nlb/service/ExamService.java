@@ -3,11 +3,13 @@ package com.nlb.service;
 
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.vo.ExamVO;
+import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import javax.persistence.criteria.CriteriaBuilder.In;
 
 public interface ExamService {
 
@@ -39,5 +41,6 @@ public interface ExamService {
 
   List<ExamVO> getAllExams();
 
-  List<String> searchCategories();
+  List<ExamVO> searchExams(String name);
+
 }

@@ -27,8 +27,8 @@
         <p id="error-message" style="color: red; display: none;">로그인 실패. 아이디 또는 비밀번호를 확인하세요.</p>
 
         <div class="form-footer">
-            <a href="/find-id">아이디 찾기</a>
-            <a href="/find-pw">비밀번호 찾기</a>
+            <a href="/find_id">아이디 찾기</a>
+            <a href="/find_pw">비밀번호 찾기</a>
         </div>
 
         <div class="form-footer">
@@ -57,7 +57,7 @@
           localStorage.setItem("userId", response.userId);
           localStorage.setItem("nickname", response.nickname);
 
-          // 메인 페이지로 이동
+          // 로그인 후 /login 페이지로 이동하여 세션 검증 후 메인 페이지로 리다이렉트
           window.location.href = "/";
         },
         error: function() {
