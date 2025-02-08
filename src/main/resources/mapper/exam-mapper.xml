@@ -237,6 +237,46 @@
     GROUP BY LOWER(category)
   </select>
 
+  <!-- (1) 일일 방문자 수 -->
+  <select id="selectDailyVisitors" resultType="com.nlb.dto.response.VisitorStatsDTO">
+    SELECT
+      TO_CHAR(submitted_at, 'YYYY-MM-DD') AS dateKey,
+      COUNT(DISTINCT examinee_id)         AS visitorCount
+    FROM exam_result
+    WHERE submitted_at IS NOT NULL
+    GROUP BY TO_CHAR(submitted_at, 'YYYY-MM-DD')
+    ORDER BY dateKey
+  </select>
+
+  <!-- (2) 주간 방문자 수 -->
+  <select id="selectWeeklyVisitors" resultType="com.nlb.dto.response.VisitorStatsDTO">
+    SELECT
+      TO_CHAR(submitted_at, 'IYYY-IW') AS dateKey,
+      COUNT(DISTINCT examinee_id)      AS visitorCount
+    FROM exam_result
+    WHERE submitted_at IS NOT NULL
+    GROUP BY TO_CHAR(submitted_at, 'IYYY-IW')
+    ORDER BY dateKey
+  </select>
+
+  <select id="selectPopularTop10" resultType="ExamVO">
+    SELECT *
+    FROM exam
+    ORDER BY examinee_count DESC
+    LIMIT 10
+  </select>
+
+  <select id="selectRecentScores" resultType="com.nlb.dto.response.RecentScoreDTO">
+    SELECT
+      e.title AS examTitle,
+      r.score AS score,
+      to_char(r.submitted_at, 'YYYY-MM-DD') AS submittedDate
+    FROM exam_result r
+           JOIN exam e ON r.exam_id = e.exam_id
+    WHERE r.examinee_id = #{userId}
+    ORDER BY r.submitted_at DESC
+    LIMIT 3
+  </select>
 
 
 </mapper>

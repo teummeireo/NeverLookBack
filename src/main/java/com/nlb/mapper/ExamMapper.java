@@ -2,6 +2,8 @@ package com.nlb.mapper;
 
 
 import com.nlb.dto.response.CategoryCountResponseDTO;
+import com.nlb.dto.response.RecentScoreDTO;
+import com.nlb.dto.response.VisitorStatsDTO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -71,5 +73,12 @@ public interface ExamMapper {
 
   List<CategoryCountResponseDTO> getCategoryCount();
 
+  List<VisitorStatsDTO> selectDailyVisitors();
+
+  List<VisitorStatsDTO> selectWeeklyVisitors();
+
+  List<ExamVO> selectPopularTop10();
+
+  List<RecentScoreDTO> selectRecentScores(int userId);
 
 }
