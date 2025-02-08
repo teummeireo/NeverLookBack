@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <canvas id="dailyVisitorChart"></canvas>
+
 
 <%-- 현재 로그인한 사용자 ID를 세션에서 가져옴 --%>
     <c:set var="currentUserId" value="${sessionScope.userId}" />
@@ -49,32 +51,18 @@
 
         <section id="default-dashboard" class="dashboard-grid">
             <div class="dashboard-card">
-                <h3>Statistics</h3>
-                <p>내 시험 결과 상세보기</p>
-            </div>
-            <div class="dashboard-card">
                 <h3>NLB 방문자 그래프</h3>
                 <p>일일 방문자 수 그래프 바로가기</p>
             </div>
             <div class="dashboard-card">
                 <h3>실시간 시험 목록</h3>
-                <ul>
-                    <li>1. Java Programming</li>
-                    <li>2. Python Programming</li>
-                    <li>3. 넌센스</li>
+                <ul id="title-count-list">
+                    <li>불러오는 중...</li>
                 </ul>
             </div>
             <div class="dashboard-card">
                 <h3>생성된 카테고리 목록</h3>
-                <ul>
-                    <li>JAVA 12건 생성</li>
-                    <li>C 98건 생성</li>
-                    <li>C++ 67건 생성</li>
-                </ul>
-            </div>
-            <div class="dashboard-card">
-                <h3>시험 목록</h3>
-                <ul id="exam-list">
+                <ul id="category-count-list">
                     <li>불러오는 중...</li>
                 </ul>
             </div>
@@ -105,6 +93,9 @@
 <script>
   $(document).ready(function () {
     let tableBody = "";
+
+    loadCategoryCount();
+    loadTitleCount();
 
     function executeSearch() {
       let query = $('#search-input').val().trim();
@@ -163,6 +154,57 @@
       });
     }
 
+    // 생성된 시험 목록 리스트 호출 함수
+    function loadCategoryCount() {
+      $.ajax({
+        url: "/api/exams/categoriesCount",
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+          let listHtml = "";
+          if (!response || response.length === 0) {
+            listHtml = "<li>카테고리가 없습니다.</li>";
+          } else {
+            // 카테고리별 건수를 순회하며 <li> 추가
+            response.forEach(function (item) {
+              // 예: JAVA 카테고리가 12건이면 => "JAVA 12건 생성"
+              listHtml += "<li>" + item.category + " " + item.examCount + "건 생성</li>";
+            });
+          }
+          $("#category-count-list").html(listHtml);
+        },
+        error: function () {
+          $("#category-count-list").html("<li>카테고리 정보를 불러오지 못했습니다.</li>");
+        }
+      });
+    }
+
+    // 실시간 생성된 시험 목록
+    function loadTitleCount() {
+      $.ajax({
+        url: "/api/exams/all",
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+          let listHtml = "";
+          if (!response || response.length === 0) {
+            listHtml = "<li>생성된 시험이 존재하지 않습니다.</li>";
+          } else {
+            // 생성된 시험 건수를 순회하며 <li> 추가
+            response.forEach(function (item) {
+              // 예: JAVA 카테고리가 12건이면 => "JAVA 12건 생성"
+              listHtml += "<li>" + item.title + "</li>";
+            });
+          }
+          $("#title-count-list").html(listHtml);
+        },
+        error: function () {
+          $("#title-count-list").html("<li>생성된 시험 정보를 불러오지 못했습니다.</li>");
+        }
+      });
+    }
+
+
     // 검색창 돋보기 아이콘 클릭 시 검색
     $('#search-btn').on('click', executeSearch);
 
@@ -174,39 +216,6 @@
       }
     });
   });
-
-  // 전체 중 10개 시험 조회
-  function loadExamList() {
-    $.ajax({
-      url: "/api/exams/all",
-      type: "GET",
-      dataType: "json",
-      success: function (response) {
-        let listItems = "";
-        if (response.length === 0) {
-          listItems = "<li class='no-data'>시험 목록이 없습니다.</li>";
-        } else {
-          let count = 0;  // 출력 개수 제한을 위한 변수
-          response.forEach(function (exam) {
-            if (count >= 10) return;  // 10개까지만 출력
-
-            listItems += "<li>" +
-                "<b>" + (exam.title ?? "N/A") + "</b> (" +
-                (exam.examCode ?? "N/A") + ") - " +
-                getStatusText(exam.activationStatus) + " / " +
-                (exam.examTime ? exam.examTime + "분" : "N/A") +
-                "</li>";
-
-            count++; // 개수 증가
-          });
-        }
-        $("#exam-list").html(listItems);
-      },
-      error: function () {
-        $("#exam-list").html("<li class='no-data'>시험 목록을 불러오지 못했습니다.</li>");
-      }
-    });
-  }
 
 
   function formatDate(dateString) {

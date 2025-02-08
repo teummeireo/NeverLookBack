@@ -3,6 +3,7 @@ package com.nlb.service;
 
 import com.mongodb.client.result.UpdateResult;
 import com.nlb.dto.request.ExamReqDTO;
+import com.nlb.dto.response.CategoryCountResponseDTO;
 import com.nlb.exception.DuplicatedQuestionException;
 import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.ExamMapper;
@@ -244,6 +245,12 @@ public class ExamServiceImpl implements ExamService {
   @Override
   public List<String> searchCategories() {
     return examMapper.selectCategories();
+  }
+
+  // 카테고리 별 시험건 수 조회
+  @Override
+  public List<CategoryCountResponseDTO> getExamCategoryCount() {
+    return examMapper.getCategoryCount();
   }
 
 }

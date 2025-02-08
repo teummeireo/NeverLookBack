@@ -3,6 +3,7 @@ package com.nlb.controller;
 
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
+import com.nlb.dto.response.CategoryCountResponseDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.service.ExamService;
@@ -210,5 +211,10 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(categories), HttpStatus.OK);
   }
 
+  // 카테고리별 시험 건수 API 추가
+  @GetMapping("/categoriesCount")
+  public List<CategoryCountResponseDTO> getCategoriesCount() {
+    return examService.getExamCategoryCount();
+  }
 
 }
