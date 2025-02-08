@@ -204,7 +204,11 @@
   document.getElementById("submit-exam").addEventListener("click", function() {
     console.log("시험 결과 확인 완료");
     this.disabled = true;
+
+    // 페이지 이동
+    window.location.href = "/api/exams/results/my";
   });
+
 
   loadExamData();
 
