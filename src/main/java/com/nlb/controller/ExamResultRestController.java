@@ -2,7 +2,11 @@ package com.nlb.controller;
 
 
 import com.nlb.dto.request.ExamResultReqDTO;
-import com.nlb.dto.response.*;
+import com.nlb.dto.response.CMResDTO;
+import com.nlb.dto.response.ExamResultCardDTO;
+import com.nlb.dto.response.ExamResultDTO;
+import com.nlb.dto.response.ExamineeInfoResDTO;
+import com.nlb.dto.response.FullExamDataResDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.service.ExamResultService;
 import com.nlb.vo.AnswerVO;
@@ -10,15 +14,18 @@ import com.nlb.vo.ExamResultVO;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/api/exams/results")
@@ -38,7 +45,8 @@ public class ExamResultRestController {
       @RequestParam(value = "order", defaultValue = "asc") String order,
       @RequestParam(value = "isReviewed", required = false) Boolean isReviewed) {
 
-    List<ExamResultDTO> ExamResultDTOList = examResultService.getExamResultList(examId, sortBy, order,
+    List<ExamResultDTO> ExamResultDTOList = examResultService.getExamResultList(examId, sortBy,
+        order,
         isReviewed);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(ExamResultDTOList), HttpStatus.OK);
@@ -140,8 +148,7 @@ public class ExamResultRestController {
     // 로그인 기능 개발 시 사용
 
     Integer examineeId = (Integer) session.getAttribute("examineeId");
-    System.out.println("examData 내부에서 세션으로 얻은 examineeID = " + examineeId );
-
+    System.out.println("examData 내부에서 세션으로 얻은 examineeID = " + examineeId);
 
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     System.out.println(examData);
@@ -151,10 +158,11 @@ public class ExamResultRestController {
   //시험 입장 후 데이터 조회 ( 문제 + 내가 입력한 답안 )
   @GetMapping("/{examId}/exam-data/{examineeId}")
   public ResponseEntity<CMResDTO<FullExamDataResDTO>> getExamDataForUser2(
-          @PathVariable("examId") int examId,
-          @PathVariable("examineeId") int examineeId,
-          HttpSession session) {
+      @PathVariable("examId") int examId,
+      @PathVariable("examineeId") int examineeId,
+      HttpSession session) {
     // 로그인 기능 개발 시 사용
+    System.out.println("들어온 값 체크 , examId =  " + examId + "examineeId = " + examineeId);
     FullExamDataResDTO examData = examResultService.getExamData(examId, examineeId);
     examData.setExamineeId(examineeId);
     System.out.println("my_Exam_detail에 입력인자들 체크 " + examData);
