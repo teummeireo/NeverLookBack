@@ -231,14 +231,25 @@
         statusIcon.textContent = isCorrect[i] === "정답" ? "✔" : "✘";
         questionDiv.appendChild(statusIcon);
 
+        // 줄 바꿈 추가
+        var br = document.createElement("br");
+        questionDiv.appendChild(br);
+
         if (isCorrect[i] === "오답") {
           var correctAnswerInput = document.createElement("input");
           correctAnswerInput.type = "text";
           correctAnswerInput.value = questions[i].correctAnswer;
           correctAnswerInput.disabled = true;
-          correctAnswerInput.style.backgroundColor = "#f8d7da";
-          correctAnswerInput.style.color = "red";
+          correctAnswerInput.style.backgroundColor = "#ffe6e6";
+          correctAnswerInput.style.color = "#d9534f";
           correctAnswerInput.style.width = "600px";
+          correctAnswerInput.style.border = "1px solid #d9534f";
+          correctAnswerInput.style.borderRadius = "8px";
+          correctAnswerInput.style.padding = "8px";
+          correctAnswerInput.style.fontSize = "16px";
+          correctAnswerInput.style.fontWeight = "bold";
+          correctAnswerInput.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.1)";
+
           questionDiv.appendChild(correctAnswerInput);
 
           // "이의 제기" 버튼 추가
