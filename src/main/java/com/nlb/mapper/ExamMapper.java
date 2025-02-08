@@ -1,6 +1,7 @@
 package com.nlb.mapper;
 
 
+import com.nlb.dto.response.CategoryCountResponseDTO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -67,6 +68,8 @@ public interface ExamMapper {
   void updateExamineeCount(@Param("examId") int examId);
 
   String findNicknameByUserId(int userId);  // 닉네임 조회 추가
+
+  List<CategoryCountResponseDTO> getCategoryCount();
 
 
 }
