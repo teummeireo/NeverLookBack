@@ -4,6 +4,8 @@ package com.nlb.controller;
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
 import com.nlb.dto.response.CategoryCountResponseDTO;
+import com.nlb.dto.response.RecentScoreDTO;
+import com.nlb.dto.response.VisitorStatsDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.service.ExamService;
@@ -217,4 +219,24 @@ public class ExamRestController {
     return examService.getExamCategoryCount();
   }
 
+  @GetMapping("/dailyVisitors")
+  public List<VisitorStatsDTO> getDailyVisitors() {
+    return examService.getDailyVisitors();
+  }
+
+  @GetMapping("/weeklyVisitors")
+  public List<VisitorStatsDTO> getWeeklyVisitors() {
+    return examService.getWeeklyVisitors();
+  }
+
+  @GetMapping("/popular10")
+  public List<ExamVO> getPopularTop10() {
+    return examService.getPopularTop10();
+  }
+
+  @GetMapping("/recentScores")
+  public List<RecentScoreDTO> getRecentScores(@RequestParam int userId) {
+    // userId 파라미터로 받거나, 세션에서 가져와도 됨
+    return examService.getRecentScores(userId);
+  }
 }
