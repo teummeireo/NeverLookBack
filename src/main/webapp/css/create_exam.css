@@ -11,7 +11,6 @@
 body { display: flex; height: 100vh; }
 .sidebar { width: 250px; background: #f4f4f4; padding: 20px; overflow-y: auto; }
 .sidebar button { display: block; width: 85%; padding: 10px; margin: 5px 0; border: none; background: #ddd; text-align: left; }
-.sidebar button:hover { background: #bbb; }
 .content { flex: 1; padding: 20px; position: relative; }
 label { display: block; margin: 10px 0 5px; }
 input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc; }
@@ -23,8 +22,40 @@ input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border
 .load-exam-btn:hover { background: #45a049;    }
 .create-exam-btn {   background: #007BFF; }
 .create-exam-btn:hover { background: #0056b3; }
+.question-item button {
+    background: none;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    cursor: default;
+    pointer-events: none;
+    padding: 5px 10px;
+    font-weight: bold;
+    color: #333; /* 글자 색상 */
+}
 
 
-
-
-
+.question-item .delete-btn {
+    pointer-events: auto; /* 삭제 버튼만 활성화 */
+    padding: 2px 5px;
+    font-size: 12px;
+    color: black;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.add-question-btn {
+    width: 90%;
+    padding: 10px;
+    margin: 10px auto;
+    background: none;
+    border: 2px solid #007BFF;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: #007BFF;
+    display: block;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
