@@ -55,6 +55,12 @@
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
+
+            <h3>
+                <i id="nickname-icon" class="fas fa-user-circle"></i>
+                <span id="nickname">${nickname}님, 오늘도 만점 목표!</span>
+            </h3>
+
         </header>
         <section id="default-dashboard" class="dashboard-grid">
             <div class="dashboard-card card-live-exams">
@@ -148,6 +154,9 @@
     loadWeeklyVisitors();
     loadPopularTop10();
     loadRecentScores();
+
+    // 초기 로드 시 사용자 정보 가져오기 호출
+    loadUserInfo();
 
     function executeSearch() {
       let query = $('#search-input').val().trim();
@@ -495,6 +504,51 @@
     } else {
       return '<i class="fas fa-lock" title="비밀방" data-entree-code="' + entreeCode + '"></i>'; // 비밀방
     }
+  }
+
+  // 현재 로그인한 사용자 정보 가져오기
+  function loadUserInfo() {
+    $.ajax({
+      url: '/user/info', // 컨트롤러의 @GetMapping("/user/info") 경로
+      type: 'GET',
+      dataType: 'json',
+      success: function (response) {
+        if (response.success) {
+          $('#nickname').text(response.data.nickname);
+
+          const sessionExpireTime = response.data.sessionExpireTime; // 세션 만료 시간
+          const now = new Date().getTime();
+          const remainingTime = sessionExpireTime - now;
+
+          if (remainingTime > 0) {
+            startLogoutTimer(remainingTime);
+          }
+        } else {
+          console.error('사용자 정보를 불러오는 데 실패했습니다.');
+        }
+      },
+      error: function () {
+        console.error('사용자 정보를 불러오는 중 오류가 발생했습니다.');
+      }
+    });
+  }
+
+  // 세션 만료 타이머 시작 함수
+  function startLogoutTimer(duration) {
+    let timer = duration / 1000; // 초 단위
+    const interval = setInterval(function () {
+      const minutes = Math.floor(timer / 60);
+      const seconds = Math.floor(timer % 60);
+      $('#logout-timer').text(`${minutes}:${seconds < 10 ? '0' + seconds : seconds}`);
+      timer--;
+
+      if (timer < 0) {
+        clearInterval(interval);
+        $('#logout-timer').text("로그아웃 됨");
+        alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        window.location.href = '/login'; // 로그인 페이지로 리다이렉트
+      }
+    }, 1000);
   }
 
 

@@ -122,5 +122,24 @@ public class NlbUserController {
         return "/jsp/exam_search";
     }
 
+    @GetMapping("/user/info")
+    public String getUserInfo(HttpSession session, Model model) {
+        // 현재 로그인된 사용자 ID 가져오기
+        Integer userId = (Integer) session.getAttribute("userId");
+        if (userId == null) {
+            return "redirect:/login"; // 로그인 페이지로 리다이렉트
+        }
+
+        // 닉네임 가져오기
+        String nickname = nlbUserService.getNicknameByUserId(userId);
+        model.addAttribute("nickname", nickname);
+
+        // 세션 만료 시간 계산
+        long sessionExpireTime = session.getLastAccessedTime() + session.getMaxInactiveInterval() * 1000L;
+        model.addAttribute("sessionExpireTime", sessionExpireTime);
+
+        return "/exam_search"; // JSP 파일명
+    }
+
 
 }
