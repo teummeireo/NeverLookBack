@@ -40,7 +40,7 @@
 <!-- 왼쪽: 문제 리스트 -->
 <div class="sidebar" id="question-list">
     <h3>문제 목록</h3>
-    <button onclick="addQuestion()">+ 문제 추가</button>
+    <button class="add-question-btn" onclick="addQuestion()">+ 문제 추가</button>
 </div>
 <!-- 오른쪽: 문제 생성 폼 -->
 <div class="content">
