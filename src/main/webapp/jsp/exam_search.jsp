@@ -44,7 +44,6 @@
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
-            <h1>시험을 검색해보세요.</h1>
         </header>
 
         <section id="default-dashboard" class="dashboard-grid">
