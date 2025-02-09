@@ -96,4 +96,8 @@
         WHERE login_id = #{loginId}
     </update>
 
+    <select id="findNicknameByUserId" parameterType="int" resultType="string">
+        SELECT nickname FROM nlbuser WHERE user_id = #{userId}
+    </select>
+
 </mapper>

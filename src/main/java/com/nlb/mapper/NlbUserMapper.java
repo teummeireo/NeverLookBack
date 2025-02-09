@@ -47,4 +47,6 @@ public interface NlbUserMapper {
 
     int updateUserRole(@Param("userId") int userId,
                        @Param("userRole") String userRole);
+
+    String findNicknameByUserId(Integer userId);
 }

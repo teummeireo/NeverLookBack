@@ -155,4 +155,9 @@ public class NlbUserServiceImpl implements NlbUserService {
         return userMapper.updateUserRole(userId, userRole);
     }
 
+    @Override
+    public String getNicknameByUserId(Integer userId) {
+        return userMapper.findNicknameByUserId(userId);
+    }
+
 }

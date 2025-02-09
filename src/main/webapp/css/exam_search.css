@@ -896,3 +896,18 @@ th {
 .card-tip .icon-heading {
     color: #ffe4b5; /* TIP → 베이지? */
 }
+
+#nickname,
+#nickname-icon {
+    display: inline-block;
+    animation: jumpIcon 1s infinite ease-in-out;
+}
+
+@keyframes jumpIcon {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}

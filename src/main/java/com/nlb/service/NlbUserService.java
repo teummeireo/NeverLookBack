@@ -40,4 +40,6 @@ public interface NlbUserService {
     int updateUserPassword(String loginId, String newPassword);
 
     int setUserRole(int userId, String role);
+
+    String getNicknameByUserId(Integer userId);
 }
