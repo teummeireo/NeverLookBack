@@ -52,12 +52,14 @@
         <br>
     </main>
 
+
     <!-- 🔥 loadExamResults가 실행되는 코드 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       var userId = <%= request.getSession().getAttribute("userId") %>;
       console.log("JSP에서 가져온 userId:", userId);
     </script>
+
 
     <script>
 
