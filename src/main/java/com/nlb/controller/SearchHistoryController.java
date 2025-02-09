@@ -41,5 +41,12 @@ public class SearchHistoryController {
     return ResponseEntity.ok().build();
   }
 
+  // 자동완성 기능 추가
+  @GetMapping("/autocomplete")
+  public ResponseEntity<List<String>> searchExamAutocomplete(@RequestParam String query) {
+    List<String> titles = searchHistoryService.getExamAutocomplete(query);
+    return ResponseEntity.ok(titles);
+  }
+
 
 }

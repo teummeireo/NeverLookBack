@@ -16,4 +16,7 @@ public interface SearchHistoryService {
 
     // 전체 검색어 삭제
     void clearRecentSearches(int userId);
+
+    // 자동완성 기능
+    List<String> getExamAutocomplete(String query);
 }

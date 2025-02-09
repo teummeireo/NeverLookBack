@@ -43,6 +43,15 @@
                     <ul id="recent-searches"></ul>
                     <button id="close-recent-searches">닫기</button>
                 </div>
+
+                <!-- 자동완성 영역 -->
+                <div id="autocomplete-container" class="hidden">
+                    <div class="autocomplete-header">
+                        <span>자동완성</span>
+                    </div>
+                    <ul id="autocomplete-searches"></ul>
+                    <button id="close-autocomplete-searches">닫기</button>
+                </div>
             </div>
 
             <%@ include file="recent_search.jsp" %> <!-- 최근 검색어 기능 포함 -->
