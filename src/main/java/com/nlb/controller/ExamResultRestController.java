@@ -3,6 +3,7 @@ package com.nlb.controller;
 
 import com.nlb.dto.request.ExamResultReqDTO;
 import com.nlb.dto.response.CMResDTO;
+import com.nlb.dto.response.ExamMyResultCardDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamResultDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
@@ -65,19 +66,17 @@ public class ExamResultRestController {
 
 
   // 내가 본 시험 결과들 조회
-  // 정렬기능(점수, 응시일) & 필터기능(검토상태)
+// 정렬기능(점수, 응시일) & 필터기능(검토상태)
   @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
-  public ResponseEntity<CMResDTO<List<ExamResultVO>>> examResultsOfUser(
+  public ResponseEntity<CMResDTO<List<ExamMyResultCardDTO>>> examResultsOfUser(
       @PathVariable("userId") int userId,
       @RequestParam(value = "sortBy", defaultValue = "submittedAt") String sortBy,
-      //score, submittedAt, category
       @RequestParam(value = "order", defaultValue = "asc") String order,
       @RequestParam(value = "isReviewed", required = false) Boolean isReviewed) {
 
-    List<ExamResultVO> examResultVOList = examResultService.getExamResultListOfUser(userId, sortBy,
-        order, isReviewed);
+    List<ExamMyResultCardDTO> examResultList = examResultService.getExamResultCardsOfUser(userId, sortBy, order, isReviewed);
 
-    return new ResponseEntity<>(CMResDTO.successDataRes(examResultVOList), HttpStatus.OK);
+    return new ResponseEntity<>(CMResDTO.successDataRes(examResultList), HttpStatus.OK);
   }
 
   @GetMapping

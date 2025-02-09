@@ -1,6 +1,7 @@
 package com.nlb.mapper;
 
 
+import com.nlb.dto.response.ExamMyResultCardDTO;
 import com.nlb.dto.response.ExamResultCardDTO;
 import com.nlb.dto.response.ExamResultDTO;
 import com.nlb.dto.response.ExamineeInfoResDTO;
@@ -67,5 +68,10 @@ public interface ExamResultMapper {
   List<Integer> findNotSubmittedResultIds(@Param("examId") int examId);
 
   ExamResultVO selectExamResultById(@Param("resultId") int resultId);
+
+    List<ExamMyResultCardDTO> selectExamResultCardsByUserId(@Param("userId") int userId,
+        @Param("sortBy") String sortBy,
+        @Param("order") String order,
+        @Param("isReviewed") Boolean isReviewed);
 
 }

@@ -59,25 +59,34 @@
 
 
   <!-- 회원이 응시한 시험 결과 리스트 조회 -->
-  <select id="selectExamResultListByUserId" resultType="ExamResultVO">
-    SELECT *
-    FROM exam_result
-    WHERE examinee_id = #{userId}
+  <select id="selectExamResultCardsByUserId" resultType="ExamMyResultCardDTO">
+    SELECT
+    er.result_id AS resultId,
+    er.exam_id AS examId,
+    er.examinee_id AS examineeId,
+    er.score AS score,
+    er.submitted_at AS submittedAt,
+    er.is_reviewed AS isReviewed,
+    e.title AS title
+    FROM exam_result er
+    JOIN exam e ON er.exam_id = e.exam_id
+    WHERE er.examinee_id = #{userId}
     <if test="isReviewed != null">
-      AND is_reviewed = #{isReviewed}
+      AND er.is_reviewed = #{isReviewed}
     </if>
     <choose>
       <when test="sortBy == 'submittedAt'">
-        ORDER BY submitted_at ${order}
+        ORDER BY er.submitted_at ${order}
       </when>
       <when test="sortBy == 'score'">
-        ORDER BY score ${order}
+        ORDER BY er.score ${order}
       </when>
       <otherwise>
-        ORDER BY submitted_at ASC
+        ORDER BY er.submitted_at ASC
       </otherwise>
     </choose>
   </select>
+
 
   <select id="selectExamResultAndExamByResultId" resultType="ExamResultCardDTO">
     SELECT e.*,           -- ExamVO의 모든 필드

@@ -619,6 +619,11 @@ public class ExamResultServiceImpl implements ExamResultService {
     return null; // 변환 실패 시 `null` 반환
   }
 
+  @Override
+  public List<ExamMyResultCardDTO> getExamResultCardsOfUser(int userId, String sortBy, String order, Boolean isReviewed) {
+    return examResultMapper.selectExamResultCardsByUserId(userId, sortBy, order, isReviewed);
+  }
+
 
 }
 

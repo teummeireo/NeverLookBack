@@ -52,4 +52,6 @@ public interface ExamResultService {
   public boolean updateShortAnswerAndScore(int resultId, int questionId, boolean isCorrected,
       String correctedAnswer, Integer partialScore);
 
+  List<ExamMyResultCardDTO> getExamResultCardsOfUser(int userId, String sortBy, String order, Boolean isReviewed);
+
 }

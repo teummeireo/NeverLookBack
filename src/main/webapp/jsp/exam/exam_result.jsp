@@ -103,15 +103,15 @@
         let htmlContent = ""; // 🔥 누적할 HTML 변수
         examResults.forEach(function (result, index) {
 
-          let examId = result.examId !== undefined ? result.examId : 0;
+          let examTitle = result.title !== undefined ? result.title : "제목 없음"; // title 가져오기
           let examineeId = result.examineeId !== undefined ? result.examineeId : 0;
           let resultId = result.resultId !== undefined ? result.resultId : 0;
 
           let card = '<div class="dashboard-card" ' +
-              'data-exam-id="' + examId + '" ' +
+              'data-exam-title="' + examTitle + '" ' + // ✅ title 값 추가
               'data-examinee-id="' + examineeId + '" ' +
               'data-result-id="' + resultId + '">' +
-              '<h3>시험 ID: ' + examId + '</h3>' +
+              '<h3>시험 제목: ' + examTitle + '</h3>' + // ✅ 제목 출력
               '<p>응시일: ' + result.submittedAt + '</p>' +
               '<p>점수: ' + result.score + '점</p>' +
               '<p>검토 상태: ' + (result.isReviewed ? "검토 완료" : "미검토") + '</p>' +
@@ -126,6 +126,7 @@
 
         console.log("📌 resultContainer 업데이트 후 HTML:", resultContainer.html()); // ✅ 최종 결과 확인
       }
+
 
       function getFilterValues() {
         let selectedFilters = [];
