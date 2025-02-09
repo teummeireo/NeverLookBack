@@ -1,5 +1,6 @@
 package com.nlb.service;
 
+import com.nlb.mapper.ExamMapper;
 import com.nlb.vo.SearchHistoryMongoVO;
 import com.nlb.vo.SearchHistoryMongoVO.SearchRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
 
     @Autowired
     private MongoTemplate mongoTemplate;
+
+    @Autowired
+    private ExamMapper examMapper;
 
     // 검색어 저장
     public void saveSearchTerm(int userId, String searchTerm) {
@@ -64,5 +68,11 @@ public class SearchHistoryServiceImpl implements SearchHistoryService {
     public void clearRecentSearches(int userId) {
         Query query = new Query(Criteria.where("userId").is(userId));
         mongoTemplate.remove(query, SearchHistoryMongoVO.class);
+    }
+
+    // 자동완성 기능
+    @Override
+    public List<String> getExamAutocomplete(String query) {
+        return examMapper.searchExamAutocomplete(query);
     }
 }

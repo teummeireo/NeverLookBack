@@ -568,14 +568,16 @@ body {
 }
 
 /* 검색어 스타일 */
-.search-term {
+.search-term,
+.autocomplete-item {
     font-size: 16px;
     color: #fff; /* 텍스트 색상 */
     cursor: pointer; /* 마우스 포인터 변경 */
     transition: color 0.3s ease; /* 텍스트 색상 전환 효과 */
 }
 
-.search-term:hover {
+.search-term:hover,
+.autocomplete-item:hover {
     color: #ffcc00; /* 마우스 올렸을 때 텍스트 강조 */
     text-decoration: underline; /* 텍스트 밑줄 */
 }
@@ -616,21 +618,24 @@ body {
 }
 
 /* 최근 검색어 목록 스타일 */
-#recent-searches-container {
+#recent-searches-container,
+#autocomplete-container {
     position: absolute;
     top: 40px;
     left: 0;
     width: 100%;
-    background-color: #2b2b2b;
-    color: white;
+    background-color: #2b2b2b; /* 부모 배경색 */
+    color: white; /* 부모 기본 텍스트 색상 */
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: none; /* 기본적으로 숨김 */
     z-index: 1000;
+    overflow: hidden; /* 부모에서 넘치는 내용 숨김 */
 }
 
 /* 최근 검색어 영역 제목 스타일 */
-.recent-header {
+.recent-header,
+.autocomplete-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -641,21 +646,25 @@ body {
     font-weight: bold;
 }
 
-#recent-searches {
+#recent-searches,
+#autocomplete-searches {
     list-style: none;
     margin: 0;
     padding: 0;
     max-height: 200px;
+    background-color: transparent; /* 자식 배경 투명 */
     overflow-y: auto;
 }
 
 /* 버튼 Hover 효과 */
-.recent-header button:hover {
+.recent-header button:hover,
+.autocomplete-header button:hover {
     background-color: #444;
 }
 
 /* 최근 검색 목록 스타일 */
-#recent-searches {
+#recent-searches,
+#autocomplete-searches {
     list-style: none; /* 기본 리스트 스타일 제거 */
     margin: 0;
     padding: 0;
@@ -674,13 +683,29 @@ body {
     transition: background-color 0.3s ease; /* 배경색 부드러운 전환 */
 }
 
+#autocomplete-searches li {
+    display: flex;
+    align-items: center; /* 수직 가운데 정렬 */
+    padding: 10px 15px;
+    border-bottom: 1px solid #444;
+    transition: background-color 0.3s ease;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    background-color: #222; /* 자식의 기본 배경색 */
+}
+
 /* 마지막 아이템 구분선 제거 */
-#recent-searches li:last-child {
+#recent-searches li:last-child,
+#autocomplete-searches li:last-child {
     border-bottom: none;
 }
 
 /* 리스트 아이템 호버 효과 */
 #recent-searches li:hover {
+    background-color: #333; /* 마우스 올렸을 때 배경색 */
+}
+
+/* 자동완성 리스트 호버 효과 */
+#autocomplete-searches li:hover {
     background-color: #333; /* 마우스 올렸을 때 배경색 */
 }
 
@@ -692,8 +717,20 @@ body {
     color: #aaa;
 }
 
+#autocomplete-searches li::before {
+    content: '💬'; /* 돋보기 모양 아이콘 */
+    margin-right: 10px;
+    font-size: 14px;
+    color: #aaa;
+    margin-left: 5px; /* 왼쪽 여백 추가 */
+    display: inline-block;
+    width: 20px; /* 일정한 너비 확보 */
+    text-align: center; /* 아이콘 정렬 */
+}
+
 /* 삭제 버튼 스타일 */
-#recent-searches li button {
+#recent-searches li button,
+#autocomplete-searches li button {
     background: none;
     border: none;
     color: #fff;
@@ -703,11 +740,13 @@ body {
 }
 
 /* 삭제 버튼 Hover 효과 */
-#recent-searches li button:hover {
+#recent-searches li button:hover,
+#autocomplete-searches li button:hover {
     color: #ff4444;
 }
 
-#close-recent-searches {
+#close-recent-searches,
+#close-autocomplete-searches {
     margin-left: auto;
     display: block;
     margin-top : 5px;
@@ -720,13 +759,15 @@ body {
     cursor: pointer;
 }
 
-#close-recent-searches:hover {
+#close-recent-searches:hover,
+#autocomplete-searches:hover {
     background-color: #555; /* Hover 시 살짝 밝은 색 */
 }
 
 
 /* "전체삭제" 버튼 스타일 */
-.recent-header button {
+.recent-header button,
+.autocomplete-header button{
     background-color: #333;
     border: none;
     color: #fff;

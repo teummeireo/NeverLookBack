@@ -219,6 +219,7 @@
   <select id="findNicknameByUserId" resultType="String">
     SELECT nickname FROM nlbuser WHERE user_id = #{userId}
   </select>
+
   <!-- 자동완성 기능: 입력된 문자열을 포함하는 시험명을 반환 -->
   <select id="searchExamAutocomplete" resultType="String">
     SELECT DISTINCT title

@@ -2,46 +2,7 @@
 
 <script>
   $(document).ready(function () {
-    // 특정 검색어 삭제
-    $(document).on('click', '.delete-search', function () {
-      const searchTerm = $(this).data('term'); // data-term 값 가져오기
-      console.log(searchTerm);
-
-      $.ajax({
-        url: '/api/search-history/delete', // API URL
-        type: 'POST',
-        data: {
-          userId: CURRENT_USER_ID,
-          searchTerm: searchTerm
-        },
-        success: function (data) {
-          console.log("삭제된 검색어:", searchTerm);
-          loadRecentSearches(); // 삭제 후 목록 갱신
-        },
-        error: function (xhr, status, error) {
-          console.error("특정 검색어 삭제 실패:", status, error);
-        }
-      });
-    });
-
-    // 전체 검색어 삭제
-    $('#clear-all-btn').on('click', function () {
-      $.ajax({
-        url: 'api/search-history/clear', // API URL
-        type: 'POST',
-        data: { userId: CURRENT_USER_ID }, // 현재 사용자 ID 전달
-        success: function () {
-          console.log("전체 검색어 삭제 완료");
-          loadRecentSearches(); // 삭제 후 목록 갱신
-        },
-        error: function (xhr, status, error) {
-          console.error("전체 검색어 삭제 실패:", status, error);
-        }
-      });
-    });
-    console.log
-
-    // 최근 검색어 목록 로드 함수
+    // 최근 검색어 목록 로드
     function loadRecentSearches() {
       $.ajax({
         url: '/api/search-history/recent',
@@ -64,8 +25,6 @@
           } else {
             list.append('<li style="text-align: center; font-weight: bold;">최근 검색 결과 없음</li>');
           }
-
-          $('#recent-searches-container').removeClass('hidden').show();
         },
         error: function (xhr, status, error) {
           console.error("최근 검색어 목록 로드 실패:", status, error);
@@ -73,25 +32,80 @@
       });
     }
 
-    // 검색창 클릭 시 최근 검색어 열기 + 스타일 변경
+    // 검색창 클릭 시
     $('#search-input').on('focus', function () {
-      loadRecentSearches();
-      $('#recent-searches-container').removeClass('hidden').show();
+      let query = $(this).val().trim();
 
-      // placeholder 변경
-      $(this).attr('placeholder', '검색어를 입력하세요.');
+      if (query.length === 0) {
+        // 검색어가 없으면 최근 검색어 표시
+        loadRecentSearches();
+        $('#recent-searches-container').removeClass('hidden').show();
+        $('#autocomplete-container').addClass('hidden').hide();
+      } else {
+        // 검색어가 있으면 자동완성 표시
+        $('#recent-searches-container').addClass('hidden').hide();
+        $('#autocomplete-container').removeClass('hidden').show();
+      }
 
-      // CSS 클래스 추가 (search-bar의 테두리 추가)
+      // 검색창 스타일 변경
       $('.search-bar').addClass('search-bar-focus');
     });
 
-    // 검색창에서 Enter, esc 키 입력 시 최근 검색어 닫기
-    $('#search-input').on('keypress', function (event) {
-      if (event.which === 13) { // Enter 키 코드
-        $('#recent-searches-container').addClass('hidden').hide(); // 최근 검색어 닫기
+    // 검색 입력 시 (자동완성 요청)
+    $('#search-input').on('keyup', function () {
+      let query = $(this).val().trim();
+
+      if (query.length > 0) {
+        $.ajax({
+          url: '/api/search-history/autocomplete',  // 🔹 URL 확인
+          type: 'GET',
+          data: { query: query },
+          success: function (data) {
+            console.log("자동완성 응답 데이터:", data);
+
+            let list = $('#autocomplete-searches');
+            list.empty();  // 기존 리스트 초기화
+
+            if (data.length > 0) {
+              data.forEach(title => {
+                list.append(
+                    '<li>' +
+                    '<span class="autocomplete-item">' + title + '</span>' +
+                    '</li>'
+                );
+              });
+
+              console.log("자동완성 리스트 HTML:", $('#autocomplete-searches').html()); // 🔹 리스트가 추가되는지 확인
+
+              // 🔹 자동완성 컨테이너 강제 표시
+              setTimeout(function() {
+                $('#autocomplete-container').removeClass('hidden').css('display', 'block');
+              }, 50);
+
+              $('#recent-searches-container').addClass('hidden').hide();
+            } else {
+              $('#autocomplete-container').addClass('hidden').hide();
+              $('#recent-searches-container').removeClass('hidden').show();
+            }
+          },
+          error: function (xhr, status, error) {
+            console.error("자동완성 로드 실패:", status, error);
+          }
+        });
+      } else {
+        $('#autocomplete-container').addClass('hidden').hide();
+        $('#recent-searches-container').removeClass('hidden').show();
       }
-      if (event.key === "Escape") {
-        $('#recent-searches-container').addClass('hidden').hide(); // 최근 검색어 닫기
+    });
+
+    // 검색창 외부 클릭 시 닫기
+    $(document).on('click', function (event) {
+      if (!$(event.target).closest('#search-input').length &&
+          !$(event.target).closest('#recent-searches-container').length &&
+          !$(event.target).closest('#autocomplete-container').length) {
+        $('#recent-searches-container').addClass('hidden').hide();
+        $('#autocomplete-container').addClass('hidden').hide();
+        $('.search-bar').removeClass('search-bar-focus');
       }
     });
 
@@ -100,27 +114,19 @@
       $('#recent-searches-container').addClass('hidden').hide();
     });
 
-    // 검색창 외부 클릭 시 원래 상태로 복귀
-    $(document).on('click', function (event) {
-      if (!$(event.target).closest('#search-input').length &&
-          !$(event.target).closest('#recent-searches-container').length) {
-        $('#recent-searches-container').addClass('hidden').hide();
-
-        // placeholder 원래대로 변경
-        $('#search-input').attr('placeholder', '');
-
-        // CSS 클래스 추가 (search-bar의 테두리 제거)
-        $('.search-bar').removeClass('search-bar-focus');
-      }
+    // 자동완성 클릭 시 검색 실행
+    $(document).on('click', '.autocomplete-item', function () {
+      let selectedText = $(this).text();
+      $('#search-input').val(selectedText);
+      $('#search-btn').trigger('click');
     });
 
-    // 최근 검색어 클릭 시 검색
+    // 최근 검색어 클릭 시 검색 실행
     $(document).on("click", ".search-term", function () {
-      let searchTerm = $(this).text(); // 클릭된 검색어 가져오기
-      $("#search-input").val(searchTerm); // 검색어 입력창에 설정
-      $("#search-btn").trigger("click"); // 검색 버튼 강제 클릭
+      let searchTerm = $(this).text();
+      $("#search-input").val(searchTerm);
+      $("#search-btn").trigger("click");
     });
-
-
   });
+
 </script>
