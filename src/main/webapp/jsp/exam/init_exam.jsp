@@ -14,7 +14,7 @@
     <%@ include file="/jsp/sidebar.jsp" %>
     <main class="content">
         <header class="header">
-            <h1>시험 생성 페이지</h1>
+            <h1>시험지 생성</h1>
         </header>
         <div class="divider"></div>
 
