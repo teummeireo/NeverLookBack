@@ -18,17 +18,16 @@ body {
     display: flex;
 }
 
-/* Sidebar (already defined in sidebar.css, no change required) */
 
 /* Content Area */
 .content {
     flex: 1;
     padding: 20px;
-    background-color: #f7f8fa;
+    background-color: #121212;
 }
 
 .header h1 {
-    color: #333;
+    color: #fff;
     font-size: 30px;
     margin-bottom: 20px;
 }

@@ -234,9 +234,30 @@ body {
     border: none;
 }
 .filter-container {
-    display: flex; /* 정렬을 위한 flexbox 설정 */
-    align-items: center; /* 세로 가운데 정렬 */
+    display: flex;
+    align-items: center;
+    /* 추가 */
+    gap: 10px; /* 필터 항목 간 간격 */
+    margin-bottom: 15px; /* 아래 여백 */
+    font-size: 16px; /* 전체 폰트 크기 키움 */
+    /* height: 50px;  // 높이를 고정하고 싶다면 */
 }
+
+.filter-select,
+.filter-input,
+.form-control {
+    font-size: 16px;     /* 글자 크기 증가 */
+    padding: 8px;        /* 세로/가로 내부 여백 증가 */
+    /* width: 160px;     // 너비 넓히기 */
+}
+
+
+.filter-options {
+    display: flex;
+    gap: 10px;       /* 항목 사이 간격 */
+    font-size: 16px; /* 폰트 크기 증가 */
+}
+
 .filter-button {
     border: 1px solid #d1d5db;
     background-color: #f9fafb;

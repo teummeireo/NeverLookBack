@@ -100,60 +100,262 @@ body {
     object-fit: contain; /* 로고 비율 유지 */
 }
 
-/* 검색 버튼 스타일 */
-.search-bar #search-btn {
-    background: none;
-    border: none;
-    color: #00ff00; /* 초록색 아이콘 */
-    font-size: 18px;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
-}
-
-/* 검색 버튼 Hover 효과 */
-.search-bar #search-btn:hover {
-    color: #00cc00; /* Hover 시 약간 어두운 초록색 */
-}
-
-/* Dashboard grid */
+/* ★ 1) 대시보드 전체를 12컬럼 그리드로 구성 ★ */
 .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3개의 열 */
-    grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
-    gap: 20px;
-    height: 100%; /* 그리드 영역 전체 사용 */
+    grid-template-columns: repeat(12, minmax(0, 1fr)); /* 12등분 */
+    grid-auto-rows: minmax(300px, auto); /* 각 행 높이: 최소300px~자동 */
+    gap: 25px;
+    margin: 20px; /* 여백 */
+    height: auto; /* 내용에 따라 높이 확장 */
 }
 
+/* ★ 2) 기본 카드 스타일 ★ */
 .dashboard-card {
     background: rgba(33, 32, 38, 0.55);
     border-radius: 10px;
     padding: 20px;
-    min-height: 200px; /* 카드 높이 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(55, 55, 55, 0.5);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3),
+    0 -4px 8px rgba(55,55,55,0.5);
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* 콘텐츠 간격 조정 */
+    justify-content: space-between;
+    transition: transform 0.3s, box-shadow 0.3s;
+    /* 등장 애니메이션: 살짝 아래서 위로 */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: cardFadeIn 0.8s ease forwards;
 }
 
-
-.dashboard-card h3 {
-    color: #fff;
-    margin-bottom: 10px;
+/* 카드 hover */
+.dashboard-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(126,87,228,0.15);
 }
+
+/* 2) 모든 .dashboard-card 안의 ul li에
+   마우스 올리면 글자색 보라 & 굵게 (배경색 변화 없음) */
+.dashboard-card ul li {
+    transition: color 0.3s, font-weight 0.3s;
+}
+.dashboard-card ul li:hover {
+    color: #7E57E4;
+    font-weight: bold;
+}
+
+/* 3) 기본적으로 불릿 표시를 하도록 (다른 카드에서) */
+.dashboard-card ul {
+    list-style: disc;
+    margin-left: 20px; /* 불릿 들여쓰기 */
+    padding-left: 0;
+}
+
+/* (1) 공통 리스트 항목 스타일 (title-count-list, category-count-list, popular-top10-list 등) */
+#title-count-list li,
+#category-count-list li,
+#popular-top10-list li {
+    position: relative;
+    padding: 8px;
+    cursor: pointer;
+    transition: color 0.3s, font-weight 0.3s;
+}
+
+/* (2) 기본 텍스트 색상 */
+#title-count-list li .exam-title,
+#category-count-list li .exam-title,
+#popular-top10-list li .exam-title {
+    margin-left: 5px;
+    color: #ccc;
+}
+#title-count-list li .exam-count,
+#category-count-list li .exam-count,
+#popular-top10-list li .exam-count {
+    margin-left: 10px;
+    color: #888;
+}
+
+/* (3) hover 시 보라 & 굵게 + 배경 제거 */
+#title-count-list li:hover,
+#category-count-list li:hover,
+#popular-top10-list li:hover {
+    background-color: transparent !important;
+    color: #7E57E4;
+    font-weight: bold;
+}
+#title-count-list li:hover .exam-title,
+#title-count-list li:hover .exam-count,
+#title-count-list li:hover .rank-icon,
+#category-count-list li:hover .exam-title,
+#category-count-list li:hover .exam-count,
+#category-count-list li:hover .rank-icon,
+#popular-top10-list li:hover .exam-title,
+#popular-top10-list li:hover .exam-count,
+#popular-top10-list li:hover .rank-icon {
+    color: #7E57E4;
+}
+
+/* (4) 번호 아이콘 (.rank-icon, rank-1..10) */
+.rank-icon {
+    margin-right: 5px;
+    color: #f0f0f0;
+    font-style: normal;
+}
+.rank-1:before  { content: "1."; }
+.rank-2:before  { content: "2."; }
+.rank-3:before  { content: "3."; }
+.rank-4:before  { content: "4."; }
+.rank-5:before  { content: "5."; }
+.rank-6:before  { content: "6."; }
+.rank-7:before  { content: "7."; }
+.rank-8:before  { content: "8."; }
+.rank-9:before  { content: "9."; }
+.rank-10:before { content: "10."; }
+
+
+/* 4) “인기 시험 TOP10” 만 불릿 제거 */
+#popular-top10-list {
+    list-style: none; /* 점 제거 */
+    margin-left: 0;
+    padding-left: 0;
+}
+
+/* 1) .flip-card는 3D 효과를 위한 perspective 설정 */
+.flip-card {
+    perspective: 1000px; /* 3D 원근감 */
+}
+
+/* .flip-card-inner는 회전될 영역 */
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;           /* 뒤집힐 때 부드러운 전환 */
+    transform-style: preserve-3d;        /* 3D 뒤집기 */
+}
+
+/* 앞/뒷면 공통 */
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* 뒤집힐 때 뒷면 숨김 */
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 뒷면은 Y축 180도 회전 */
+.flip-card-back {
+    transform: rotateY(180deg);
+    background: rgba(33,32,38,0.7); /* 원하는 배경색 */
+    text-align: center;
+}
+
+/* 마우스 올리면 뒤집힘 */
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+/* 혹시 .dashboard-card:hover {...} 로 확대되는 효과가 있다면
+   flip-card 시엔 혼합되어 어지러울 수 있으므로 조정해주는 게 좋음 */
+.flip-card:hover {
+    transform: none !important;        /* 확대 취소 or 약화 */
+    box-shadow: 0 8px 16px rgba(126,87,228,0.15);
+}
+
+/* 카드 제목 내부 아이콘 크기, 간격 */
+.dashboard-card h3 .icon-heading {
+    margin-right: 8px;
+    font-size: 18px;
+    /* 아이콘 hover 시 회전 같은 효과 */
+    transition: transform 0.3s;
+}
+.dashboard-card h3:hover .icon-heading {
+    transform: rotate(20deg);
+}
+
+/* 카드가 화면에 등장할 때 서서히 나타나게 하는 keyframes */
+@keyframes cardFadeIn {
+    to {
+        opacity: 1;            /* 불투명 */
+        transform: translateY(0); /* 제자리 */
+    }
+}
+
+/* 마우스 호버 효과 */
+.dashboard-card:hover {
+    transform: translateY(-5px) scale(1.03);  /* 약간 위로 올리며 확대 */
+    box-shadow: 0 8px 16px rgba(126, 87, 228, 0.30);
+}
+
+/* 카드 제목 내부 아이콘 크기, 간격 */
+.dashboard-card h3 .icon-heading {
+    margin-right: 8px;
+    font-size: 18px;
+    /* 아이콘 hover 시 회전 같은 효과 */
+    transition: transform 0.3s;
+}
+.dashboard-card h3:hover .icon-heading {
+    transform: rotate(20deg);
+}
+
+/* keyframes for fadeIn */
+@keyframes cardFadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ★ 3) 각 카드별 그리드 위치/크기 (grid-column, grid-row) ★ */
+
+/* 첫 번째 행 (실시간 시험 목록, 카테고리 목록, 인기 TOP10) 각 4칸씩 차지 */
+.card-live-exams {
+    grid-column: 1 / 5;  /* 1~4번 칸 */
+    grid-row: 1 / 2;     /* 1행 차지 */
+}
+.card-categories {
+    grid-column: 5 / 9;  /* 5~8번 칸 */
+    grid-row: 1 / 2;
+}
+.card-top10 {
+    grid-column: 9 / 13; /* 9~12번 칸 */
+    grid-row: 1 / 2;
+}
+
+/* 두 번째 행 (일일/주간 방문자), 가로 6칸씩 */
+.card-daily-visitors {
+    grid-column: 1 / 4;  /* 1~6 */
+    grid-row: 2 / 3;     /* 2행 */
+}
+.card-weekly-visitors {
+    grid-column: 4 / 7; /* 7~12 */
+    grid-row: 2 / 3;
+}
+
+/* 세 번째 행 (내 최근성적, 오늘 TIP), 가로 6칸씩 */
+.card-recent-score {
+    grid-column: 7 / 10;
+    grid-row: 2 / 3;
+}
+.card-tip {
+    grid-column: 10 / 13;
+    grid-row: 2 / 3;
+}
+
 
 .dashboard-card p {
     color: #ddd;
 }
 
-.dashboard-card ul {
-    list-style: none;
-    padding: 0;
+/* 카드 내의 리스트 hover 시 약간의 배경 강조 */
+.dashboard-card ul li {
+    transition: background-color 0.2s;
 }
-
-.dashboard-card li {
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    color: #ccc;
+.dashboard-card ul li:hover {
+    background-color: rgba(255,255,255,0.1);
 }
 
 /* Media queries for responsive design */
@@ -220,10 +422,11 @@ body {
 
 /* result-table이 부모 요소에 맞게 크기를 조정하도록 설정 */
 .result-table {
-    width: 90%; /* 부모 요소인 #result-dashboard의 90%를 차지하도록 설정 */
+    width: 100%; /* 부모 요소인 #result-dashboard의 90%를 차지하도록 설정 */
     max-width: 1000px; /* 너무 넓어지지 않도록 최대 너비 제한 */
     height: auto; /* 높이를 자동으로 조정 */
     border-collapse: collapse;
+    font-size: 16px;     /* 기본 글자 크기 */
     background-color: #1e1e1e;
     color: #fff;
     border: 1px solid #444;
@@ -242,10 +445,11 @@ body {
 /* 테이블 셀 스타일 */
 .result-table th,
 .result-table td {
-    padding: 12px;
+    padding: 12px 15px; /* 행 높이 늘리기 */
     border-bottom: 1px solid #444;
     text-align: center;
     word-break: break-word; /* 긴 텍스트가 있을 경우 줄바꿈 */
+    font-size: 16px;    /* 셀 폰트 사이즈 */
 }
 
 /* 테이블 행 색상 설정 */
@@ -255,15 +459,6 @@ body {
 
 .result-table tbody tr:hover {
     background-color: #333;
-}
-
-/* 테이블이 부모 요소 크기에 맞게 확장되도록 설정 */
-.dashboard-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
 }
 
 /* 테이블 크기를 유동적으로 조정 */
@@ -637,4 +832,26 @@ th {
 
 .hidden {
     display: none;
+}
+
+.card-live-exams .icon-heading {
+    color: #f6bb80; /* 실시간 시험 목록 → 초록 */
+}
+.card-categories .icon-heading {
+    color: #1e90ff; /* 생성된 카테고리 목록 → 파랑 */
+}
+.card-top10 .icon-heading {
+    color: #ff4500; /* 인기 시험 TOP 10 → 주황/빨강 */
+}
+.card-daily-visitors .icon-heading {
+    color: #4dd0e1; /* 일일 방문자 → 청록 */
+}
+.card-weekly-visitors .icon-heading {
+    color: #ff99cc; /* 주간 방문자 → 핑크 */
+}
+.card-recent-score .icon-heading {
+    color: #f0e68c; /* 내 최근 성적 → 밝은 금색 */
+}
+.card-tip .icon-heading {
+    color: #ffe4b5; /* TIP → 베이지? */
 }
