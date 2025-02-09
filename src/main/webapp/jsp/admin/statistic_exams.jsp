@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>시험 통계</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/new_main.css">
 
 </head>
 <body>
