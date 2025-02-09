@@ -3,6 +3,9 @@ package com.nlb.controller;
 
 import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CMResDTO;
+import com.nlb.dto.response.CategoryCountResponseDTO;
+import com.nlb.dto.response.RecentScoreDTO;
+import com.nlb.dto.response.VisitorStatsDTO;
 import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.ExamMapper;
 import com.nlb.service.ExamService;
@@ -10,16 +13,23 @@ import com.nlb.service.WebSocketExamService;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -61,9 +71,13 @@ public class ExamRestController {
     if (status.equals("closed") && examMapper.getExamStatusById(examId).equals("on_going")) {
       // 먼저 WebSocket으로 "flush" 메시지 전송
       messageSendingOperations.convertAndSend("/topic/exam/" + examId + "/notifications",
-              "시험이 곧 강제 종료됩니다! 브라우저에서 답안을 즉시 저장하세요. (3초 후 종료)");
+          "시험이 곧 강제 종료됩니다! 브라우저에서 답안을 즉시 저장하세요. (3초 후 종료)");
       // 3초 정도 대기
-      try {Thread.sleep(3000);} catch (InterruptedException e) {e.printStackTrace();}
+      try {
+        Thread.sleep(3000);
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
       webSocketExamService.closeExam(examId);
     }
 
@@ -140,9 +154,8 @@ public class ExamRestController {
       @RequestParam("examId") int examId,
       HttpSession session) {
     //todo 로그인 개발되면 사용
-    //Integer creatorId = (Integer) session.getAttribute("userId");
-
-    int creatorId = 1;
+    Integer creatorId =
+        (session.getAttribute("userId") != null) ? (int) session.getAttribute("userId") : 1;
 
     Map<String, Object> examData = examService.getExamDataCreated(examId, creatorId);
 
@@ -162,7 +175,8 @@ public class ExamRestController {
 
   // 시험명 검색
   @GetMapping("/search")
-  public ResponseEntity<?> searchExams(@RequestParam(value = "name", required = false) String name) {
+  public ResponseEntity<?> searchExams(
+      @RequestParam(value = "name", required = false) String name) {
     List<ExamWithCreatorVO> examList = examService.searchExamsByName(name);
 
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
@@ -178,9 +192,10 @@ public class ExamRestController {
       @RequestParam(value = "activationStatus", required = false) String activationStatus,
       @RequestParam(value = "examTime", required = false) Integer examTime,
       @RequestParam(value = "entreeCode", required = false) String entreeCode,
-      @RequestParam(value = "examId", required = false) int examId){
+      @RequestParam(value = "examId", required = false) int examId) {
 
-    List<ExamWithCreatorVO> examList = examService.filterExam(name, category, nickname, createdAt, activationStatus, examTime, entreeCode, examId);
+    List<ExamWithCreatorVO> examList = examService.filterExam(name, category, nickname, createdAt,
+        activationStatus, examTime, entreeCode, examId);
     return new ResponseEntity<>(CMResDTO.successDataRes(examList), HttpStatus.OK);
   }
 
@@ -189,6 +204,7 @@ public class ExamRestController {
     webSocketExamService.closeExam(examId);
     return ResponseEntity.ok("시험이 강제 종료되었습니다.");
   }
+
   @GetMapping("/categories")
   public ResponseEntity<CMResDTO<List<String>>> searchCatgories() {
 
@@ -197,5 +213,30 @@ public class ExamRestController {
     return new ResponseEntity<>(CMResDTO.successDataRes(categories), HttpStatus.OK);
   }
 
+  // 카테고리별 시험 건수 API 추가
+  @GetMapping("/categoriesCount")
+  public List<CategoryCountResponseDTO> getCategoriesCount() {
+    return examService.getExamCategoryCount();
+  }
 
+  @GetMapping("/dailyVisitors")
+  public List<VisitorStatsDTO> getDailyVisitors() {
+    return examService.getDailyVisitors();
+  }
+
+  @GetMapping("/weeklyVisitors")
+  public List<VisitorStatsDTO> getWeeklyVisitors() {
+    return examService.getWeeklyVisitors();
+  }
+
+  @GetMapping("/popular10")
+  public List<ExamVO> getPopularTop10() {
+    return examService.getPopularTop10();
+  }
+
+  @GetMapping("/recentScores")
+  public List<RecentScoreDTO> getRecentScores(@RequestParam int userId) {
+    // userId 파라미터로 받거나, 세션에서 가져와도 됨
+    return examService.getRecentScores(userId);
+  }
 }

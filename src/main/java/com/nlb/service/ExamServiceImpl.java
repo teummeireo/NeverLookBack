@@ -3,6 +3,9 @@ package com.nlb.service;
 
 import com.mongodb.client.result.UpdateResult;
 import com.nlb.dto.request.ExamReqDTO;
+import com.nlb.dto.response.CategoryCountResponseDTO;
+import com.nlb.dto.response.RecentScoreDTO;
+import com.nlb.dto.response.VisitorStatsDTO;
 import com.nlb.exception.DuplicatedQuestionException;
 import com.nlb.exception.ErrorCode;
 import com.nlb.mapper.ExamMapper;
@@ -246,4 +249,29 @@ public class ExamServiceImpl implements ExamService {
     return examMapper.selectCategories();
   }
 
+  // 카테고리 별 시험건 수 조회
+  @Override
+  public List<CategoryCountResponseDTO> getExamCategoryCount() {
+    return examMapper.getCategoryCount();
+  }
+
+  @Override
+  public List<VisitorStatsDTO> getDailyVisitors() {
+    return examMapper.selectDailyVisitors();
+  }
+
+  @Override
+  public List<VisitorStatsDTO> getWeeklyVisitors() {
+    return examMapper.selectWeeklyVisitors();
+  }
+
+  @Override
+  public List<ExamVO> getPopularTop10() {
+    return examMapper.selectPopularTop10();
+  }
+
+  @Override
+  public List<RecentScoreDTO> getRecentScores(int userId) {
+    return examMapper.selectRecentScores(userId);
+  }
 }
