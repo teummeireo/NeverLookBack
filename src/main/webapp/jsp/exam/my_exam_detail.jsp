@@ -6,124 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/my_exam_detail.css">
-  <title>시험 응시</title>
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      width: 40%;
-      max-width: 500px;
-      background-color: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .modal-content {
-      padding: 20px;
-      text-align: center;
-    }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 20px;
-      background-color: #f8f9fa;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .modal-header h3 {
-      margin: 0;
-      font-size: 1.2em;
-    }
-
-    .close {
-      font-size: 24px;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .close:hover {
-      color: red;
-    }
-
-    .modal-body {
-      padding: 20px;
-    }
-
-    .modal-body textarea {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 1em;
-      resize: none;
-    }
-
-    .modal-footer {
-      padding: 15px;
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      background-color: #f8f9fa;
-      border-top: 1px solid #ddd;
-    }
-
-    .modal-footer button {
-      padding: 8px 15px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: background-color 0.2s;
-    }
-
-    .modal-footer .cancel {
-      background-color: #ccc;
-    }
-
-    .modal-footer .cancel:hover {
-      background-color: #bbb;
-    }
-
-    .modal-footer .submit {
-      background-color: #007bff;
-      color: white;
-    }
-
-    .modal-footer .submit:hover {
-      background-color: #0056b3;
-    }
-
-    .dispute-section {
-      background-color: #f8d7da;
-      border-left: 5px solid red;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 5px;
-    }
-
-    .dispute-comment {
-      font-size: 1em;
-      color: #721c24;
-      font-weight: bold;
-    }
-
-    .admin-reply {
-      font-size: 0.9em;
-      color: blue;
-      margin-top: 5px;
-      margin-left: 15px;
-    }
-
-  </style>
-
+  <title>시험 결과 확인</title>
 </head>
 <body>
 
@@ -321,7 +204,11 @@
   document.getElementById("submit-exam").addEventListener("click", function() {
     console.log("시험 결과 확인 완료");
     this.disabled = true;
+
+    // 페이지 이동
+    window.location.href = "/api/exams/results/my";
   });
+
 
   loadExamData();
 
@@ -348,14 +235,25 @@
         statusIcon.textContent = isCorrect[i] === "정답" ? "✔" : "✘";
         questionDiv.appendChild(statusIcon);
 
+        // 줄 바꿈 추가
+        var br = document.createElement("br");
+        questionDiv.appendChild(br);
+
         if (isCorrect[i] === "오답") {
           var correctAnswerInput = document.createElement("input");
           correctAnswerInput.type = "text";
           correctAnswerInput.value = questions[i].correctAnswer;
           correctAnswerInput.disabled = true;
-          correctAnswerInput.style.backgroundColor = "#f8d7da";
-          correctAnswerInput.style.color = "red";
+          correctAnswerInput.style.backgroundColor = "#ffe6e6";
+          correctAnswerInput.style.color = "#d9534f";
           correctAnswerInput.style.width = "600px";
+          correctAnswerInput.style.border = "1px solid #d9534f";
+          correctAnswerInput.style.borderRadius = "8px";
+          correctAnswerInput.style.padding = "8px";
+          correctAnswerInput.style.fontSize = "16px";
+          correctAnswerInput.style.fontWeight = "bold";
+          correctAnswerInput.style.boxShadow = "2px 2px 5px rgba(0,0,0,0.1)";
+
           questionDiv.appendChild(correctAnswerInput);
 
           // "이의 제기" 버튼 추가

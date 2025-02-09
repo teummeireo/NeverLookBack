@@ -5,7 +5,7 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    /*font-family: 'Pretendard', sans-serif;*/
+    font-family: 'Pretendard', sans-serif;
 }
 
 @font-face {
@@ -15,6 +15,129 @@ body {
     font-style: normal;
 }
 
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-family: 'Pretendard', sans-serif;
+
+}
+
+/* Modal content box */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* Center vertically and horizontally */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    width: 50%; /* Set width of the modal box */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+    text-align: center; /* Center-align the content */
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+/* Modal title styling */
+.modal-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Textarea styling */
+textarea {
+    font-family: 'Pretendard', sans-serif;
+    width: 90%;
+    height: 100px;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+}
+
+/* Button styling */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+button.cancel {
+    background-color: #f44336;
+}
+
+button.cancel:hover {
+    background-color: #c0392b;
+}
+
+.dispute-section {
+    background-color: #f8d7da;
+    border-left: 5px solid red;
+    padding: 10px;
+    display: inline-block;
+    margin-top: 10px;
+    border-radius: 5px;
+}
+
+.dispute-comment {
+    display: inline-block;
+    font-size: 1em;
+    color: #721c24;
+    font-weight: bold;
+    padding: 5px 10px;
+    border: 1px solid #721c24;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+
+.admin-reply {
+    display: inline-block;
+    font-size: 1em;
+    color: blue;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 15px;
+    padding: 5px 10px;
+    border: 1px solid blue;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
 
 .exam-header { display: flex; justify-content: space-between; padding: 15px; background: #007BFF; color: white; }
 .exam-info { display: flex; gap: 20px; }
@@ -22,7 +145,7 @@ body {
 
 .exam-container { display: flex; flex: 1; }
 .sidebar { width: 250px; background: #f4f4f4; padding: 20px; overflow-y: auto; }
-.sidebar button { display: block; width: 100%; padding: 10px; margin: 5px 0; border: none; background: #ddd; cursor: pointer; text-align: left; }
+.sidebar button { display: block; width: 100%; padding: 10px; margin: 5px 0; border: none; background: #ddd; color: #1A1A1A; cursor: pointer; text-align: left; }
 .sidebar button:hover { background: #bbb; }
 .content { flex: 1; padding: 20px; position: relative; }
 
