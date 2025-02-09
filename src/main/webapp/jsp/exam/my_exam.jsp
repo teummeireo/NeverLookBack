@@ -33,7 +33,7 @@
 <%--                <h2>내 시험 답안 상세보기</h2>--%>
 <%--                <p>내 시험 답안을 확인하고 복습해보세요.</p>--%>
 <%--            </div>--%>
-            <div class="dashboard-card" onclick="location.href='${pageContext.request.contextPath}/jsp/exam/take_exam.jsp'"> <%--todo 새주소--%>
+            <div class="dashboard-card" onclick="location.href='${pageContext.request.contextPath}/exam_search'">
                 <div class="card-icon">
                     <i class="icon-exam"></i> <!-- Replace with an actual icon -->
                 </div>

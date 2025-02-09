@@ -62,14 +62,14 @@
             });
 
                 function loadExamResults() {
-                    let userId = 1; // 세션 적용 시 수정 필요
+                    let userId = ${sessionScope.userId}; // 세션 적용 시 수정 필요
                     let sortBy = "submittedAt"; // 기본 정렬 기준
                     let order = $("#sortOrder").val() === "latest" ? "desc" : "asc"; // 정렬 순서
                     let isReviewed = getFilterValues(); // 필터 값 가져오기
                     let searchKeyword = $("#searchInput").val().trim(); // 검색어 가져오기
 
                     $.ajax({
-                        url: `/api/exams/results/user/1`,
+                        url: `/api/exams/results/user/` + userId,
                         type: "GET",
                         data: { sortBy: sortBy, order: order, isReviewed: isReviewed },
                         success: function (response) {
