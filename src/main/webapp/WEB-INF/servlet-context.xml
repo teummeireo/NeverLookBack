@@ -120,6 +120,32 @@
 	</websocket:message-broker>
 
 
+	<!-- RedisConnectionFactory 설정 -->
+	<bean id="redisConnectionFactory" class="org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory">
+		<property name="hostName" value="localhost" />
+		<property name="port" value="6379" />
+<!--
+		<property name="password" value="${redis.password}" />
+-->
+	</bean>
+
+
+
+	<!-- RedisTemplate 설정 -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+		<property name="connectionFactory" ref="redisConnectionFactory"/>
+		<property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+		</property>
+		<property name="valueSerializer">
+			<bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+				<constructor-arg name="type" value="java.lang.Object"/>
+			</bean>
+		</property>
+	</bean>
+
+
+
 
 	<!-- View Resolver -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

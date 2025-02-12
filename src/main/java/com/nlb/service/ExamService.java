@@ -5,6 +5,7 @@ import com.nlb.dto.request.ExamReqDTO;
 import com.nlb.dto.response.CategoryCountResponseDTO;
 import com.nlb.dto.response.RecentScoreDTO;
 import com.nlb.dto.response.VisitorStatsDTO;
+import com.nlb.vo.ExamResultMongoVO;
 import com.nlb.vo.ExamVO;
 import com.nlb.vo.ExamWithCreatorVO;
 import com.nlb.vo.QuestionVO;
@@ -55,4 +56,8 @@ public interface ExamService {
   List<ExamVO> getPopularTop10();
 
   List<RecentScoreDTO> getRecentScores(int userId);
+
+  long getRemainingTimeInMinutes(LocalDateTime examFinishTime);
+
+  void finalizeExamSubmission(int examId, Integer examineeId, ExamResultMongoVO mongoData);
 }

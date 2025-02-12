@@ -82,4 +82,6 @@ public interface ExamMapper {
   List<RecentScoreDTO> selectRecentScores(int userId);
 
   List<String> searchExamAutocomplete(@Param("name") String name);
+
+  List<Integer> getExamineesByExamId(@Param("examId") int examId);
 }

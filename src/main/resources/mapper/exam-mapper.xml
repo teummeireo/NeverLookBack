@@ -279,5 +279,12 @@
     LIMIT 3
   </select>
 
+  <select id="getExamineeByExamId" parameterType="int" resultType="int">
+    SELECT examinee_id
+    FROM exam
+    where exam_id = ${examId}
+  </select>
+
+
 
 </mapper>
