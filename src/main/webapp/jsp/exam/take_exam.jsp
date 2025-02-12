@@ -537,15 +537,26 @@
   }
 
 
-  //3분마다 자동 저장
-  function startAutoSave() {
-    autoSaveInterval = setInterval(function () {
-      console.log("[자동 저장] 3분마다 실행 중...");
-      if (!isExamSubmitted) {
-        saveAnswers();
+  function autoSaveByWebSocket() {
+    let examResultReqDTO = {
+      examResultVO: {
+        examId: examId,
+        examineeId: examineeId,
+      },
+      examResultMongoVO: {
+        resultId: examData.resultId,
+        answers: answers
       }
-    }, 180000); // 3분마다 실행 (180,000ms)
+    };
+
+    if (stompClient) {
+      stompClient.send("/app/exam/answers/saveRedis", {}, JSON.stringify(examResultReqDTO));
+      console.log("📡 [SOCKET] 자동 저장 요청 보냄:", examResultReqDTO);
+    }
   }
+
+  // 3분마다 자동 저장 실행
+  setInterval(autoSaveByWebSocket, 180000);
 
   // ========================
   // 5) onload 시점에 WebSocket 연결 + 시험 데이터 로딩
@@ -553,7 +564,7 @@
   window.onload = function () {
     connectWebSocket();  // STOMP 연결 + 구독
     loadExamData();      // 문제/시험 데이터 로딩
-    startAutoSave();     // 3분마다 자동 저장 시작
+    autoSaveByWebSocket();     // 3분마다 자동 저장 시작
   };
 
   // (B) 시험 알림 구독 추가
@@ -566,7 +577,8 @@
           // DOM에 있는 것들 => answers 배열로 flush
           flushCurrentAnswers();
           // flush 한 후, /api/exams/results/answers 로 저장
-          saveAnswers();
+        autoSaveByWebSocket();
+        saveAnswers();
           setTimeout(() => {
               notifyServerFlushComplete(); // 🔥 서버에 flush 완료 알림
           }, 500);
