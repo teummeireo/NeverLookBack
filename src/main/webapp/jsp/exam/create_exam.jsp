@@ -107,10 +107,12 @@
             item.setAttribute("data-id", q.questionId);
             // drag & drop 시에 문제 ID를 식별하기 위해 data-id 속성을 추가
 
-            // 문제 제목을 표시하는 버튼
+
+          // 문제 제목을 표시하는 버튼
             let btn = document.createElement("button");
             btn.textContent = "문제 " + q.questionId;
-            btn.onclick = () => loadQuestion(index);
+          btn.className = "question-btn"; // Add a class for styling
+          btn.onclick = () => loadQuestion(index);
             // 버튼 클릭하면 해당 문제를 오른쪽 폼에 로드
 
             // 문제 삭제 버튼 (빨간 X 표시)

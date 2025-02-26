@@ -26,8 +26,8 @@ input, select, textarea { width: 100%; padding: 8px; margin-bottom: 10px; border
     background: none;
     border: 2px solid #007BFF;
     border-radius: 5px;
-    cursor: default;
-    pointer-events: none;
+    cursor: pointer;
+    pointer-events: auto;
     padding: 5px 10px;
     font-weight: bold;
     color: #333; /* 글자 색상 */
